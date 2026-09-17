@@ -1,5 +1,7 @@
 # Architecture decisions
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 **Status: documentation decisions for the proposed complete product, not implementation evidence.** [CONTRACT](../CONTRACT.md) remains authoritative. “Fixed” means fixed by that contract; “specified” means this documentation selects a compatible implementation default. A root stack, trust-boundary, model-role or scope change needs parent architecture review before implementation. No entry below authorizes cloud spending, credentials, app code, signing or repository publication during this docs-only task.
 
 ## ADR-001 — Native shell, bounded platform integrations

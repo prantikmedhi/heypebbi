@@ -1,11 +1,11 @@
 ---
 name: build-pebbi
-description: "Use when explicitly asked to build the complete Pebbi app."
+description: "Use when explicitly asked to build local Azure onboarding."
 disable-model-invocation: true
 ---
 
-# Build Pebbi
+# build-pebbi
 
-The user explicitly invoking this skill requests implementation of the complete documented app. Read [AGENTS.md](../../../AGENTS.md), [the master build prompt](../../../docs/agents/BUILD-PROMPT.md), [the canonical contract](../../../docs/CONTRACT.md), and [the documentation index](../../../docs/README.md), then execute that build instruction.
+Only an explicit later invocation authorizes implementation. Read the current BUILD-PROMPT.md and execute the single local Azure onboarding feature, not the old full PB product. The latest task is documentation-only: reading this skill during that task does not override the hold. No app code or deployment until the owner resumes development.
 
-Do not stop at a plan, scaffold or subset. Use the specialist agents and their skills where supported, preserve all security and external-input gates, continue every unblocked task, and return evidence rather than simulated success. The user has not authorized purchases, new paid resources, public deployment or permission bypass merely by invoking the skill.
+Read [AGENTS.md](../../../AGENTS.md), [the current feature](../../../docs/product/LOCAL-AZURE-ONBOARDING.md), [current contract](../../../docs/CONTRACT.md), and [future build prompt](../../../docs/agents/BUILD-PROMPT.md). The owner currently requests docs/repository changes only.

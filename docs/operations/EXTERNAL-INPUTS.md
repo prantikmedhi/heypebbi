@@ -1,5 +1,7 @@
 # External inputs and explicit blockers
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: **documentation-only input register**. No cloud infrastructure, app registration, Stripe product, signing key, domain, deployment or paid resource is provisioned by this pack. This register records what a later implementation needs, what is known and what must remain disconnected until verified. [CONTRACT](../CONTRACT.md) is the source of the limited provider audit facts below.
 
 An input is not verified merely because a name appears in a catalog, a secret exists, an OAuth dialog opens or a model accepts session configuration. The correct evidence is an authorized end-to-end operation on the intended account/deployment/route, plus relevant negative behavior. Do not include private endpoints, resource names, keys, raw transcripts or audit files in this repository.

@@ -1,5 +1,7 @@
 # Billing, entitlements and trusted usage
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: implementation specification; no live prices, Stripe products, paid allowances or provisioning have been approved or created. [CONTRACT](../CONTRACT.md) fixes Stripe hosted Checkout/Customer Portal, the three proposed plan names and server-authoritative usage. [API](API.md) / [openapi.json](openapi.json) define exact paths and payloads.
 
 ## Plans and operator gates

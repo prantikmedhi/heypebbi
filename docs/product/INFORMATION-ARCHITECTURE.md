@@ -1,5 +1,7 @@
 # Pebbi — information architecture
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Normative destination and ownership map. [Contract](../CONTRACT.md) and [Requirements](REQUIREMENTS.md) govern behavior; [App flows](APP-FLOWS.md) governs transitions; [Screens](../design/SCREENS.md) and [DESIGN.md](../../DESIGN.md) govern visual composition and tokens. This is a native SwiftUI/AppKit information architecture, not a web route specification.
 
 ## Identity and nouns

@@ -755,5 +755,7 @@
       ],
       "additionalProperties": false
     }
-  }
+  },
+  "x-pebbi-scope": "historicalManagedServiceDesign",
+  "x-pebbi-superseded-by": "docs/product/LOCAL-AZURE-ONBOARDING.md"
 }

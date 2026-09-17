@@ -1,5 +1,7 @@
 # Release authority and launch gates
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Current state: **DOCUMENTATION_ONLY; RELEASE BLOCKED**. No app/backend has been implemented, built, signed, notarized, deployed or accepted by this documentation work. Tests described here are future obligations. [CONTRACT](../CONTRACT.md) fixes the product and stack; [ACCEPTANCE](../quality/ACCEPTANCE.md), [TESTING](../quality/TESTING.md) and [coverage.json](../quality/coverage.json) define evidence.
 
 Release readiness is a durable state of an exact artifact/configuration set, not a calendar roadmap. No numbered phases, date targets or elapsed time can make a gate pass. A later build agent carries every unblocked implementation task through actual execution/review and records external blockers without disabling security or dropping requirements.

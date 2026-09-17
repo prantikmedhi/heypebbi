@@ -1,5 +1,7 @@
 # Agent runtime, queues and recovery
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 **Proposed runtime specification; no implementation or passing integration tests are claimed.** Covers PB-007, PB-010, PB-013–PB-017, PB-020–PB-028, PB-030–PB-031, PB-034–PB-035, PB-037–PB-040. Native Swift actors implement this runtime without Hermes or a paid agent CLI. [CONTRACT](../CONTRACT.md) owns state names, [TOOLS](TOOLS.md) owns tool calls, [DATA-MODEL](DATA-MODEL.md) owns atomic persistence and [API](API.md) owns backend transport.
 
 ## 1. Independent units and state

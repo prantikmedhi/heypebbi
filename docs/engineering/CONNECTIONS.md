@@ -1,5 +1,7 @@
 # Connections, OAuth and MCP contract
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: implementation specification, not an installed connector catalog. [CONTRACT](../CONTRACT.md) fixes scope; [SECURITY](SECURITY.md) owns trust policy, [TOOLS](TOOLS.md) the broker, and [API](API.md) the Pebbi service wire. Connections are local, per-account records. No backend connector-sync endpoint is added.
 
 ## Product contract

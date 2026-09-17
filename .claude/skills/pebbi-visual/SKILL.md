@@ -1,23 +1,10 @@
 ---
 name: pebbi-visual
-description: "Use when implementing Pebbi screens, assets, or motion."
+description: "Use when styling Pebbi local onboarding."
 ---
 
 # pebbi-visual
 
-Read [AGENTS.md](../../../AGENTS.md) and [the canonical contract](../../../docs/CONTRACT.md) first. This skill guides an authorized task; it does not authorize implementation by itself.
+Visual scope: expressive Pebbi branding, native accessible SecureField/form controls, advanced per-role settings, truthful saved-unverified copy and error states. Do not create fake chat or voice capability. Keep original DESIGN.md tokens and assets; old full-product compositions are visual references only.
 
-## Read for this work
-
-- [DESIGN.md](../../../DESIGN.md)
-- [docs/design/BRAND.md](../../../docs/design/BRAND.md)
-- [docs/design/SCREENS.md](../../../docs/design/SCREENS.md)
-- [docs/design/COMPONENTS.md](../../../docs/design/COMPONENTS.md)
-- [docs/design/MOTION.md](../../../docs/design/MOTION.md)
-- [docs/design/ACCESSIBILITY.md](../../../docs/design/ACCESSIBILITY.md)
-
-## Procedure
-
-Use Pebbi's expressive tactile identity, not a minimal monochrome productivity template. Compose each surface for its actual task: Home operates work; Settings configures; a walkthrough teaches. Implement real SwiftUI/AppKit controls and accessible semantics. Use the canonical palette and original mascot construction rather than approximate colors or emoji substitutes. Motion must begin from the current presentation state, remain interruptible and have reduced-motion equivalents. Keep colored material away from long reading surfaces where it hurts contrast. Build normal, loading, empty, unavailable, denied and error states. Verify small and large windows, notchless displays, VoiceOver, focus, text scaling and dark appearance on actual rendered UI.
-
-Return changed paths, actual checks, evidence and blockers. Keep shared contracts unchanged unless the coordinator approves and updates all consumers.
+Read [AGENTS.md](../../../AGENTS.md), [the current feature](../../../docs/product/LOCAL-AZURE-ONBOARDING.md), [current contract](../../../docs/CONTRACT.md), and [future build prompt](../../../docs/agents/BUILD-PROMPT.md). The owner currently requests docs/repository changes only.

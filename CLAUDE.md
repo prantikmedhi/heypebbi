@@ -2,12 +2,10 @@
 
 @AGENTS.md
 
-The current repository is documentation-only. Do not start implementation unless the user asks to build or explicitly invokes `/build-pebbi`.
+**Documentation only until the owner explicitly resumes implementation.** Current scope is local BYOK Azure onboarding, not the older full managed-service app.
 
-For an authorized full build, use [the master build prompt](docs/agents/BUILD-PROMPT.md), [documentation index](docs/README.md), and [orchestration contract](docs/agents/ORCHESTRATION.md). Repository-local specialist agents and skills live in `.claude/agents` and `.claude/skills`.
+Read [the current feature](docs/product/LOCAL-AZURE-ONBOARDING.md), [CONTRACT.md](docs/CONTRACT.md) and [the index](docs/README.md). A later explicit `/build-pebbi` invocation loads [BUILD-PROMPT.md](docs/agents/BUILD-PROMPT.md) for this bounded feature only.
 
-Models used by a development assistant are separate from models shipped in Pebbi. `model: inherit` keeps project subagents on the developer's chosen working provider. This repository does not reconfigure Claude, LiteLLM, Azure, or a user's global skills. Claude Code through a non-Claude model gateway is third-party compatibility, not an Anthropic-supported route; use any functioning coding agent with the portable Markdown prompt if needed.
+No backend, Supabase, Render, Vercel, Pebbi account, Stripe or mandatory locked model. Keys stay in macOS Keychain; actual Azure inference is remote. Do not modify the user's global Claude/LiteLLM/Azure configuration.
 
-Do not load the entire documentation pack into every child. Give each its authoritative contracts, PB requirement IDs, owned files, verification targets and current blockers. The coordinator still owns integration and independent verification.
-
-There is deliberately no project permission override, unsafe auto-approval hook or credential-bearing settings file. Project instructions are guidance, not a security boundary.
+Specialist agents inherit the development model and normal permissions. Their deployment-related names are compatibility names, not permission to create servers. No project credential file, unsafe auto-approval or security bypass is included.

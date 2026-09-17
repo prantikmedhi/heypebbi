@@ -77,7 +77,8 @@
     "docs/reference/HEYCLICKY-COVERAGE.md",
     "docs/reference/SOURCES.md",
     "scripts/validate_docs.py",
-    "scripts/validate_contracts.py"
+    "scripts/validate_contracts.py",
+    "docs/product/LOCAL-AZURE-ONBOARDING.md"
   ],
   "requirementIds": [
     "PB-001",
@@ -186,5 +187,23 @@
       "degraded",
       "failed"
     ]
-  }
+  },
+  "currentFeature": "docs/product/LOCAL-AZURE-ONBOARDING.md",
+  "currentRequirementIds": [
+    "BYOK-001",
+    "BYOK-002",
+    "BYOK-003",
+    "BYOK-004",
+    "BYOK-005",
+    "BYOK-006",
+    "BYOK-007",
+    "BYOK-008",
+    "BYOK-009",
+    "BYOK-010",
+    "BYOK-011",
+    "BYOK-012"
+  ],
+  "implementationStatus": "onHoldDocumentationOnly",
+  "architecture": "nativeLocalBYOKDirectAzure",
+  "legacyContractScope": "requirementIds/restOperations/webSocketPaths/stateEnums are retained historical managed-service references, not active implementation requirements."
 }

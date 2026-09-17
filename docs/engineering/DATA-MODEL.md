@@ -1,5 +1,7 @@
 # Local data model, journal and migrations
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 **Proposed schema specification; not a database implementation.** Owns native storage for PB-002, PB-009–PB-017, PB-021–PB-026, PB-030–PB-031, PB-035, PB-037. PostgreSQL account/billing/service tables remain in backend-owned documents; do not mirror a server billing ledger into an authoritative local table.
 
 ## 1. Storage roots and types

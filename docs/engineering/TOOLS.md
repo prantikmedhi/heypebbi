@@ -1,5 +1,7 @@
 # Local tool contracts and authority boundary
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 **Proposed normative contract; no tool handlers are implemented.** This document owns native tool wire shapes. [CONTRACT](../CONTRACT.md) owns common formats/states; [API](API.md) owns HTTP/SSE/WebSocket shapes; canonical SECURITY.md owns policy. Never expose a raw backend/MCP/native action directly to the model without the broker defined here.
 
 ## 1. Envelope, IDs and immutable records

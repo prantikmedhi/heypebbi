@@ -1,5 +1,7 @@
 # Operations and durable runtime recovery
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: **operating specification for a future implementation**. No service, job, monitor or on-call process is running because this file exists. [RELEASE.md](RELEASE.md) defines launch gates; [EXTERNAL-INPUTS.md](EXTERNAL-INPUTS.md) records required authorization. This is a state/recovery runbook, not a calendar roadmap or provisioning request.
 
 ## Boundaries and owners

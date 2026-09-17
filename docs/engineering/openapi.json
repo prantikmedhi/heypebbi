@@ -1,10 +1,12 @@
 {
   "openapi": "3.1.0",
+  "x-pebbi-scope": "historicalManagedServiceDesign",
+  "x-pebbi-superseded-by": "docs/product/LOCAL-AZURE-ONBOARDING.md",
   "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
   "info": {
     "title": "Pebbi Service API",
     "version": "1.0.0",
-    "description": "Documentation-only target contract. CONTRACT.md controls scope. Authentication tenant/hosts are operator inputs; no production availability is asserted."
+    "description": "HISTORICAL managed-service API, superseded by local BYOK Azure onboarding. No Pebbi backend is required or authorized. Retained only for reference and historical consistency checks."
   },
   "security": [
     {

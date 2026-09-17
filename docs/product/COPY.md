@@ -1,5 +1,7 @@
 # Pebbi — interface copy and language contract
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 English source copy for native UI and required public/account pages. [Contract](../CONTRACT.md), [Requirements](REQUIREMENTS.md), [App flows](APP-FLOWS.md) and [IA](INFORMATION-ARCHITECTURE.md) govern meaning. Exact visual style belongs to [DESIGN.md](../../DESIGN.md). Strings below are proposed original Pebbi copy, not copied vendor prose and not claims of a shipped application.
 
 ## Voice and writing rules

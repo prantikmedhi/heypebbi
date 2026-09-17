@@ -1,5 +1,7 @@
 # Documentation validation record
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 This record covers the specification and original brand references only. It is not application QA, native runtime verification, Azure readiness, signing or production deployment evidence.
 
 ## Checks exercised

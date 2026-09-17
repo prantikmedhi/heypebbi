@@ -1,5 +1,7 @@
 # Acceptance contract
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: **SPECIFIED, NOT EXECUTED**. This repository contains documentation and original brand references, not an application. This file defines future pass/fail obligations. No entry below is evidence of a working feature. All live launch gates are **BLOCKED** until the actual external inputs and release-candidate behavior are verified. Astra was audited working in the limited context recorded in [CONTRACT](../CONTRACT.md); that is not production readiness. Missing Azure realtime and dictation deployments are explicitly **USER-DEFERRED**, not permission to substitute another model.
 
 ## Authority and use

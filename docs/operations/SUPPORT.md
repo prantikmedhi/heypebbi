@@ -1,5 +1,7 @@
 # Support, diagnostics and user-safe recovery
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: **support operating specification; no live support channel or SLA is asserted**. A verified operator contact, support destination and assigned owners are [external inputs](EXTERNAL-INPUTS.md) required for LG-SUPPORT/LG-WEB. Do not invent an email address, staffed team, response promise or ticket receipt. [OPERATIONS](OPERATIONS.md) owns incidents; [PRIVACY-AND-DATA](PRIVACY-AND-DATA.md) owns data handling.
 
 ## User-facing support entry points

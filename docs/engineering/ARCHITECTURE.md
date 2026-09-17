@@ -1,5 +1,7 @@
 # Native product architecture
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 **Status: proposed implementation specification; documentation only.** No targets, actors, tests or integrations named below exist yet. [CONTRACT](../CONTRACT.md) fixes the stack and vocabulary. This document owns native module boundaries, not backend wire definitions, security policy, visual tokens or acceptance certification.
 
 ## 1. Architectural decision

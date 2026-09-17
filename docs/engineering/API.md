@@ -1,5 +1,7 @@
 # Service API and streaming contract
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: documentation only. [CONTRACT](../CONTRACT.md) owns product vocabulary; [openapi.json](openapi.json) is OpenAPI 3.1 / JSON Schema 2020-12 and owns every REST request/response field and every decoded streaming message. This document owns protocol sequencing, authorization and invariants that structural schema cannot express. No domain, tenant, service or Azure deployment is asserted to be provisioned.
 
 ## Shared wire rules

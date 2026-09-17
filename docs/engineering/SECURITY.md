@@ -1,5 +1,7 @@
 # Security, privacy and fail-closed boundaries
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: required implementation controls, not a security certification or existing production deployment. [CONTRACT](../CONTRACT.md) is authoritative. [API](API.md) owns wire authentication and [TOOLS](TOOLS.md) owns local tool execution. The native Mac, model, content source, connector, backend and billing provider are separate trust boundaries.
 
 ## Trust and least privilege

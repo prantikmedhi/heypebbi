@@ -1,5 +1,7 @@
 # Backend technology and deployment contract
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: specification only; no service, cloud resource, credentials or production deployment is created here. [CONTRACT](../CONTRACT.md) takes precedence. Target: the complete Pebbi product, not a smaller backend demonstration.
 
 ## Fixed implementation choices

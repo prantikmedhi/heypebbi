@@ -1,5 +1,7 @@
 # Pebbi — complete user journeys and state transitions
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Normative companion to [Requirements](REQUIREMENTS.md) and the [contract](../CONTRACT.md). Runtime enum spelling is exact. Surface presentation and evidence labels are not substitute runtime states. Every flow has a stable `pb-NNN` anchor and acceptance reference to the same PB identifier in [Acceptance](../quality/ACCEPTANCE.md). [IA](INFORMATION-ARCHITECTURE.md) names destinations; [Copy](COPY.md) supplies status and error strings. F0–F7 and A0–A5 below refer to the shared focus and approval rules in [Requirements](REQUIREMENTS.md#common-rules-inherited-by-every-pb).
 
 ## Global transition contract

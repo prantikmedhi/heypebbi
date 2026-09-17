@@ -1,4 +1,18 @@
-# Pebbi — canonical build contract
+# Pebbi — canonical contract
+
+## Current decision: local BYOK, documentation only
+
+The latest owner instruction is to update docs and the repository first, **not implement the project now**. The sole next implementation feature is [Local Azure onboarding](product/LOCAL-AZURE-ONBOARDING.md), acceptance BYOK-001 through BYOK-012. No app, backend or deployment is created by this revision.
+
+Pebbi remains native SwiftUI/AppKit macOS with original colorful tactile branding. It is public and open-source under [MIT](../LICENSE). Each user supplies their own Azure API key, endpoint and per-role deployment names in first-run Custom Azure setup. Save the small versioned profile atomically in this app's non-synchronizing macOS Keychain item; enable later edit/reset with safe failure handling. No owner credentials, fixed model lock, hosted Pebbi API, Supabase, Render, Vercel, Entra customer account, Stripe or hosted usage database is required.
+
+**Local application, remote Azure inference.** Setup can validate/save without network activity. Actual AI input goes directly from the Mac to the explicitly selected Azure resource and may incur charges in that user's Azure account. Never claim fully offline inference, verified audio access from a settings save, or that private AI inputs cannot leave the Mac.
+
+Current authority: latest user request → this current decision → [LOCAL-AZURE-ONBOARDING.md](product/LOCAL-AZURE-ONBOARDING.md) → [AGENTS.md](../AGENTS.md). The [future prompt](agents/BUILD-PROMPT.md) must not execute until implementation is explicitly resumed. The existing original design tokens/assets remain current visual guidance; implementation of their full illustrated product surfaces is not authorized.
+
+## Historical managed-service contract — superseded
+
+Everything below is retained as design history and to preserve prior cross-references. Its PB roster, routes, locked model choices, managed identity/billing and release requirements are **not current implementation instructions or prerequisites**. No earlier subsection overrides the current decision above. The legacy JSON contracts and tests validate historical consistency only.
 
 Status: documentation and original brand assets only. No application implementation exists in this repository yet.
 

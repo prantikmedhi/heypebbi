@@ -1,6 +1,6 @@
 # Third-party notices and asset provenance
 
-The current repository contains original project documentation, original Pebbi vector reference assets and documentation validation tooling. It does not bundle the Clicky app, Apple fonts, licensed commercial typefaces, Azure/OpenAI models, or application dependencies.
+The current repository contains original project documentation, original Pebbi vector reference assets and documentation validation tooling, offered under the [MIT license](LICENSE). No application implementation is included yet. It does not bundle the Clicky app, Apple fonts, licensed commercial typefaces, Azure/OpenAI models, or application dependencies.
 
 ## Clicky reference
 

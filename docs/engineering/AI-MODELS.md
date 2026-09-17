@@ -1,5 +1,7 @@
 # Locked AI roles and Azure evidence
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Authority: [CONTRACT](../CONTRACT.md). Status: target architecture and sanitized evidence summary, not a live Pebbi deployment. This documentation-only task did not run new tenant inference or modify client/provider configuration.
 
 ## Exactly three role assignments

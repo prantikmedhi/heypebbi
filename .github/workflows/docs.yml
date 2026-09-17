@@ -20,11 +20,14 @@ jobs:
         run: |
           python scripts/validate_docs.py --self-test
           python scripts/validate_docs.py
-      - name: Check OpenAPI and JSON Schema
+      - name: Check current documentation-only BYOK scope
+        run: |
+          python -c 'import json,re; from pathlib import Path; m=json.loads(Path("docs/manifest.json").read_text()); expected={"BYOK-%03d" % i for i in range(1,13)}; assert m["implementationStatus"] == "onHoldDocumentationOnly"; assert m["architecture"] == "nativeLocalBYOKDirectAzure"; assert set(m["currentRequirementIds"]) == expected; assert set(re.findall(r"BYOK-\d{3}",Path(m["currentFeature"]).read_text())) == expected; assert Path("LICENSE").read_text().startswith("MIT License"); print("Current BYOK documentation scope and MIT license verified; no app test executed")'
+      - name: Check historical hosted OpenAPI and JSON Schema
         run: |
           python -m pip install 'openapi-spec-validator>=0.7,<0.8' 'jsonschema>=4.23,<5'
           python -c 'import json; from openapi_spec_validator import validate; from jsonschema import Draft202012Validator; o=json.load(open("docs/engineering/openapi.json")); t=json.load(open("docs/engineering/schemas/tool-envelope.schema.json")); validate(o); Draft202012Validator.check_schema(t); [Draft202012Validator.check_schema(s) for s in o["components"]["schemas"].values()]; print("OpenAPI and JSON Schema valid")'
-      - name: Check reviewed contract regression fixtures
+      - name: Check retained historical contract fixtures
         run: python scripts/validate_contracts.py
       - name: Check design tokens and contrast
         run: npx -y @google/design.md lint DESIGN.md

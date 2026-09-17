@@ -1,5 +1,7 @@
 # Browser automation: opt-in MV3 and native messaging
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 **Proposed implementation contract, not a shipped extension.** Governs PB-003, PB-017, PB-019–PB-020, PB-022–PB-023, PB-031, PB-035, PB-037. [CONTRACT](../CONTRACT.md) mandates Chrome and Brave installation flows, selected scope, authenticated native messaging and DOM-first automation. [TOOLS](TOOLS.md) owns public local tool names; this document owns browser IPC, refs and lifetime.
 
 ## 1. Architecture and permissions

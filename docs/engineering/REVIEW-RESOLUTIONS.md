@@ -1,5 +1,7 @@
 # Accepted integration review resolutions
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 These are accepted clarifications to the initial specification, not a staged product plan. They close implementability gaps found during independent documentation review. [CONTRACT.md](../CONTRACT.md) remains the scope authority; this document defines the refinements that the owning engineering/product documents and schemas must express consistently.
 
 ## Device authorization

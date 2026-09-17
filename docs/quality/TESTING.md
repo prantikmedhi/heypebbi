@@ -1,5 +1,7 @@
 # Test strategy, golden journeys and failure injection
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: **test specification only; nothing here reports an executed app test**. There is no app or backend implementation in this documentation repository. Fixtures, previews and the brand board cannot satisfy live or native gates. [ACCEPTANCE.md](ACCEPTANCE.md) contains the 80 requirement-level positive/negative cases; [coverage.json](coverage.json) is the complete PB-001–PB-040 traceability index. [RELEASE.md](../operations/RELEASE.md) owns launch decisions.
 
 ## Test architecture and evidence

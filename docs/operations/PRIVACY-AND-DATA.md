@@ -1,5 +1,7 @@
 # Privacy, data handling and deletion
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Status: **implementation/privacy requirements, not a published legal policy or compliance certification**. Actual operators, processor terms, regions, retention configuration and contact details require approval and verification before launch. No real app data is collected by these documents. [CONTRACT](../CONTRACT.md), [API](../engineering/API.md) and [DATA-MODEL](../engineering/DATA-MODEL.md) control system boundaries and records; this document controls operational disclosure, testing and lifecycle obligations. [EXTERNAL-INPUTS](EXTERNAL-INPUTS.md) keeps unverified policy/deployment inputs BLOCKED.
 
 ## Plain-language product promises to implement

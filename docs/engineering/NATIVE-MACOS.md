@@ -1,5 +1,7 @@
 # Native macOS implementation contract
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](../product/LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 **Proposed specification, not implemented code.** Governs PB-001, PB-003, PB-005–PB-010, PB-014, PB-018, PB-029, PB-031–PB-038. [CONTRACT](../CONTRACT.md) and canonical security policy take precedence. [ARCHITECTURE](ARCHITECTURE.md) defines ownership; [TOOLS](TOOLS.md) defines tool envelopes.
 
 ## 1. Native app and window model

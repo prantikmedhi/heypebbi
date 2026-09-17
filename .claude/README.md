@@ -1,10 +1,7 @@
-# Project-local Claude support
+# Project-local agent support
 
-This directory contains original Pebbi-specific instructions. It does not install or change global skills, provider configuration, credentials or permission settings.
+Current instruction: **documentation only; implementation is on hold**. Read [AGENTS.md](../AGENTS.md) and [the local Azure onboarding feature](../docs/product/LOCAL-AZURE-ONBOARDING.md).
 
-- `/build-pebbi` is an explicitly invoked skill that loads the complete build contract.
-- `pebbi-native`, `pebbi-visual`, `pebbi-services`, and `pebbi-verification` are domain procedures.
-- Specialist agent files in `agents/` reference those skills and use `model: inherit`. They do not force a paid Anthropic model or imply a runtime dependency.
-- No unsafe auto-approval setting, hook or project secret file is included. Existing user/admin permissions continue to govern tools.
+`/build-pebbi` is retained as a compatibility command. When explicitly invoked later, it requests only the bounded current onboarding feature—not the previous complete backend-backed product. The native, visual, services and verification skills are scoped accordingly. “Services” means direct Azure client interfaces, not a hosted Pebbi service.
 
-Other coding agents should read [AGENTS.md](../AGENTS.md), [the build prompt](../docs/agents/BUILD-PROMPT.md) and the same skill Markdown directly if they do not discover this directory automatically. Project skill formats are documented by [Claude](https://code.claude.com/docs/en/skills); use the installed client's supported behavior rather than assuming a feature exists.
+Subagents inherit the developer's selected model and normal permissions. No global configuration, credentials, unsafe auto-approval or runtime dependency is installed by this directory. Other coding agents can use the same Markdown instructions. [Claude skill reference](https://code.claude.com/docs/en/skills).

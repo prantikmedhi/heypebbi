@@ -1,5 +1,7 @@
 # Pebbi — complete observable requirements
 
+> **HISTORICAL REFERENCE — SUPERSEDED SCOPE.** The current decision is [local Azure onboarding](LOCAL-AZURE-ONBOARDING.md), docs only until implementation is resumed. This earlier managed/full-product design is preserved as reference, not an instruction to implement its hosted services, login, billing, fixed models or full PB scope. Current requirements take precedence.
+
 Normative; documentation only. The [contract](../CONTRACT.md) takes precedence. Every PB identifier below is mandatory and maps to the same identifier in [Acceptance](../quality/ACCEPTANCE.md) and [coverage.json](../quality/coverage.json). An acceptance reference is an obligation, not evidence that a test passed. [App flows](APP-FLOWS.md) define exact journeys; [Screens](../design/SCREENS.md) supplies visual treatment.
 
 ## Common rules inherited by every PB
