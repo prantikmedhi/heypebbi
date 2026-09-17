@@ -34,7 +34,8 @@
         "docs/quality/ACCEPTANCE.md#tc-pb-002-p",
         "docs/quality/ACCEPTANCE.md#tc-pb-002-n",
         "docs/quality/TESTING.md#gj-01",
-        "docs/quality/TESTING.md#gj-08"
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#tc-repair-device"
       ],
       "verificationClass": [
         "automated",
@@ -133,7 +134,10 @@
         "docs/quality/ACCEPTANCE.md#tc-pb-007-n",
         "docs/quality/TESTING.md#gj-02",
         "docs/quality/TESTING.md#fi-provider",
-        "docs/quality/TESTING.md#fi-voice"
+        "docs/quality/TESTING.md#fi-voice",
+        "docs/quality/TESTING.md#tc-repair-audio-owner",
+        "docs/quality/TESTING.md#tc-repair-message-bytes",
+        "docs/quality/TESTING.md#tc-repair-native-approval"
       ],
       "verificationClass": [
         "automated",
@@ -195,7 +199,10 @@
         "docs/quality/TESTING.md#gj-03",
         "docs/quality/TESTING.md#fi-audio",
         "docs/quality/TESTING.md#fi-duplicate",
-        "docs/quality/TESTING.md#fi-focus"
+        "docs/quality/TESTING.md#fi-focus",
+        "docs/quality/TESTING.md#tc-repair-audio-owner",
+        "docs/quality/TESTING.md#tc-repair-message-bytes",
+        "docs/quality/TESTING.md#tc-repair-dictation-cancel"
       ],
       "verificationClass": [
         "automated",
@@ -252,7 +259,8 @@
         "docs/quality/ACCEPTANCE.md#tc-pb-013-n",
         "docs/quality/TESTING.md#gj-04",
         "docs/quality/TESTING.md#gj-08",
-        "docs/quality/TESTING.md#fi-memory"
+        "docs/quality/TESTING.md#fi-memory",
+        "docs/quality/TESTING.md#tc-repair-token-budget"
       ],
       "verificationClass": [
         "automated",
@@ -270,7 +278,8 @@
       "testCases": [
         "docs/quality/ACCEPTANCE.md#tc-pb-014-p",
         "docs/quality/ACCEPTANCE.md#tc-pb-014-n",
-        "docs/quality/TESTING.md#gj-04"
+        "docs/quality/TESTING.md#gj-04",
+        "docs/quality/TESTING.md#tc-repair-artifact"
       ],
       "verificationClass": [
         "automated",
@@ -292,7 +301,10 @@
         "docs/quality/TESTING.md#gj-05",
         "docs/quality/TESTING.md#fi-crash",
         "docs/quality/TESTING.md#fi-duplicate",
-        "docs/quality/TESTING.md#fi-network"
+        "docs/quality/TESTING.md#fi-network",
+        "docs/quality/TESTING.md#tc-repair-artifact",
+        "docs/quality/TESTING.md#tc-repair-audio-owner",
+        "docs/quality/TESTING.md#tc-repair-token-budget"
       ],
       "verificationClass": [
         "automated",
@@ -311,7 +323,8 @@
         "docs/quality/ACCEPTANCE.md#tc-pb-016-p",
         "docs/quality/ACCEPTANCE.md#tc-pb-016-n",
         "docs/quality/TESTING.md#gj-05",
-        "docs/quality/TESTING.md#fi-queue"
+        "docs/quality/TESTING.md#fi-queue",
+        "docs/quality/TESTING.md#tc-repair-audio-owner"
       ],
       "verificationClass": [
         "automated",
@@ -332,7 +345,11 @@
         "docs/quality/TESTING.md#gj-05",
         "docs/quality/TESTING.md#gj-06",
         "docs/quality/TESTING.md#fi-approval",
-        "docs/quality/TESTING.md#fi-duplicate"
+        "docs/quality/TESTING.md#fi-duplicate",
+        "docs/quality/TESTING.md#tc-repair-artifact",
+        "docs/quality/TESTING.md#tc-repair-audio-owner",
+        "docs/quality/TESTING.md#tc-repair-native-approval",
+        "docs/quality/TESTING.md#tc-repair-dictation-cancel"
       ],
       "verificationClass": [
         "automated",
@@ -412,7 +429,8 @@
         "docs/quality/TESTING.md#gj-04",
         "docs/quality/TESTING.md#gj-06",
         "docs/quality/TESTING.md#fi-queue",
-        "docs/quality/TESTING.md#fi-workspace"
+        "docs/quality/TESTING.md#fi-workspace",
+        "docs/quality/TESTING.md#tc-repair-artifact"
       ],
       "verificationClass": [
         "automated",
@@ -468,7 +486,8 @@
       "testCases": [
         "docs/quality/ACCEPTANCE.md#tc-pb-024-p",
         "docs/quality/ACCEPTANCE.md#tc-pb-024-n",
-        "docs/quality/TESTING.md#gj-07"
+        "docs/quality/TESTING.md#gj-07",
+        "docs/quality/TESTING.md#tc-repair-native-approval"
       ],
       "verificationClass": [
         "automated",
@@ -528,7 +547,9 @@
         "docs/quality/ACCEPTANCE.md#tc-pb-027-n",
         "docs/quality/TESTING.md#gj-08",
         "docs/quality/TESTING.md#fi-duplicate",
-        "docs/quality/TESTING.md#fi-quota"
+        "docs/quality/TESTING.md#fi-quota",
+        "docs/quality/TESTING.md#tc-repair-device",
+        "docs/quality/TESTING.md#tc-repair-audio-owner"
       ],
       "verificationClass": [
         "automated",
@@ -549,7 +570,10 @@
         "docs/quality/TESTING.md#gj-02",
         "docs/quality/TESTING.md#gj-08",
         "docs/quality/TESTING.md#fi-provider",
-        "docs/quality/TESTING.md#fi-quota"
+        "docs/quality/TESTING.md#fi-quota",
+        "docs/quality/TESTING.md#tc-repair-device",
+        "docs/quality/TESTING.md#tc-repair-message-bytes",
+        "docs/quality/TESTING.md#tc-repair-token-budget"
       ],
       "verificationClass": [
         "automated",
@@ -607,7 +631,9 @@
         "docs/quality/ACCEPTANCE.md#tc-pb-031-n",
         "docs/quality/TESTING.md#gj-02",
         "docs/quality/TESTING.md#gj-08",
-        "docs/quality/TESTING.md#fi-privacy"
+        "docs/quality/TESTING.md#fi-privacy",
+        "docs/quality/TESTING.md#tc-repair-device",
+        "docs/quality/TESTING.md#tc-repair-artifact"
       ],
       "verificationClass": [
         "automated",
@@ -629,7 +655,8 @@
         "docs/quality/TESTING.md#gj-01",
         "docs/quality/TESTING.md#gj-02",
         "docs/quality/TESTING.md#gj-03",
-        "docs/quality/TESTING.md#gj-08"
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#tc-repair-native-approval"
       ],
       "verificationClass": [
         "automated",
@@ -670,7 +697,8 @@
         "docs/quality/TESTING.md#gj-02",
         "docs/quality/TESTING.md#gj-03",
         "docs/quality/TESTING.md#fi-audio",
-        "docs/quality/TESTING.md#fi-voice"
+        "docs/quality/TESTING.md#fi-voice",
+        "docs/quality/TESTING.md#tc-repair-audio-owner"
       ],
       "verificationClass": [
         "automated",
@@ -694,7 +722,9 @@
         "docs/quality/TESTING.md#fi-crash",
         "docs/quality/TESTING.md#fi-duplicate",
         "docs/quality/TESTING.md#fi-network",
-        "docs/quality/TESTING.md#fi-sleep"
+        "docs/quality/TESTING.md#fi-sleep",
+        "docs/quality/TESTING.md#tc-repair-audio-owner",
+        "docs/quality/TESTING.md#tc-repair-dictation-cancel"
       ],
       "verificationClass": [
         "automated",
@@ -755,7 +785,9 @@
         "docs/quality/TESTING.md#gj-02",
         "docs/quality/TESTING.md#gj-05",
         "docs/quality/TESTING.md#fi-memory-pressure",
-        "docs/quality/TESTING.md#fi-queue"
+        "docs/quality/TESTING.md#fi-queue",
+        "docs/quality/TESTING.md#tc-repair-message-bytes",
+        "docs/quality/TESTING.md#tc-repair-token-budget"
       ],
       "verificationClass": [
         "automated",
@@ -801,7 +833,14 @@
         "docs/quality/TESTING.md#gj-06",
         "docs/quality/TESTING.md#gj-07",
         "docs/quality/TESTING.md#gj-08",
-        "docs/quality/TESTING.md#gj-09"
+        "docs/quality/TESTING.md#gj-09",
+        "docs/quality/TESTING.md#tc-repair-device",
+        "docs/quality/TESTING.md#tc-repair-artifact",
+        "docs/quality/TESTING.md#tc-repair-audio-owner",
+        "docs/quality/TESTING.md#tc-repair-message-bytes",
+        "docs/quality/TESTING.md#tc-repair-token-budget",
+        "docs/quality/TESTING.md#tc-repair-native-approval",
+        "docs/quality/TESTING.md#tc-repair-dictation-cancel"
       ],
       "verificationClass": [
         "automated",

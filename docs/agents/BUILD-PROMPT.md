@@ -20,7 +20,7 @@ The engineering source of truth is [architecture](../engineering/ARCHITECTURE.md
 
 Inspect actual source and environment. If application code already exists, preserve it, compare it against every requirement, and complete gaps rather than overwriting it with a starter. If only docs exist, create the documented source structure and working build/test commands. Identify the actual macOS SDK, toolchain and service credentials without printing secrets.
 
-Read the complete PB roster and create `.pebbi-build/state.json` from [the template](build-state.template.json). This ledger is local execution state, not product runtime storage. Each requirement needs implementation paths, tests, evidence and a status. Do not mark a requirement verified because a child says so or because its source file exists.
+Read the complete PB roster and create `.pebbi-build/state.json` from [the template](build-state.template.json) only if no ledger exists. On continuation, preserve the existing ledger and revalidate its evidence; never reset completed work by copying the template over it. This ledger is local execution state, not product runtime storage. Each requirement needs implementation paths, tests, evidence and a status. Do not mark a requirement verified because a child says so or because its source file exists.
 
 Use a dependency-aware work queue, not a calendar roadmap. Resolve shared contract shapes first; assign bounded, disjoint subsystem ownership next. Implement vertical user journeys fully, including denied permissions, network failure, cancellation and focus restoration. Keep the whole product in scope throughout. Do not present numbered rollout stages, time estimates, or requests for approval of minor design choices.
 

@@ -85,7 +85,7 @@ For an optional limitation in an otherwise satisfied result, describe the limita
 | `reviewing` | Review your words | Destination: {appName} — {fieldLabel} |
 | `inserting` | Inserting text | Checking the selected field |
 | `completed` | Text inserted | Inserted into {appName} — {fieldLabel} |
-| `cancelled` | Dictation cancelled | Nothing else will be inserted. Open saved text if available. |
+| `cancelled` | Dictation cancelled | No new insertion will start. Check the insertion result below; retained text is available according to your privacy settings. |
 | `failed` | Dictation could not finish | Your recognized text is still available. |
 
 Copy-only action receipt: **“Copied to clipboard. Not inserted or sent.”** A direct-insertion path without positive confirmation must say **“Insertion could not be confirmed. Check the field before trying again.”** It cannot show `completed` as verified insertion.
@@ -123,7 +123,9 @@ Always pair ambiguous “Needs attention” with the actual cause. A routine blo
 
 **Stale preview:** “This action changed after you reviewed it. Check the new version before allowing it.”
 
-**Ambiguous voice:** “Do you mean {proposalA} or {proposalB}? Nothing has started.”
+**Voice authority:** Speech may select low-risk work or open review, never approve a protected effect. Even an unambiguous “yes” receives: “Review this action, then use Allow once to continue.” Label the actual native control (for example, Send once) when it differs. Pointer, keyboard and VoiceOver activation use the same exact-preview authority; no voice-only path bypasses it.
+
+**Ambiguous task selection:** “Do you mean {proposalA} or {proposalB}? I have not selected a task.” Do not claim nothing happened to unrelated or already dispatched work.
 
 ### High-risk action
 
@@ -143,7 +145,7 @@ Always pair ambiguous “Needs attention” with the actual cause. A routine blo
 
 **Body:** “This runs with your macOS user permissions. Pebbi's workspace rules are not an OS sandbox; code may access other files or the network. Review the full script, inputs, arguments and limits before allowing this run.”
 
-**Buttons:** Allow this run / Keep file only. A fresh `allowOnce` is required for each exact script version and execution intent. Never imply a model-generated script is trusted just because Pebbi wrote it.
+**Buttons:** Allow this run / Keep file only. A fresh native `allowOnce` is required for the reviewed immutable script artifact bytes and execution inputs. The internal `scriptArtifactId`/`expectedSha256` binding is verification metadata, not a user-facing script-version placeholder. Never imply a model-generated script is trusted just because Pebbi wrote it.
 
 ### Foreground takeover
 
@@ -184,7 +186,13 @@ Avoid guarantees that every secret can be detected. When uncertain, ask for user
 
 - Review heading: **Your words, ready to check.**
 - Insert button: **Insert into {appName}**.
-- Focus changed: **“The active field changed. Your text has not been inserted. Select the intended field, then try again.”**
+- Focus changed before dispatch: **“The active field changed. Your text has not been inserted. Select the intended field, then try again.”** Use this only when no insertion was admitted; afterward use the receipt-specific copy below.
+- Cancel before dispatch: **“Dictation cancelled before insertion. The target was not changed.”**
+- Cancel after dispatch, reconciliation pending: **“Dictation stopped. Checking whether the text was inserted. Do not insert it again yet.”**
+- Cancelled, verified inserted: **“The text was inserted before dictation stopped. No further insertion will start. Any later edits have been left alone.”**
+- Cancelled, verified unchanged: **“Dictation stopped. The insertion did not change the target.”** Require authoritative evidence; elapsed time or an unreadable field is not proof.
+- Cancelled, unknown outcome: **“Dictation stopped, but insertion could not be confirmed. Check the target before trying again. Pebbi has not undone or repeated the insertion.”**
+- Dictation replacing voice capture: **“Voice is using the microphone. Pause it and start dictation? Your task will keep its current state.”** Buttons: Pause voice and dictate / Keep voice.
 - Secure field: **“Pebbi cannot dictate into a secure field. Enter this yourself.”**
 - Terminal preview: **“Line breaks were removed so this text cannot submit a command by itself. Review it before inserting. Pebbi will not press Return.”**
 - Clipboard option: **“Copy instead? This replaces your current clipboard. Copying does not insert or send the text.”**
@@ -198,10 +206,10 @@ Avoid guarantees that every secret can be detected. When uncertain, ask for user
 
 | Context | Copy/actions |
 | --- | --- |
-| Suggestions opt-in | Let Pebbi look for useful next jobs in the sources you choose. Research is read-only. Nothing runs until you approve. |
+| Suggestions opt-in | Let Pebbi look for useful next jobs in the sources you choose. Research is read-only. Choosing a suggestion starts a task; protected actions still need their own review and native approval. |
 | Source lookback | Looks at available work from the last {lookbackHours} hours in {sourceLabels}. |
 | Proposal | {proposalTitle}; Why this may help; Sources; Pebbi; Expected result; Required access |
-| Proposal controls | Approve / Adjust / Skip / View sources |
+| Proposal controls | Approve / Adjust / Skip / View sources. Approve selects this task; it does not authorize its protected actions. |
 | No proposal | No useful suggestion is ready. Your sources have not been changed. |
 | Missing source | Suggestions could not read {sourceLabel}. Reconnect it or continue with the remaining selected sources. |
 | Approved busy task | Added to {pebbiName}'s queue with its sources. |
@@ -255,7 +263,7 @@ The following copy moments are required in addition to shared state labels. Use 
 | PB-007 | {pebbiName} is listening. | Voice unavailable. / View connection / Use available typed features |
 | PB-008 | Screen context: {scopeLabel}. | The selection changed. / Choose again |
 | PB-009 | Step {stepNumber}: {instruction}. | This control moved. / Check the current screen / Continue manually |
-| PB-010 | Review before inserting. | The active field changed. Nothing was inserted. / Choose destination |
+| PB-010 | Review before inserting. | Before dispatch: The active field changed. Nothing was inserted. / Choose destination. After dispatch: show the verified or unknown insertion receipt above. |
 | PB-011 | {pebbiName} was saved. | This Pebbi could not be saved. Your edits are still here. / Retry |
 | PB-012 | Mark as unread / Jump to latest | This saved conversation cannot be found. / Start a fresh conversation |
 | PB-013 | Memory saved for {scopeLabel}. | This conflicts with a saved fact. / Review both |

@@ -51,6 +51,7 @@
     "docs/engineering/CONNECTIONS.md",
     "docs/engineering/DATA-MODEL.md",
     "docs/engineering/DECISIONS.md",
+    "docs/engineering/REVIEW-RESOLUTIONS.md",
     "docs/engineering/NATIVE-MACOS.md",
     "docs/engineering/SECURITY.md",
     "docs/engineering/TECH-STACK.md",
@@ -74,7 +75,8 @@
     "docs/quality/coverage.json",
     "docs/reference/HEYCLICKY-COVERAGE.md",
     "docs/reference/SOURCES.md",
-    "scripts/validate_docs.py"
+    "scripts/validate_docs.py",
+    "scripts/validate_contracts.py"
   ],
   "requirementIds": [
     "PB-001",
@@ -121,6 +123,7 @@
   "restOperations": [
     "GET /healthz",
     "GET /v1/me",
+    "POST /v1/devices/enrollments",
     "POST /v1/devices",
     "DELETE /v1/devices/{deviceId}",
     "GET /v1/capabilities",

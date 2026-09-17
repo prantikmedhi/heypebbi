@@ -48,14 +48,16 @@ Required classes: **automated, manual, live**. Shared journeys: [GJ-01](TESTING.
 <a id="tc-pb-002-p"></a>
 ### TC-PB-002-P — positive
 
-Complete Entra External ID authorization-code + PKCE in the system browser, validate identity, register a device and reload the session from Keychain. Sign-out disconnects protected transports and removes local session material while retaining local user content unless deletion was requested. Revoke another test device and observe its next protected operation rejected. Retained local account data is locked against a different signed-in identity; device/session listing and revocation match server state.
+Complete Entra External ID authorization-code + PKCE in the system browser, validate identity, register a device and reload the session from Keychain. Sign-out disconnects protected transports and removes local session material while retaining local user content unless deletion was requested. Enroll using verified recent interactive authentication, store the once-returned device credential in Keychain, and exercise account bearer plus matching device ID/token on every device-bound route. Revoke another test device and observe its next protected operation rejected; old authentication cannot mint a replacement enrollment. Run [TC-REPAIR-DEVICE](TESTING.md#tc-repair-device), including successful fresh post-revocation re-enrollment and explicit lost-response recovery without secret replay. Retained local account data is locked against a different signed-in identity; device/session listing and revocation match server state.
 
 <a id="tc-pb-002-n"></a>
 ### TC-PB-002-N — negative
 
-Reject mismatched state, nonce, issuer, audience, redirect URI, reused code, expired token and cross-account device IDs. A cancelled browser sign-in is not a connected account. A signed-out user cannot spend quota or access account data using cached authorization; account switching does not mix local histories. Sign-out is not deletion, and another account cannot browse retained private data or inherit its grants.
+Reject mismatched state, nonce, issuer, audience, redirect URI, reused code, expired token and cross-account device IDs. A stolen valid bearer with a guessed/changed device ID, absent or mismatched device credential, revoked credentials, stale enrollment authentication or refreshed-token issue time grants no device-bound admission or audio session minting. No changed installationId bypasses `enrollmentNotBefore`; equal/older authentication time is rejected. A cancelled browser sign-in is not a connected account. A signed-out user cannot spend quota or access account data using cached authorization; account switching does not mix local histories. Sign-out is not deletion, and another account cannot browse retained private data or inherit its grants.
 
 **Required gate/evidence:** Capture redacted auth decisions and server revocation readback. Real tenant/client/redirect and two test sessions are required for LG-IDENTITY; fixture auth cannot clear it.
+
+**Mandatory repair fixtures:** [TC-REPAIR-DEVICE](TESTING.md#tc-repair-device). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-003"></a>
 ## PB-003 — Permission onboarding and denied/revoked recovery
@@ -133,14 +135,16 @@ Required classes: **automated, manual, live, hardware**. Shared journeys: [GJ-02
 <a id="tc-pb-007-p"></a>
 ### TC-PB-007-P — positive
 
-An explicit start opens the selected gpt-realtime-2.1 session and maps idle, connecting, listening, thinking and speaking to visible and accessible status. The user can speak, receive audible output, interrupt playback and continue. A typed equivalent is available and transcript persistence follows the selected privacy policy. Stopping speech does not cancel an independently running task. Typed users can invoke the same tools and approval flows; no-audio or muted output remains readable, and every work handoff exposes a task reference.
+An explicit start opens the selected gpt-realtime-2.1 session and maps idle, connecting, listening, thinking and speaking to visible and accessible status. The user can speak, receive audible output, interrupt playback and continue. A typed equivalent is available and transcript persistence follows the selected privacy policy. Stopping speech does not cancel an independently running task. Exercise [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner): ongoing voice and a reasoning task make independent progress, use distinct reservations/receipts, and never confuse real source-task provenance with the audio wire owner. Typed users can invoke the same tools and approval flows; no-audio or muted output remains readable, and every work handoff exposes a task reference.
 
 <a id="tc-pb-007-n"></a>
 ### TC-PB-007-N — negative
 
-Inject unsupported deployment, disconnect, duplicate turn events and user interruption. Stop old playback and reject stale audio; never play a prior turn after a new one starts. Show unavailable/failed rather than synthetic success. No silent model substitution or unsolicited microphone start is allowed. No spontaneous always-listening restart is allowed; incomplete transcript/response is labeled partial rather than silently completed.
+Inject unsupported deployment, disconnect, duplicate turn events and user interruption. Stop old playback and reject stale audio; never play a prior turn after a new one starts. Show unavailable/failed rather than synthetic success. No silent model substitution or unsolicited microphone start is allowed. Run [TC-REPAIR-MESSAGE-BYTES](TESTING.md#tc-repair-message-bytes) against multibyte/escaped/fragmented transcript and context messages; serialized UTF-8 caps include the envelope and must never silently truncate a final utterance. Audio retains its tighter message/decoded-byte limits. No spontaneous always-listening restart is allowed; incomplete transcript/response is labeled partial rather than silently completed.
 
 **Required gate/evidence:** LG-VOICE is BLOCKED pending the user-deferred Azure realtime input; test real bidirectional audio on hardware plus FI-PROVIDER and FI-VOICE. Typed Astra success cannot satisfy voice.
+
+**Mandatory repair fixtures:** [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner), [TC-REPAIR-MESSAGE-BYTES](TESTING.md#tc-repair-message-bytes), [TC-REPAIR-NATIVE-APPROVAL](TESTING.md#tc-repair-native-approval). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-008"></a>
 ## PB-008 — Explicit screen capture scope and screen understanding
@@ -184,14 +188,16 @@ Required classes: **automated, manual, live, hardware**. Shared journeys: [GJ-03
 <a id="tc-pb-010-p"></a>
 ### TC-PB-010-P — positive
 
-Start dictation deliberately with a selected input device; stream through gpt-live-transcribe into reviewing text, permit correction and cancel, then insert only after revalidating the original app, field and secure-input status. One confirmed insertion yields one completed transcript and no duplicated characters. Test attachment-free dictation with language preference and explicitly edited personal dictionary; review-first is default. User-enabled direct insertion is limited to revalidated nonsensitive fields. Test terminal/shell destinations with line breaks collapsed and a mandatory preview; never press Return to submit or execute.
+Start dictation deliberately with a selected input device; stream through gpt-live-transcribe into reviewing text, permit correction and cancel, then insert only after revalidating the original app, field and secure-input status. One confirmed insertion yields one completed transcript and no duplicated characters. Test standalone dictation while the Pebbi’s agent task runs or waits for approval/connection, without surrogate agent-task queue admission; explicitly hand off a single microphone lease from voice if needed. Test attachment-free dictation with language preference and explicitly edited personal dictionary; review-first is default. User-enabled direct insertion is limited to revalidated nonsensitive fields. Test terminal/shell destinations with line breaks collapsed and a mandatory preview; never press Return to submit or execute.
 
 <a id="tc-pb-010-n"></a>
 ### TC-PB-010-N — negative
 
-Switch focus, close the field, enable secure input, deny Accessibility, unplug the microphone, interrupt the network or replay final transcript events. Preserve recoverable text for review without inserting elsewhere. Cancel leaves the target unchanged. A pasteboard fallback is disclosed and does not silently overwrite a changed clipboard. Punctuation cleanup cannot invent meaning; a copied transcript is not an inserted transcript, and a no-final provider close is failed, not an empty success.
+Switch focus, close the field, enable secure input, deny Accessibility, unplug the microphone, interrupt the network or replay final transcript events. Preserve recoverable text for review without inserting elsewhere. Cancel before insertion dispatch leaves the target unchanged. After an insertion is admitted, cancellation stops further work and reconciles that one effect; retain inserted/unchanged/unknown outcome in the insertion receipt alongside the canonical lifecycle state. Do not automatically undo over concurrent user edits, insert again or claim unchanged/success without evidence. Run all [TC-REPAIR-DICTATION-CANCEL](TESTING.md#tc-repair-dictation-cancel) barriers, including target acceptance before readback and restart with uncertainty. A pasteboard fallback is disclosed and does not silently overwrite a changed clipboard. Punctuation cleanup cannot invent meaning; a copied transcript is not an inserted transcript, and a no-final provider close is failed, not an empty success.
 
 **Required gate/evidence:** LG-DICTATION is BLOCKED pending the user-deferred deployment. Verify real transcription and app insertion separately with FI-FOCUS, FI-AUDIO and FI-DUPLICATE, including a native text field and supported browser editor.
+
+**Mandatory repair fixtures:** [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner), [TC-REPAIR-MESSAGE-BYTES](TESTING.md#tc-repair-message-bytes), [TC-REPAIR-DICTATION-CANCEL](TESTING.md#tc-repair-dictation-cancel). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-011"></a>
 ## PB-011 — Persistent Pebbi creation, editing and appearance
@@ -240,9 +246,11 @@ Inspect each saved memory with provenance and scope, edit it, forget it and relo
 <a id="tc-pb-013-n"></a>
 ### TC-PB-013-N — negative
 
-Inject contradictory/stale memory, cross-Pebbi records and malicious memory instructions. The current explicit instruction and scoped authorization win; forgotten items are not resurrected from summaries, caches or queued context. If an in-flight provider request already received content, disclose that it cannot be recalled and invalidate subsequent use. Sensitive inferences/secrets are not saved; conflicts ask which fact to retain, and deleted/unavailable source references are not silently fabricated.
+Inject contradictory/stale memory, cross-Pebbi records and malicious memory instructions. The current explicit instruction and scoped authorization win; forgotten items are not resurrected from summaries, caches or queued context. If an in-flight provider request already received content, disclose that it cannot be recalled and invalidate subsequent use. Run [TC-REPAIR-TOKEN-BUDGET](TESTING.md#tc-repair-token-budget): missing/null/unusable delivered budgets fail readiness closed, changed budgets re-estimate before dispatch, and provider context-limit recovery preserves instructions, citations, approvals and unresolved receipts instead of silently dropping them. Sensitive inferences/secrets are not saved; conflicts ask which fact to retain, and deleted/unavailable source references are not silently fabricated.
 
 **Required gate/evidence:** Run FI-MEMORY and LG-AI using synthetic canaries. Inspect actual prompt construction and provider requests, not only a friendly model answer saying it forgot.
+
+**Mandatory repair fixtures:** [TC-REPAIR-TOKEN-BUDGET](TESTING.md#tc-repair-token-budget). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-014"></a>
 ## PB-014 — Attachments, whole-document reading and previews
@@ -261,6 +269,8 @@ Corrupt, encrypted, misleading-extension, oversized, symlinked or malicious docu
 
 **Required gate/evidence:** Use multi-page fixtures with first/middle/final canaries, Unicode and scanned pages; LG-AI verifies actual document-grounded reasoning. Compare extraction manifest with the complete file, not a preview thumbnail.
 
+**Mandatory repair fixtures:** [TC-REPAIR-ARTIFACT](TESTING.md#tc-repair-artifact). Each linked assertion is required in addition to the P/N cases above.
+
 <a id="pb-015"></a>
 ## PB-015 — Agent task execution and truthful live progress
 
@@ -278,6 +288,8 @@ Duplicate/out-of-order SSE events, provider hallucinated receipts, dropped tool 
 
 **Required gate/evidence:** Correlate UI, task-local sequence journal, actual tool readback and output hashes; LG-AI plus FI-NETWORK, FI-DUPLICATE and FI-CRASH are mandatory.
 
+**Mandatory repair fixtures:** [TC-REPAIR-ARTIFACT](TESTING.md#tc-repair-artifact), [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner), [TC-REPAIR-TOKEN-BUDGET](TESTING.md#tc-repair-token-budget). Each linked assertion is required in addition to the P/N cases above.
+
 <a id="pb-016"></a>
 ## PB-016 — Concurrent Pebbis, queues and race-free follow-ups
 
@@ -286,7 +298,7 @@ Required classes: **automated, manual, live**. Shared journeys: [GJ-05](TESTING.
 <a id="tc-pb-016-p"></a>
 ### TC-PB-016-P — positive
 
-Run independent tasks for two Pebbis concurrently while serializing conflicting work on the same resource. Display bounded queue position and reason; a follow-up is bound to an explicit task/conversation and queued or applied only at a safe boundary. Completed events return to the correct owner. Assert one active attempt per Pebbi; a follow-up racing startup/completion is included exactly once or becomes a visible successor. Reorder queued work transactionally; preserve source-carrying suggestion context and explicit task destination.
+Run independent tasks for two Pebbis concurrently while serializing conflicting work on the same resource. Display bounded queue position and reason; a follow-up is bound to an explicit task/conversation and queued or applied only at a safe boundary. Completed events return to the correct owner. Assert one active agent-task attempt per Pebbi, with independent voice/dictation audio ownership outside the serial task slot; a follow-up racing startup/completion is included exactly once or becomes a visible successor. Reorder queued work transactionally; preserve source-carrying suggestion context and explicit task destination.
 
 <a id="tc-pb-016-n"></a>
 ### TC-PB-016-N — negative
@@ -294,6 +306,8 @@ Run independent tasks for two Pebbis concurrently while serializing conflicting 
 Saturate queues, interleave follow-ups, cancel a queued task and replay an old completion. No queue grows without bound, no cross-Pebbi memory or artifact leakage occurs, and no exclusive resource is held by two writers. Queue overflow is explicit and does not silently discard accepted work. Ambiguous “retry it” or duplicate-name routing asks; archived Pebbis require reassign/unarchive. A follow-up that changes a preview invalidates its old approval before dispatch.
 
 **Required gate/evidence:** Run FI-QUEUE with deterministic scheduling and a live controlled parallel task; assert event ownership, bounded concurrency, fairness and resource lease release after crash.
+
+**Mandatory repair fixtures:** [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-017"></a>
 ## PB-017 — Approval, stop, cancellation and recovery
@@ -303,14 +317,16 @@ Required classes: **automated, manual, live, hardware**. Shared journeys: [GJ-05
 <a id="tc-pb-017-p"></a>
 ### TC-PB-017-P — positive
 
-Preview exact target/action/payload before a protected effect; bind allowOnce, allowForScope or deny to the displayed scope and expiry. Stop moves running work through cancelling to cancelled after quiescence. Recovery marks active attempts interrupted and reconciles uncertain effects before offering a new attempt. Inspect and revoke existing grants; keep Stop reachable during streaming, approval waits and heavy load. Test cancellation racing dispatch/completion and denial of an essential action yielding input/replan or explicit cancellation.
+Preview exact target/action/payload before a protected effect; bind allowOnce, allowForScope or deny to the displayed scope and expiry. Protected-effect allows require deliberate accessible native approval-control activation by pointer, keyboard, VoiceOver or equivalent assistive interaction; task/suggestion selection by speech is not that decision. Stop moves running work through cancelling to cancelled after quiescence. Recovery marks active attempts interrupted and reconciles uncertain effects before offering a new attempt. Inspect and revoke existing grants; keep Stop reachable during streaming, approval waits and heavy load. Test cancellation racing dispatch/completion and denial of an essential action yielding input/replan or explicit cancellation.
 
 <a id="tc-pb-017-n"></a>
 ### TC-PB-017-N — negative
 
-Replay, expire or change an approval payload; reject it. Payment, credentials, destructive bulk, publishing and outbound messages always require fresh approval. Prompt injection, local allowlists and one-prompt build autonomy cannot disable these checks. Speech interruption alone does not cancel tasks and cancellation never promises reversal of a completed effect. Ambiguous spoken approval stays waiting; late Allow after cancellation cannot resurrect the task, and repeated unchanged proposals after Deny cannot form a nag/bypass loop.
+Replay, expire or change an approval payload; reject it. Payment, credentials, destructive bulk, publishing and outbound messages always require fresh approval. Prompt injection, local allowlists and one-prompt build autonomy cannot disable these checks. Speech interruption alone does not cancel tasks and cancellation never promises reversal of a completed effect. Unambiguous spoken “yes,” replayed transcripts, typed/model-asserted consent and ambiguous spoken approval all leave protected effects waiting for native approval with zero dispatch; late Allow after cancellation cannot resurrect the task, and repeated unchanged proposals after Deny cannot form a nag/bypass loop.
 
 **Required gate/evidence:** Run FI-APPROVAL and FI-DUPLICATE using a controlled recipient/resource; verify both server and native boundaries. Hardware takeover permission must be tested separately from application approval.
+
+**Mandatory repair fixtures:** [TC-REPAIR-ARTIFACT](TESTING.md#tc-repair-artifact), [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner), [TC-REPAIR-NATIVE-APPROVAL](TESTING.md#tc-repair-native-approval), [TC-REPAIR-DICTATION-CANCEL](TESTING.md#tc-repair-dictation-cancel). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-018"></a>
 ## PB-018 — Native desktop control and takeover boundaries
@@ -371,14 +387,16 @@ Required classes: **automated, manual, live, hardware**. Shared journeys: [GJ-04
 <a id="tc-pb-021-p"></a>
 ### TC-PB-021-P — positive
 
-Create and preview an artifact inside the selected Pebbi workspace, show its final path and verify actual bytes. Run code only through a scoped, disclosed tool policy with working directory, timeout, output limits and child-process lifecycle control. Access beyond the workspace requires a new bounded user grant. Preview destination/diff before overwrite, preserve the prior file until atomic commit, show command exit status and distinguish generated code from actually executed/tested output. Missing executable is a recoverable prerequisite failure.
+From an empty selected Pebbi workspace, stage explicitly structured authored UTF-8 text with `stageTextArtifact`, then finalize and use its native immutable ID/byte count/digest for a separately authorized file creation. Staging alone changes no user target file and ordinary assistant prose is not a file. Preview the created artifact, show its final path and verify actual bytes. Execute a staged harmless script only after actual same-account/workspace `scriptArtifactId`/`expectedSha256` verification and fresh native review of the script bytes and execution inputs; an invented ID or `scriptVersionId` cannot supply authority. Run code only through a scoped, disclosed tool policy with working directory, timeout, output limits and child-process lifecycle control. Access beyond the workspace requires a new bounded user grant. Preview destination/diff before overwrite, preserve the prior file until atomic commit, show command exit status and distinguish generated code from actually executed/tested output. Missing executable is a recoverable prerequisite failure.
 
 <a id="tc-pb-021-n"></a>
 ### TC-PB-021-N — negative
 
-Path traversal, symlink escape, alias escape, home-directory expansion, malicious filenames, environment-secret access and unapproved network/process execution are rejected. An allowlist is not claimed as an OS sandbox. Stop/Quit terminates owned execution; output flooding cannot freeze Home. No automatic package install, paid resource scaling or environment repair may expand scope/spend without authorization.
+Path traversal, symlink escape, alias escape, home-directory expansion, malicious filenames, environment-secret access and unapproved network/process execution are rejected. Run [TC-REPAIR-ARTIFACT](TESTING.md#tc-repair-artifact) with Unicode byte fidelity, duplicate/changed/gapped chunks, cross-scope drafts, chunk/aggregate/envelope limits, immutable finalization and private cleanup. No private draft/artifact text or hash enters the metadata-only journal; only explicit Save permits durable private output. An allowlist is not claimed as an OS sandbox. Stop/Quit terminates owned execution; output flooding cannot freeze Home. No automatic package install, paid resource scaling or environment repair may expand scope/spend without authorization.
 
 **Required gate/evidence:** Use test-owned workspaces and OS process/file observations; FI-WORKSPACE and FI-QUEUE apply. Exercise cooperative owned-process termination, and reject work requiring guaranteed adversarial-code confinement until a reviewed OS-isolation design exists; process groups/allowlists alone cannot guarantee it. Live reasoning must not convert suggested commands into silently authorized execution.
+
+**Mandatory repair fixtures:** [TC-REPAIR-ARTIFACT](TESTING.md#tc-repair-artifact). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-022"></a>
 ## PB-022 — Built-in connection catalog and OAuth lifecycle
@@ -422,7 +440,7 @@ Required classes: **automated, manual, live**. Shared journeys: [GJ-07](TESTING.
 <a id="tc-pb-024-p"></a>
 ### TC-PB-024-P — positive
 
-Generate personalized Suggestions only from granted readable context and show reason, source context and proposed scope. Dismiss, snooze or approve a suggestion. Approval creates one visible task; task-level protected effects still request fresh approval. Reopening Suggestions does not execute anything. Test the default disclosed 72-hour source lookback, one proposal at a time, named owner/outcome, estimated usage class and explicit Approve, Skip, Adjust, Dismiss. Adjust creates a proposal version; Cancel restores the original; approved busy work retains source snapshots in its queue.
+Generate personalized Suggestions only from granted readable context and show reason, source context and proposed scope. Dismiss, snooze or approve a suggestion. Selecting a low-risk suggestion by native Approve or unambiguous speech creates one visible task; speech may also open its review. This selection creates no protected-effect grant: task-level protected effects still require deliberate accessible native approval against the exact preview. Reopening Suggestions does not execute anything. Test the default disclosed 72-hour source lookback, one proposal at a time, named owner/outcome, estimated usage class and explicit Approve, Skip, Adjust, Dismiss. Adjust creates a proposal version; Cancel restores the original; approved busy work retains source snapshots in its queue.
 
 <a id="tc-pb-024-n"></a>
 ### TC-PB-024-N — negative
@@ -430,6 +448,8 @@ Generate personalized Suggestions only from granted readable context and show re
 Background suggestion computation cannot send messages, write files, charge usage beyond authorized limits or connect a new service. Sensitive/forgotten content is excluded. Duplicate clicks/replayed suggestion events create at most one task; stale proposals must refresh before execution. A skipped proposal or optional rejection reason is not authorization; stale source changes require revalidation before launch.
 
 **Required gate/evidence:** Run deterministic suggestion/action separation and LG-AI on test-owned context; inspect side-effect ledger showing zero writes before approve-to-run.
+
+**Mandatory repair fixtures:** [TC-REPAIR-NATIVE-APPROVAL](TESTING.md#tc-repair-native-approval). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-025"></a>
 ## PB-025 — Routines, local scheduling, wake and retry policy
@@ -482,6 +502,8 @@ Absent/unapproved price IDs disable paid Checkout. Client-forged usage, concurre
 
 **Required gate/evidence:** LG-BILLING needs approved operator configuration, Stripe test-mode lifecycle evidence and explicitly authorized limited production verification; FI-QUOTA and FI-DUPLICATE cover exact ledger effects. Use integer minor units and ISO currency.
 
+**Mandatory repair fixtures:** [TC-REPAIR-DEVICE](TESTING.md#tc-repair-device), [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner). Each linked assertion is required in addition to the P/N cases above.
+
 <a id="pb-028"></a>
 ## PB-028 — Quota limits and graceful provider unavailability
 
@@ -495,9 +517,11 @@ When quota is exhausted or a selected provider is unavailable, show the affected
 <a id="tc-pb-028-n"></a>
 ### TC-PB-028-N — negative
 
-Inject 429, 401, unsupported-operation, deployment-not-found, timeout and midstream failure. No unapproved provider fallback, infinite retry, negative balance or fake response occurs. An unauthenticated/unentitled request never reaches a paid provider; a disconnected service cannot display ready.
+Inject 429, 401, unsupported-operation, deployment-not-found, timeout and midstream failure. No unapproved provider fallback, infinite retry, negative balance or fake response occurs. An unauthenticated/unentitled request never reaches a paid provider; a disconnected service cannot display ready. A missing/unusable `tokenBudget` cannot be guessed from a model name or hidden backend configuration; run TC-REPAIR-TOKEN-BUDGET and TC-REPAIR-MESSAGE-BYTES for explicit preserved-review failures without fake success.
 
 **Required gate/evidence:** Run FI-PROVIDER and FI-QUOTA; all three selected model roles need live evidence under LG-AI, LG-VOICE and LG-DICTATION. Known user-deferred voice failures remain BLOCKED, not waived.
+
+**Mandatory repair fixtures:** [TC-REPAIR-DEVICE](TESTING.md#tc-repair-device), [TC-REPAIR-MESSAGE-BYTES](TESTING.md#tc-repair-message-bytes), [TC-REPAIR-TOKEN-BUDGET](TESTING.md#tc-repair-token-budget). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-029"></a>
 ## PB-029 — Preferences, voice/device choice and shortcut recording
@@ -550,6 +574,8 @@ Canary secrets, secure fields, excluded windows and raw audio/screenshots never 
 
 **Required gate/evidence:** LG-PRIVACY combines network payload inspection, local/server retention sweeps, Keychain review and real permission revocation. FI-PRIVACY verifies logs, exports, caches and interrupted deletion.
 
+**Mandatory repair fixtures:** [TC-REPAIR-DEVICE](TESTING.md#tc-repair-device), [TC-REPAIR-ARTIFACT](TESTING.md#tc-repair-artifact). Each linked assertion is required in addition to the P/N cases above.
+
 <a id="pb-032"></a>
 ## PB-032 — VoiceOver, keyboard, contrast and reduced motion
 
@@ -566,6 +592,8 @@ Complete all essential journeys using keyboard only and VoiceOver with meaningfu
 Enable Reduce Motion, Reduce Transparency and Increase Contrast independently and together. No task/control disappears, large spring/parallax motion persists, focus trap occurs or state relies only on color/animation/audio. Rapidly reverse perch/sheet motion: input remains usable and transition starts from the presentation state without a jump. The mascot is never the sole state signal; disabled/error/selected states must remain distinguishable under all accessibility settings.
 
 **Required gate/evidence:** LG-ACCESSIBILITY requires real VoiceOver plus contrast measurements and native accessibility-tree checks across light/dark, disabled/error/loading states. Screenshots alone cannot pass it.
+
+**Mandatory repair fixtures:** [TC-REPAIR-NATIVE-APPROVAL](TESTING.md#tc-repair-native-approval). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-033"></a>
 ## PB-033 — Multi-display, notchless, Spaces and scaling behavior
@@ -601,6 +629,8 @@ Bluetooth profile switching, unplug/replug, call takeover, device permission rev
 
 **Required gate/evidence:** LG-AUDIO needs real devices and working live voice/dictation providers; transport-only and prerecorded fixture tests remain useful but do not clear the blocked live audio gate. FI-AUDIO and FI-VOICE apply.
 
+**Mandatory repair fixtures:** [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner). Each linked assertion is required in addition to the P/N cases above.
+
 <a id="pb-035"></a>
 ## PB-035 — Offline, sleep/wake and app-crash recovery
 
@@ -617,6 +647,8 @@ Lose network, sleep and kill the app at controlled task boundaries. Persist inte
 No automatic replay of an uncertain payment/message/file overwrite occurs. Expired grants or stale provider sessions are not resumed as valid. Wake does not start covert capture, flood routine runs or hide failed/partial work. A corrupt database enters a safe recovery path without replacing it with an empty success state.
 
 **Required gate/evidence:** Run FI-NETWORK, FI-SLEEP, FI-CRASH and FI-DUPLICATE on physical hosts with controlled external effect readback and GRDB migration/journal assertions.
+
+**Mandatory repair fixtures:** [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner), [TC-REPAIR-DICTATION-CANCEL](TESTING.md#tc-repair-dictation-cancel). Each linked assertion is required in addition to the P/N cases above.
 
 <a id="pb-036"></a>
 ## PB-036 — Secure updates, signing and release rollback
@@ -669,6 +701,8 @@ Memory pressure, oversized attachments, slow consumer, stalled stream and output
 
 **Required gate/evidence:** LG-PERFORMANCE requires Instruments/energy evidence on Intel and Apple Silicon and actual selected providers for network-dependent latency. Fixtures establish algorithmic limits only; FI-MEMORY-PRESSURE and FI-QUEUE apply.
 
+**Mandatory repair fixtures:** [TC-REPAIR-MESSAGE-BYTES](TESTING.md#tc-repair-message-bytes), [TC-REPAIR-TOKEN-BUDGET](TESTING.md#tc-repair-token-budget). Each linked assertion is required in addition to the P/N cases above.
+
 <a id="pb-039"></a>
 ## PB-039 — Support, privacy, account and download web surfaces
 
@@ -694,7 +728,7 @@ Required classes: **automated, manual, live, hardware**. Shared journeys: [GJ-01
 <a id="tc-pb-040-p"></a>
 ### TC-PB-040-P — positive
 
-For the exact release candidate, every PB-001 through PB-040 has linked positive and negative evidence, all required golden journeys and failure injections are run, and launch-gate owners sign a manifest tying results to app/backend/extension/configuration versions. Re-run invalidated gates after material changes.
+For the exact release candidate, every PB-001 through PB-040 has linked positive and negative evidence, all required golden journeys and failure injections are run, and launch-gate owners sign a manifest tying results to app/backend/extension/configuration versions. Re-run invalidated gates after material changes. Include every shared integration-repair fixture linked in coverage, with real boundary observations rather than schema-only checks. A single all-gates-passed decision authorizes the complete product after isolated pre-release verification; continuous monitoring and withdrawal/corrective-release controls do not require staged public-cohort promotion.
 
 <a id="tc-pb-040-n"></a>
 ### TC-PB-040-N — negative
@@ -702,3 +736,5 @@ For the exact release candidate, every PB-001 through PB-040 has linked positive
 Any missing evidence, live input, required architecture/device, security review or rollback rehearsal keeps release BLOCKED. A docs validator, catalog metadata, fixture demo, audited Astra response or successful build cannot substitute for complete product acceptance. No requirement is dropped to claim completion.
 
 **Required gate/evidence:** Use every LG gate, the exact coverage index and RELEASE.md evidence rules. This repository currently provides specifications only; no application test or launch gate is asserted to have passed.
+
+**Mandatory repair fixtures:** [TC-REPAIR-DEVICE](TESTING.md#tc-repair-device), [TC-REPAIR-ARTIFACT](TESTING.md#tc-repair-artifact), [TC-REPAIR-AUDIO-OWNER](TESTING.md#tc-repair-audio-owner), [TC-REPAIR-MESSAGE-BYTES](TESTING.md#tc-repair-message-bytes), [TC-REPAIR-TOKEN-BUDGET](TESTING.md#tc-repair-token-budget), [TC-REPAIR-NATIVE-APPROVAL](TESTING.md#tc-repair-native-approval), [TC-REPAIR-DICTATION-CANCEL](TESTING.md#tc-repair-dictation-cancel). Each linked assertion is required in addition to the P/N cases above.

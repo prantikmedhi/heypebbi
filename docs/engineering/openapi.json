@@ -165,11 +165,11 @@
         }
       }
     },
-    "/v1/devices": {
+    "/v1/devices/enrollments": {
       "post": {
-        "operationId": "registerDevice",
-        "summary": "Register or return the same account installation; cannot resurrect a revoked session without recent sign-in",
-        "description": "Register or return the same account installation; cannot resurrect a revoked session without recent sign-in.",
+        "operationId": "createDeviceEnrollment",
+        "summary": "Create a one-use account/installation-bound OIDC authorization nonce challenge",
+        "description": "Account API access-token bearer required, no device headers or existing device needed. Accept schemaVersion/installationId; return schemaVersion/enrollmentId/authorizationNonce/expiresAt once. Server persists only account/installation binding, SHA-256 of ASCII nonce, createdAt, 300-second expiry and consumed status (EnrollmentChallengeRecord). No device authority is granted. At most one active challenge per account/installation, five per account; creation attempts capped at 5/account and 20/IP per rolling 300 seconds. No existing challenge invalidation; cap is 429 rateLimited with Retry-After. Required idempotency key; committed replay is 409 enrollmentConsumed without nonce, changed request is 409 idempotencyConflict. Lost 201 waits for expiry then a new key/challenge. Missing verified Entra auth_time/account mapping is 503 enrollmentUnavailable. See API.md.",
         "parameters": [
           {
             "$ref": "#/components/parameters/RequestId"
@@ -180,7 +180,104 @@
         ],
         "responses": {
           "201": {
-            "description": "Successful response",
+            "description": "One-return authorization nonce and enrollmentId, expiry at server createdAt + 300 seconds; Cache-Control no-store and no response-body replay cache.",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateEnrollmentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEnrollmentRequest"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "appBearer": []
+          }
+        ]
+      }
+    },
+    "/v1/devices": {
+      "post": {
+        "operationId": "registerDevice",
+        "summary": "Consume a standard OIDC nonce challenge and fresh native ID-token proof; return a device credential once",
+        "description": "Account API access-token bearer required; no device headers. Body enrollmentId/enrollmentIdToken is scoped enrollment proof, NEVER generic API bearer authentication. Verify ordinary signed native-client-audience ID token against server challenge/account/installation, signed nonce and fresh auth_time; no custom Entra assertion issuer/claims. Required X-Pebbi-Reauth is intent only. Optional replaceDeviceId enables explicitly reviewed same-installation confirmed-credential recovery, including the last device, with atomic old revocation/new issuance and no old-bearer-only shortcut. Committed replay is 409 enrollmentConsumed, never a secret. Full freshness, rates, pending expiry and transaction rules are in API.md.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/RecentAuth"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "New device with single-return deviceToken; no response-body idempotency cache.",
             "headers": {
               "X-Request-Id": {
                 "schema": {
@@ -251,7 +348,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": []
+          }
+        ]
       }
     },
     "/v1/devices/{deviceId}": {
@@ -277,6 +379,9 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -335,7 +440,13 @@
           "504": {
             "$ref": "#/components/responses/Error504"
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/capabilities": {
@@ -349,6 +460,9 @@
           },
           {
             "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -414,7 +528,13 @@
           "504": {
             "$ref": "#/components/responses/Error504"
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/ai/responses": {
@@ -428,6 +548,9 @@
           },
           {
             "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -522,7 +645,13 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/voice/sessions": {
@@ -536,6 +665,9 @@
           },
           {
             "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -611,7 +743,13 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/dictation/sessions": {
@@ -625,6 +763,9 @@
           },
           {
             "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -700,7 +841,13 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/usage/reservations": {
@@ -717,6 +864,9 @@
           },
           {
             "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -792,7 +942,13 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/usage/reservations/{reservationId}/finalize": {
@@ -931,6 +1087,9 @@
               "maxLength": 512
             },
             "description": "Opaque account/filter-bound cursor from nextCursor. Never an access token."
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -996,7 +1155,13 @@
           "504": {
             "$ref": "#/components/responses/Error504"
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/billing/plans": {
@@ -1010,6 +1175,9 @@
           },
           {
             "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -1075,7 +1243,13 @@
           "504": {
             "$ref": "#/components/responses/Error504"
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/billing/checkout": {
@@ -1092,6 +1266,9 @@
           },
           {
             "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -1167,7 +1344,13 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/billing/portal": {
@@ -1184,6 +1367,9 @@
           },
           {
             "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -1259,7 +1445,13 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/billing/webhook": {
@@ -1367,6 +1559,9 @@
           },
           {
             "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -1443,7 +1638,13 @@
             }
           }
         },
-        "x-idempotency-observation": true
+        "x-idempotency-observation": true,
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     },
     "/v1/account": {
@@ -1463,6 +1664,9 @@
           },
           {
             "$ref": "#/components/parameters/RecentAuth"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceToken"
           }
         ],
         "responses": {
@@ -1538,7 +1742,13 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "appBearer": [],
+            "deviceCredential": []
+          }
+        ]
       }
     }
   },
@@ -1548,7 +1758,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "Entra External ID access token",
-        "description": "Validate configured issuer, audience, delegated scope, signature, time, account and device status. ID tokens are not API credentials."
+        "description": "Generic API authentication validates Entra API access-token issuer, API audience, delegated scope, signature, time and account status. ID tokens NEVER satisfy bearer security. Only POST /v1/devices additionally accepts an ordinary native-client-audience ID token in enrollmentIdToken body as scoped nonce-bound fresh enrollment proof. Device-bound routes also require their exact registered device credential. Canonical account key is pinned issuer/tenant plus signed immutable oid and matching tid where provided; reject absent/unconfigured mapping. Pairwise sub stays token/audience-specific metadata, never literal cross-audience equality or email/name matching."
       },
       "meteringBearer": {
         "type": "http",
@@ -1561,6 +1771,12 @@
         "in": "header",
         "name": "Stripe-Signature",
         "description": "Verify signature against raw body and configured webhook secret with timestamp tolerance; not a static API key."
+      },
+      "deviceCredential": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Pebbi-Device-Token",
+        "description": "Opaque backend-issued device credential; AND appBearer in the same security requirement. Lookup by account + X-Pebbi-Device-Id, compare stored SHA-256 digest in constant time and validate confirmation/revocation. Never sufficient alone."
       }
     },
     "schemas": {
@@ -1587,7 +1803,13 @@
           "exportNotReady",
           "payloadTooLarge",
           "unsupportedMediaType",
-          "internalError"
+          "internalError",
+          "deviceCredentialInvalid",
+          "recentAuthenticationRequired",
+          "enrollmentConsumed",
+          "enrollmentUnavailable",
+          "tokenBudgetChanged",
+          "contextLimitExceeded"
         ]
       },
       "Error": {
@@ -1811,6 +2033,24 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 40
+          },
+          "enrollmentId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Server-created challenge bound to API-bearer account and exact installationId; unexpired and consumed once atomically with credential issuance."
+          },
+          "enrollmentIdToken": {
+            "type": "string",
+            "minLength": 32,
+            "maxLength": 16384,
+            "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$",
+            "writeOnly": true,
+            "description": "Ordinary Entra signed native-client-audience ID token from auth-code + PKCE with server authorizationNonce, prompt=login and configured signed auth_time. Body-only enrollment proof, NEVER generic API bearer. Verify signature/iss/aud/time, signed nonce hash, same account as independent API access token via pinned issuer/tenant + immutable signed oid and matching tid where provided, not pairwise sub equality or email/name, challenge installation/expiry, auth_time >= challenge.createdAt, age <= 300 seconds and auth_time strictly after current enrollmentNotBefore. No custom purpose, assertion ID or installation claims. Actual deployment auth_time and cross-audience mapping remain external gates; see API.md."
+          },
+          "replaceDeviceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Optional exact confirmed nonrevoked device of the same account and installation, selected in explicit accessible native recovery review. Requires the same fresh challenged ID-token proof, never another working device or old bearer alone. Server atomically consumes challenge, revokes target/old sessions, advances threshold and creates new pending credential. Proof clears pre-transaction threshold; future enrollment clears advanced threshold. Without this field an active confirmed installation conflicts; an unexpired unconfirmed target cannot be replaced. See API.md for races/lost-response recovery."
           }
         },
         "required": [
@@ -1818,9 +2058,12 @@
           "installationId",
           "name",
           "platform",
-          "appVersion"
+          "appVersion",
+          "enrollmentId",
+          "enrollmentIdToken"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Closed registration/replacement body. Account API access token is separately required in Authorization. No client-supplied nonce, auth_time, account mapping, approval boolean or custom issuer claim object is accepted."
       },
       "RegisterDeviceResponse": {
         "type": "object",
@@ -1831,13 +2074,25 @@
           },
           "device": {
             "$ref": "#/components/schemas/Device"
+          },
+          "deviceToken": {
+            "$ref": "#/components/schemas/DeviceToken"
+          },
+          "deviceTokenConfirmBy": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$",
+            "description": "Server issuance + 300 seconds. First successfully authenticated device-bound REST admission confirms possession before this deadline. Unconfirmed enrollment expires and is revoked; the raw secret cannot be recovered."
           }
         },
         "required": [
           "schemaVersion",
-          "device"
+          "device",
+          "deviceToken",
+          "deviceTokenConfirmBy"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "description": "Single 201 delivery only, never replayed from idempotency cache. Confirmed credential lasts until revocation. Lost delivery requires pending retirement then new challenge/new interactive OIDC proof. Reviewed confirmed same-installation recovery atomically revokes old device and issues a new pending device, not a recoverable old secret."
       },
       "PlanCode": {
         "type": "string",
@@ -2082,6 +2337,17 @@
           },
           "supportsContextInput": {
             "type": "boolean"
+          },
+          "tokenBudget": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TokenBudget"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Required property; null when verified capacity, safe clamps or estimator evidence is missing/stale. Null disallows reasoning ready and screen input; do not substitute zero or infer limits from model name. Audio may be ready with null only under independently verified audio/message limits (not native token budgeting)."
           }
         },
         "required": [
@@ -2094,7 +2360,8 @@
           "audioFormats",
           "voices",
           "verifiedAt",
-          "supportsContextInput"
+          "supportsContextInput",
+          "tokenBudget"
         ],
         "additionalProperties": false,
         "allOf": [
@@ -2142,6 +2409,70 @@
               "properties": {
                 "model": {
                   "const": "gpt-6-astra"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "reasoning"
+                },
+                "state": {
+                  "const": "ready"
+                }
+              },
+              "required": [
+                "role",
+                "state"
+              ]
+            },
+            "then": {
+              "properties": {
+                "tokenBudget": {
+                  "$ref": "#/components/schemas/TokenBudget"
+                },
+                "verifiedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "supportsScreenInput": {
+                  "const": true
+                }
+              },
+              "required": [
+                "supportsScreenInput"
+              ]
+            },
+            "then": {
+              "properties": {
+                "tokenBudget": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/TokenBudget"
+                    },
+                    {
+                      "properties": {
+                        "estimator": {
+                          "properties": {
+                            "maxImageTokens": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 9007199254740991
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2234,7 +2565,8 @@
               },
               "maxFrameBytes": {
                 "type": "integer",
-                "const": 32768
+                "const": 32768,
+                "description": "Maximum RFC 6455 data-frame payload bytes, not total reassembled JSON message bytes. Larger text messages MUST fragment."
               },
               "maxConcurrentReasoning": {
                 "type": "integer",
@@ -2245,6 +2577,18 @@
                 "type": "integer",
                 "minimum": 1,
                 "maximum": 4
+              },
+              "maxMessageBytes": {
+                "type": "integer",
+                "const": 262144
+              },
+              "maxAudioMessageBytes": {
+                "type": "integer",
+                "const": 32768
+              },
+              "maxDecodedAudioBytes": {
+                "type": "integer",
+                "const": 16384
               }
             },
             "required": [
@@ -2254,7 +2598,10 @@
               "sessionTokenLifetimeSeconds",
               "maxFrameBytes",
               "maxConcurrentReasoning",
-              "maxConcurrentAudio"
+              "maxConcurrentAudio",
+              "maxMessageBytes",
+              "maxAudioMessageBytes",
+              "maxDecodedAudioBytes"
             ],
             "additionalProperties": false
           }
@@ -2308,11 +2655,13 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Owner UUID: actual logical taskId for reasoning; audioOperationId for conversation/dictation. Reservation role fixes the owner kind; never reuse one owner ID across incompatible roles."
           },
           "attemptId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual task attemptId for reasoning; audioAttemptId for conversation/dictation, bound to the reservation owner/role."
           },
           "role": {
             "$ref": "#/components/schemas/Role"
@@ -2343,11 +2692,13 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Owner UUID: actual logical taskId for reasoning; audioOperationId for conversation/dictation. Reservation role fixes the owner kind; never reuse one owner ID across incompatible roles."
           },
           "attemptId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual task attemptId for reasoning; audioAttemptId for conversation/dictation, bound to the reservation owner/role."
           },
           "role": {
             "$ref": "#/components/schemas/Role"
@@ -2493,11 +2844,13 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Owner UUID: actual logical taskId for reasoning; audioOperationId for conversation/dictation. Reservation role fixes the owner kind; never reuse one owner ID across incompatible roles."
           },
           "attemptId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual task attemptId for reasoning; audioAttemptId for conversation/dictation, bound to the reservation owner/role."
           },
           "role": {
             "$ref": "#/components/schemas/Role"
@@ -3357,11 +3710,13 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual logical agent task UUID for reasoning; never an audioOperationId. Audio aliases apply only to audio-role reservation/session/event contracts."
           },
           "attemptId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual agent-task attempt UUID for reasoning; never an audioAttemptId."
           },
           "pebbiId": {
             "type": "string",
@@ -3394,7 +3749,13 @@
           "maxOutputTokens": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 32768
+            "maximum": 32768,
+            "description": "Must be <= current tokenBudget.maxOutputTokens AND reservation output ceiling. Schema maximum is a service cap, not provider capacity."
+          },
+          "tokenBudgetId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Exact currently delivered reasoning tokenBudget.budgetId used by native compaction. Mismatch on dispatch returns 409 tokenBudgetChanged before provider work; refresh capability and recompute, never silently reuse old clamps."
           }
         },
         "required": [
@@ -3407,7 +3768,8 @@
           "afterSequence",
           "input",
           "tools",
-          "maxOutputTokens"
+          "maxOutputTokens",
+          "tokenBudgetId"
         ],
         "additionalProperties": false
       },
@@ -3424,7 +3786,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual logical agent task UUID for reasoning; never an audioOperationId. Audio aliases apply only to audio-role reservation/session/event contracts."
           },
           "sequence": {
             "type": "integer",
@@ -3487,7 +3850,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual logical agent task UUID for reasoning; never an audioOperationId. Audio aliases apply only to audio-role reservation/session/event contracts."
           },
           "sequence": {
             "type": "integer",
@@ -3548,7 +3912,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual logical agent task UUID for reasoning; never an audioOperationId. Audio aliases apply only to audio-role reservation/session/event contracts."
           },
           "sequence": {
             "type": "integer",
@@ -3618,7 +3983,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual logical agent task UUID for reasoning; never an audioOperationId. Audio aliases apply only to audio-role reservation/session/event contracts."
           },
           "sequence": {
             "type": "integer",
@@ -3695,7 +4061,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual logical agent task UUID for reasoning; never an audioOperationId. Audio aliases apply only to audio-role reservation/session/event contracts."
           },
           "sequence": {
             "type": "integer",
@@ -3762,7 +4129,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Actual logical agent task UUID for reasoning; never an audioOperationId. Audio aliases apply only to audio-role reservation/session/event contracts."
           },
           "sequence": {
             "type": "integer",
@@ -3843,11 +4211,13 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "attemptId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioAttemptId, NOT an agent attempt FK."
           },
           "pebbiId": {
             "type": "string",
@@ -3860,7 +4230,8 @@
           "afterSequence": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "Durable cursor from native audio_event_receipts for audioOperationId, not agent-task journal cursor; no audio replay."
           },
           "audioFormat": {
             "$ref": "#/components/schemas/AudioFormat"
@@ -3898,11 +4269,13 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "attemptId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioAttemptId, NOT an agent attempt FK."
           },
           "pebbiId": {
             "type": "string",
@@ -3915,7 +4288,8 @@
           "afterSequence": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9007199254740991
+            "maximum": 9007199254740991,
+            "description": "Durable cursor from native audio_event_receipts for audioOperationId, not agent-task journal cursor; no audio replay."
           },
           "audioFormat": {
             "$ref": "#/components/schemas/AudioFormat"
@@ -4108,7 +4482,8 @@
           "type",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ClientAudioAppend": {
         "type": "object",
@@ -4149,7 +4524,8 @@
                 "minLength": 4,
                 "maxLength": 21848,
                 "contentEncoding": "base64",
-                "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+                "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+                "description": "Canonical base64; actual decoded PCM <=16384 bytes, even byte count, 20\u2013100 ms negotiated-rate duration. contentEncoding alone is not a validator; decoder checks required."
               },
               "utteranceId": {
                 "type": "string",
@@ -4172,7 +4548,8 @@
           "type",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 32768
       },
       "ClientAudioCommit": {
         "type": "object",
@@ -4222,7 +4599,8 @@
           "type",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ClientResponseInterrupt": {
         "type": "object",
@@ -4272,7 +4650,8 @@
           "type",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ClientSessionStop": {
         "type": "object",
@@ -4327,7 +4706,8 @@
           "type",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ClientSessionCancel": {
         "type": "object",
@@ -4380,7 +4760,8 @@
           "type",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "AudioClientMessage": {
         "oneOf": [
@@ -4408,7 +4789,8 @@
         ],
         "discriminator": {
           "propertyName": "type"
-        }
+        },
+        "description": "Decoded reassembled JSON message. Also enforce actual UTF-8 serialized bytes (including envelope/whitespace/escaping) <=262144; audio.append/voice.output.audio <=32768 and decoded PCM <=16384. JSON Schema maxLength counts Unicode code points, not bytes. RFC 6455 frames <=32768 payload bytes; continuation reassembly remains bounded."
       },
       "ServerSessionReady": {
         "type": "object",
@@ -4423,7 +4805,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4476,7 +4859,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerAudioAccepted": {
         "type": "object",
@@ -4491,7 +4875,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4538,7 +4923,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerVoiceState": {
         "type": "object",
@@ -4553,7 +4939,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4598,7 +4985,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerVoiceInputTranscript": {
         "type": "object",
@@ -4613,7 +5001,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4644,7 +5033,8 @@
               },
               "text": {
                 "type": "string",
-                "maxLength": 32000
+                "maxLength": 32000,
+                "description": "Unicode code-point ceiling; additionally bound full serialized UTF-8 JSON message to 256 KiB. Encode non-ASCII directly (do not split/truncate code points); never label a shortened final utterance complete."
               },
               "isFinal": {
                 "type": "boolean"
@@ -4668,7 +5058,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerVoiceOutputAudio": {
         "type": "object",
@@ -4683,7 +5074,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4722,7 +5114,8 @@
                 "minLength": 4,
                 "maxLength": 21848,
                 "contentEncoding": "base64",
-                "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+                "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+                "description": "Canonical base64; actual decoded PCM <=16384 bytes, even byte count, 20\u2013100 ms negotiated-rate duration. contentEncoding alone is not a validator; decoder checks required."
               }
             },
             "required": [
@@ -4743,7 +5136,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 32768
       },
       "ServerVoiceOutputText": {
         "type": "object",
@@ -4758,7 +5152,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4789,7 +5184,8 @@
               },
               "text": {
                 "type": "string",
-                "maxLength": 16000
+                "maxLength": 16000,
+                "description": "Unicode code-point ceiling; additionally bound full serialized UTF-8 JSON message to 256 KiB. Encode non-ASCII directly (do not split/truncate code points); never label a shortened final utterance complete."
               },
               "isFinal": {
                 "type": "boolean"
@@ -4813,7 +5209,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerVoiceOutputDone": {
         "type": "object",
@@ -4828,7 +5225,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4878,7 +5276,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerDictationState": {
         "type": "object",
@@ -4893,7 +5292,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4942,7 +5342,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerDictationTranscriptPartial": {
         "type": "object",
@@ -4957,7 +5358,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -4988,7 +5390,8 @@
               },
               "text": {
                 "type": "string",
-                "maxLength": 32000
+                "maxLength": 32000,
+                "description": "Unicode code-point ceiling; additionally bound full serialized UTF-8 JSON message to 256 KiB. Encode non-ASCII directly (do not split/truncate code points); never label a shortened final utterance complete."
               }
             },
             "required": [
@@ -5008,7 +5411,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerDictationTranscriptFinal": {
         "type": "object",
@@ -5023,7 +5427,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -5054,7 +5459,8 @@
               },
               "text": {
                 "type": "string",
-                "maxLength": 32000
+                "maxLength": 32000,
+                "description": "Unicode code-point ceiling; additionally bound full serialized UTF-8 JSON message to 256 KiB. Encode non-ASCII directly (do not split/truncate code points); never label a shortened final utterance complete."
               }
             },
             "required": [
@@ -5074,7 +5480,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerSessionError": {
         "type": "object",
@@ -5089,7 +5496,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -5134,7 +5542,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerSessionClosed": {
         "type": "object",
@@ -5149,7 +5558,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -5202,7 +5612,8 @@
           "occurredAt",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "AudioServerMessage": {
         "oneOf": [
@@ -5248,7 +5659,8 @@
         ],
         "discriminator": {
           "propertyName": "type"
-        }
+        },
+        "description": "Decoded reassembled JSON message. Also enforce actual UTF-8 serialized bytes (including envelope/whitespace/escaping) <=262144; audio.append/voice.output.audio <=32768 and decoded PCM <=16384. JSON Schema maxLength counts Unicode code points, not bytes. RFC 6455 frames <=32768 payload bytes; continuation reassembly remains bounded."
       },
       "LocalToolName": {
         "type": "string",
@@ -5275,6 +5687,7 @@
           "listWorkspace",
           "readFile",
           "extractDocument",
+          "stageTextArtifact",
           "createFile",
           "replaceFile",
           "moveFile",
@@ -5354,7 +5767,8 @@
               "text": {
                 "type": "string",
                 "minLength": 1,
-                "maxLength": 16000
+                "maxLength": 16000,
+                "description": "Unicode code-point ceiling; additionally bound full serialized UTF-8 JSON message to 256 KiB. Encode non-ASCII directly (do not split/truncate code points); never label a shortened final utterance complete."
               },
               "sourceTaskId": {
                 "anyOf": [
@@ -5365,7 +5779,8 @@
                   {
                     "type": "null"
                   }
-                ]
+                ],
+                "description": "Provenance of actual verified agent task/attempt being spoken, NOT the audio accounting owner. Does not transfer cancellation authority."
               },
               "sourceAttemptId": {
                 "anyOf": [
@@ -5376,7 +5791,8 @@
                   {
                     "type": "null"
                   }
-                ]
+                ],
+                "description": "Provenance of actual verified agent task/attempt being spoken, NOT the audio accounting owner. Does not transfer cancellation authority."
               },
               "speak": {
                 "type": "boolean"
@@ -5423,7 +5839,8 @@
           "type",
           "payload"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
       },
       "ServerConversationContextAccepted": {
         "type": "object",
@@ -5438,7 +5855,8 @@
           },
           "taskId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Audio wire alias for audioOperationId, NOT an agent task FK; immutable session/reservation role supplies owner kind."
           },
           "sequence": {
             "type": "integer",
@@ -5485,7 +5903,214 @@
           "occurredAt",
           "payload"
         ],
+        "additionalProperties": false,
+        "x-maxSerializedUtf8Bytes": 262144
+      },
+      "DeviceToken": {
+        "type": "string",
+        "minLength": 43,
+        "maxLength": 43,
+        "pattern": "^[A-Za-z0-9_-]{43}$",
+        "description": "Canonical unpadded base64url of exactly 32 CSPRNG bytes. Secret returned once; validate canonical decoding, never trim. Device-bound REST requires this plus matching device ID and app bearer. Persist only SHA-256 digest server-side; native Keychain only."
+      },
+      "TokenEstimator": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "verifiedTokenizer",
+              "conservativeBound"
+            ]
+          },
+          "fixedOverheadTokens": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "maxImageTokens": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "kind",
+          "fixedOverheadTokens",
+          "maxImageTokens"
+        ],
+        "additionalProperties": false,
+        "description": "Identity/version selects a reviewed native AND gateway estimator implementation; never downloadable code or a guessed chars/token ratio. fixedOverheadTokens bounds all gateway-only instructions/wrappers. maxImageTokens is a deployment-verified upper bound per supported image (including adapter tiling); null forbids images. Estimate tool schemas, all messages/content and images separately from fixed overhead. A conservativeBound must be justified for this exact adapter/deployment."
+      },
+      "TokenBudget": {
+        "type": "object",
+        "properties": {
+          "budgetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerContextTokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "maxInputTokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "maxOutputTokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32768
+          },
+          "estimator": {
+            "$ref": "#/components/schemas/TokenEstimator"
+          },
+          "verifiedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        },
+        "required": [
+          "budgetId",
+          "providerContextTokens",
+          "maxInputTokens",
+          "maxOutputTokens",
+          "estimator",
+          "verifiedAt",
+          "expiresAt"
+        ],
+        "additionalProperties": false,
+        "description": "All quantities are tokens. Provider context capacity is deployment-verified, distinct from operator maxInputTokens/maxOutputTokens. Semantically enforce maxInputTokens + maxOutputTokens <= providerContextTokens, evidence freshness <=24h, usable input >0 and matching estimator evidence. budgetId changes on deployment, estimator, overhead, clamp, capacity or evidence revision; never expose private endpoint/deployment configuration."
+      },
+      "CreateEnrollmentRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "installationId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "installationId"
+        ],
         "additionalProperties": false
+      },
+      "CreateEnrollmentResponse": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "enrollmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "authorizationNonce": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 43,
+            "pattern": "^[A-Za-z0-9_-]{42}[AEIMQUYcgkosw048]$",
+            "description": "Canonical unpadded base64url of 32 CSPRNG bytes. Send verbatim as OIDC nonce. Server stores only SHA-256 of these ASCII characters; never raw nonce in persistent caches/logs/exports. Returned once and discarded from native attempt memory on completion/cancel/expiry."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$",
+            "description": "Server createdAt (UTC whole seconds) + 300 seconds. Completion must commit strictly before this time, no skew extension."
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "enrollmentId",
+          "authorizationNonce",
+          "expiresAt"
+        ],
+        "additionalProperties": false,
+        "description": "One-return challenge, not device authority. No device credential in this response; no replayable nonce cache."
+      },
+      "EnrollmentChallengeRecord": {
+        "type": "object",
+        "properties": {
+          "enrollmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "installationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "authorizationNonceHash": {
+            "type": "string",
+            "minLength": 64,
+            "maxLength": 64,
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Lowercase hexadecimal SHA-256 of ASCII authorizationNonce, NOT its decoded random bytes; compare in constant time."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$",
+            "description": "Server UTC time truncated to whole seconds, never client-supplied. Signed auth_time must be at least this time."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$",
+            "description": "createdAt + 300 seconds; row retained through this time + 60 seconds only for replay/cleanup, not proof validity."
+          },
+          "consumed": {
+            "type": "boolean",
+            "description": "Initially false; atomic compare-and-set to true in the account transaction that issues the new device credential. Rollback issues nothing; commit never reopens."
+          }
+        },
+        "required": [
+          "enrollmentId",
+          "accountId",
+          "installationId",
+          "authorizationNonceHash",
+          "createdAt",
+          "expiresAt",
+          "consumed"
+        ],
+        "additionalProperties": false,
+        "description": "SERVER-INTERNAL challenge metadata, never a client request/response. Account from validated API access token, installation from validated create request, nonce hash/IDs/times generated by backend. These are not custom Entra claims. Exact rates, one-use semantics, revocation threshold and retention are normative in API.md."
       }
     },
     "parameters": {
@@ -5507,7 +6132,7 @@
           "type": "string",
           "format": "uuid"
         },
-        "description": "Registered, nonrevoked device bound to bearer account. Not an independent credential."
+        "description": "Public opaque device ID belonging to bearer account, verified against the independently supplied DeviceToken digest and nonrevoked record. Knowing this ID is not authentication."
       },
       "IdempotencyKey": {
         "name": "Idempotency-Key",
@@ -5530,6 +6155,15 @@
           ]
         },
         "description": "Signals recent-auth action; server must independently require verified authentication age <= 5 minutes, never trust this header as proof."
+      },
+      "DeviceToken": {
+        "name": "X-Pebbi-Device-Token",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "$ref": "#/components/schemas/DeviceToken"
+        },
+        "description": "Secret device credential, not a public identifier. Required together with app bearer and matching DeviceId on every device-bound REST request, including session minting; not sent on WebSocket upgrades."
       }
     },
     "responses": {
@@ -5880,7 +6514,27 @@
       },
       "serverMessageSchema": {
         "$ref": "#/components/schemas/AudioServerMessage"
-      }
+      },
+      "requiredHeaders": {
+        "Authorization": "Bearer <single-use conversation session token>",
+        "X-Pebbi-Device-Id": "UUID matching token-bound device",
+        "Sec-WebSocket-Protocol": "pebbi.audio.v1",
+        "Upgrade": "websocket",
+        "Connection": "Upgrade",
+        "Sec-WebSocket-Key": "RFC 6455 handshake nonce",
+        "Sec-WebSocket-Version": "13"
+      },
+      "forbiddenHeaders": [
+        "X-Pebbi-Device-Token"
+      ],
+      "limits": {
+        "maxFrameBytes": 32768,
+        "maxMessageBytes": 262144,
+        "maxAudioMessageBytes": 32768,
+        "maxDecodedAudioBytes": 16384,
+        "perMessageDeflate": false
+      },
+      "ownerMapping": "taskId in server events carries audioOperationId; session request attemptId carries audioAttemptId. Native audio receipts only; reservation role is immutable."
     },
     "/v1/dictation/stream": {
       "method": "GET",
@@ -5894,7 +6548,27 @@
       },
       "serverMessageSchema": {
         "$ref": "#/components/schemas/AudioServerMessage"
-      }
+      },
+      "requiredHeaders": {
+        "Authorization": "Bearer <single-use dictation session token>",
+        "X-Pebbi-Device-Id": "UUID matching token-bound device",
+        "Sec-WebSocket-Protocol": "pebbi.audio.v1",
+        "Upgrade": "websocket",
+        "Connection": "Upgrade",
+        "Sec-WebSocket-Key": "RFC 6455 handshake nonce",
+        "Sec-WebSocket-Version": "13"
+      },
+      "forbiddenHeaders": [
+        "X-Pebbi-Device-Token"
+      ],
+      "limits": {
+        "maxFrameBytes": 32768,
+        "maxMessageBytes": 262144,
+        "maxAudioMessageBytes": 32768,
+        "maxDecodedAudioBytes": 16384,
+        "perMessageDeflate": false
+      },
+      "ownerMapping": "taskId in server events carries audioOperationId; session request attemptId carries audioAttemptId. Native audio receipts only; reservation role is immutable."
     }
   }
 }

@@ -107,8 +107,8 @@ apps/
 | `AppComposition`, `LifecycleController` | Compose real services; startup, account partition, orderly quit; no business rules | `@MainActor`; inject services once; manages child lifetimes | PB-001, PB-002, PB-035, PB-036 |
 | Presentation folders | Native views, accessibility, user drafts, visible state projection; no tool execution | `@MainActor`; consume immutable `Sendable` snapshots and send commands to coordinators | PB-004–PB-007, PB-011–PB-012, PB-026, PB-029, PB-032–PB-033 |
 | Domain | IDs, canonical enums, value types, validation, tool envelopes | Pure `Sendable` values; no AppKit, network, database or clocks | PB-015–PB-017, PB-040 |
-| `Store` | All local DB mutations, migrations, transactional journal/projector and CAS checks | Actor wrapping GRDB `DatabasePool`; async reads/writes; SQL transaction closures contain no `await` | PB-011–PB-017, PB-025, PB-030–PB-031, PB-035 |
-| `TaskCoordinator` | Ingress dedupe, task/attempt creation, per-Pebbi executor registry, cancellation routing | Actor; Store is ordering authority; never execute an OS side effect here | PB-015–PB-017 |
+| `Store` | All local DB mutations, migrations, task and separate audio journals, authored-artifact staging, transactional projections and CAS checks | Actor wrapping GRDB `DatabasePool`; async reads/writes; SQL transaction closures contain no `await` | PB-011–PB-017, PB-025, PB-030–PB-031, PB-035 |
+| `TaskCoordinator` | Ingress dedupe, task/attempt creation, per-Pebbi executor registry, cancellation routing; native management commands commit through Store, never model tools | Actor; Store is ordering authority; never execute an OS side effect here | PB-015–PB-017 |
 | `PebbiExecutor` | One Pebbi's serial queue; model/tool loop and checkpoints | One actor per loaded Pebbi; Store, broker, backend, memory; child tasks retained explicitly | PB-015–PB-016, PB-028 |
 | `ToolBroker` | Validate immutable intent, policy/approval, resource lease, durable dispatch, reconcile exact target | Actor; adapters expose execution functions; never accepts permission claims from the model | PB-008–PB-010, PB-017–PB-023, PB-031 |
 | `ApprovalCoordinator` | Native approval requests, human decision CAS, grant matching/revocation | Actor; UI presentation crosses MainActor; canonical security policy applies | PB-017, PB-022–PB-023, PB-031 |
@@ -120,8 +120,8 @@ apps/
 | `WindowCoordinator`, `ShortcutController`, `OverlayController`, `TakeoverController` | Window lifecycle, input routing, overlay accessibility and explicit foreground input | `@MainActor`; do not own task state | PB-005–PB-006, PB-009, PB-018, PB-032–PB-033 |
 | `AXDriver` | Bounded semantic accessibility reads/actions and stale-element validation | Dedicated serial AX worker thread/run loop; actor façade returns value snapshots, never AX objects | PB-003, PB-010, PB-018 |
 | `CaptureService`, `DisplayGeometry` | Authorized ScreenCaptureKit frames; coordinate snapshots and invalidation | Actor; SCK delegate queue copies metadata/frame buffers with explicit ownership; UI geometry on MainActor | PB-008–PB-009, PB-033 |
-| `VoiceController`, `DictationController`, `AudioEngineBridge` | Separate speech/dictation lifecycles and audio device handling | Controller actors; dedicated audio graph serial queue and realtime-safe callback; no DB/network in callback | PB-007, PB-010, PB-034 |
-| `FileService`, `DocumentReader` | User-selected roots, immutable file versions, extraction coverage and preview leases | Actors; bounded file IO/parsing workers; PDFKit/Quick Look UI on MainActor | PB-014, PB-021, PB-030–PB-031 |
+| `VoiceController`, `DictationController`, `AudioEngineBridge` | Separate audio_operations/audio_event_receipts ownership, speech/dictation lifecycles, microphone lease and audio device handling; no task queue slot | Controller actors; dedicated audio graph serial queue and realtime-safe callback; no DB/network in callback | PB-007, PB-010, PB-034 |
+| `FileService`, `DocumentReader` | User-selected roots, bounded stageTextArtifact producer, immutable artifact/hash and file versions, extraction coverage and preview leases | Actors; bounded file IO/parsing workers; PDFKit/Quick Look UI on MainActor | PB-014, PB-021, PB-030–PB-031 |
 | `BrowserSessionBroker`, native host, extension | Pairing, tab selection, DOM session generation and result verification | App actor; stdio native host; MV3 service worker/content scripts; authenticated IPC | PB-019–PB-020 |
 | `ConnectionManager`, `MCPProcessManager` | Catalog/configuration, OAuth state, MCP capability snapshots, process lifetime | Actors; subprocess pipes read off MainActor; Keychain injection at use, never model context | PB-022–PB-023 |
 | `ExecutionService`, execution supervisor | Explicitly consented local code run, process-group containment and output quotas | Actor + signed helper; ordinary user privileges, explicitly not an OS sandbox | PB-021, PB-031, PB-035 |
@@ -135,7 +135,7 @@ Dependency direction: Presentation → coordinators → domain/services → adap
 2. Actor isolation is not transactional isolation. Any actor may reenter at `await`. Reserve a version/lease in Store before awaiting; after the await, validate attempt ID, steering revision, cancel epoch, account epoch and lease generation before publishing or performing the next side effect.
 3. Only Store writes SQL. One GRDB write transaction atomically inserts journal events and updates projections. No tool/network work or inter-actor call inside that transaction. UI never reads half-written state.
 4. Long work uses retained structured tasks or explicit supervised workers. Do not spawn fire-and-forget detached tasks. App exit cancels children; helpers receive channel closure. Blocking AX, file parsing and `waitpid` must not occupy MainActor or Swift cooperative executor threads indefinitely.
-5. MainActor observes coalesced state snapshots; transient token/audio frames do not cause one SQL write or full view redraw each. Final text and state boundaries are durable; UI token deltas are provisional and labelled as such.
+5. MainActor observes coalesced state snapshots; transient token/audio frames do not cause one SQL write or full view redraw each. Final text and state boundaries are durable under normal retention (private content remains memory-only); UI token deltas are provisional and labelled as such.
 6. Cancellation is cooperative and does not imply an external action was undone. Keep enough dispatch metadata to reconcile even after the task's model generation is cancelled. Delayed provider frames must never revive a cancelled task or an old account's UI.
 
 ## 4. End-to-end flows and trust boundaries
@@ -144,7 +144,7 @@ Dependency direction: Presentation → coordinators → domain/services → adap
 
 Native UI/voice creates a user-origin ingress command → Store commits message + logical task/attempt + event → Pebbi queue claims attempt → retrieval produces a bounded, attributable context → backend capability/usage authorization → Responses stream supplies text/tool proposals → ToolBroker validates against local registry → native approval if required → durable immutable intent/dispatch record → one adapter executes → read-back verifier → immutable result and visible journal progress → model sees sanitized result → completion guarded against pending follow-ups.
 
-Voice speech output may be interrupted at any point without cancelling this pipeline. Dictation is a separate focused-edit pipeline. [AGENT-RUNTIME](AGENT-RUNTIME.md) owns their interaction, queue algorithms and cancellation semantics.
+Voice without work allocates a separate audio operation, not a queued task. Audio wire taskId/attemptId map to audioOperationId/audioAttemptId by reservation role; reasoning retains task/attempt IDs. Voice remains available while the same Pebbi runs Astra; verified result speech carries real sourceTaskId/sourceAttemptId provenance. Voice speech output may be interrupted at any point without cancelling this pipeline. Dictation is a separate focused-edit/audio-receipt pipeline that can run while the Pebbi task waits and never needs its serial slot. [AGENT-RUNTIME](AGENT-RUNTIME.md) owns their interaction, queue algorithms and cancellation semantics.
 
 ### B. Screen help or browser research
 
@@ -152,18 +152,18 @@ User selects scope → permission/capture or browser session lease → untrusted
 
 ### C. Files and connections
 
-Native open/save panel creates a bounded workspace/resource grant → versioned file/attachment metadata in Store → extraction with full-coverage manifest → local preview or selected content sent to backend with disclosure. Connector discovery is read-only configuration; launching a local MCP binary or accepting OAuth scopes is a distinct user action. Connectors never bypass the ToolBroker.
+Native open/save panel creates a bounded workspace/resource grant → versioned file/attachment metadata in Store → extraction with full-coverage manifest → local preview or selected content sent to backend with disclosure. Authored text/script starts with explicit stageTextArtifact chunks → sealed artifact/hash → createFile/replaceFile or per-run approved runCode(scriptArtifactId, expectedSha256). Staging is internal, not a target write/execution permission; private bytes/hashes remain RAM-only until native Save. Connector discovery is read-only configuration; launching a local MCP binary or accepting OAuth scopes is a distinct user action. Connectors never bypass the ToolBroker.
 
 ### D. Routines and suggestions
 
-Suggestions can analyze approved read-only context; they cannot dispatch tools with side effects. Accepting a suggestion creates a normal task with provenance. Routine schedules are local and execute only while the app is open. Catch-up, overlap, retry and pause rules live in [AGENT-RUNTIME](AGENT-RUNTIME.md). Scheduled status must never suggest a server daemon is working while Quit.
+Typed `/pebbi` and `/routine` commands and natural-language draft reviews use the closed native management contract in AGENT-RUNTIME.md; only native Save/Enable commits, never assistant prose or a model tool. Suggestions can analyze approved read-only context; they cannot dispatch tools with side effects. Accepting a suggestion creates a normal task with provenance. Routine schedules are local and execute only while the app is open. Catch-up, overlap, retry and pause rules live in [AGENT-RUNTIME](AGENT-RUNTIME.md). Scheduled status must never suggest a server daemon is working while Quit.
 
 ## 5. Platform and account boundaries
 
 - Developer ID distribution, hardened runtime, notarized DMG and signed Sparkle updates are required; App Store sandbox distribution is not selected. Hardened runtime, TCC, an app-level file grant and process allowlisting are four different controls, none is a general code sandbox.
 - Account local partition root: `Application Support/HeyPebbi/Accounts/<accountId>/`. `accountId` is the opaque backend account UUID, never an email or Entra tenant ID. Sign-out disconnects voice/providers, cancels dispatch, revokes ephemeral leases and prevents access to that partition until the same user signs in. Preserve or delete local data only according to an explicit user choice; no cross-account memory search.
 - Per-Pebbi private sessions use an in-memory content store and the minimal durable uncertain-effect journal in DATA-MODEL.md; no private chat/memory/artifact bodies are silently retained. Explicit Save is required for durable outputs.
-- Keychain contains session/refresh material, OAuth secrets and pairing keys. SQLite stores references, never secret values. App-local data is not advertised as database-encrypted: GRDB SQLite here is ordinary SQLite protected by user filesystem permissions and the user's device security/FileVault configuration.
+- Keychain contains session/refresh material, backend-issued deviceToken bound to account/device, OAuth secrets and pairing keys. IdentityService sends the device token only in X-Pebbi-Device-Token on device-bound backend requests, with matching public device ID and account bearer; it is never a browser pairing key or WebSocket session token. SQLite stores references, never secret values. App-local data is not advertised as database-encrypted: GRDB SQLite here is ordinary SQLite protected by user filesystem permissions and the user's device security/FileVault configuration.
 - Provider roles remain exactly `gpt-realtime-2.1`, `gpt-live-transcribe`, `gpt-6-astra`. Unsupported/deployment-missing responses mean unavailable, not fallback to a different model or a fake live fixture. The backend API and deployment audit own provider details.
 - PB-039 public pages are served by the canonical backend/web boundary; native Settings opens verified HTTPS support/privacy/account/download links in the system browser. Do not create another native embedded website shell.
 
@@ -180,7 +180,7 @@ Suggestions can analyze approved read-only context; they cannot dispatch tools w
 | File extraction partial | Coverage manifest exposes missing pages/sheets; no claim to have read the whole document |
 | Slow UI or excess workload | Global bounded permits, lazy lists, coalesced deltas, cancellation; retain safety and accessibility instead of dropping checks |
 
-Initial engineering limits are explicit tunable policy, not measured performance promises: two active reasoning attempts globally, one active attempt per Pebbi, four concurrent read-only research requests per attempt, one global microphone owner, one foreground takeover owner, one mutator per AX app/browser tab/workspace resource. Waiters release expensive permits. Completed transient frame buffers are dropped rather than queued without bound. Quantitative release budgets and actual measurements belong in quality documentation; no invented benchmark is a release pass.
+Initial engineering limits are explicit tunable policy, not measured performance promises: two active reasoning attempts globally, one active **agent task** attempt per Pebbi (audio_operations are excluded), four concurrent read-only research requests per attempt, one global microphone owner, one foreground takeover owner, one mutator per AX app/browser tab/workspace resource. Waiters release expensive permits. Completed transient frame buffers are dropped rather than queued without bound. Quantitative release budgets and actual measurements belong in quality documentation; no invented benchmark is a release pass.
 
 ## 7. Invariants and verification ownership
 
@@ -193,6 +193,9 @@ Mandatory architecture checks:
 - Kill/relaunch at every journal boundary produces no silent repeat of a non-idempotent effect.
 - Two Pebbis competing for one target cannot interleave mutations; one Pebbi's approval wait does not freeze another's read-only work.
 - Denied permissions, offline providers and absent model deployments retain truthful states and a working native Home.
+- Same-Pebbi voice plus reasoning and dictation during a task wait use independent owners/receipts; duplicate/late audio events cannot touch agent task FKs or consume its slot.
+- Empty-workspace authored file/script succeeds only through stageTextArtifact; cancel/privacy/hash mismatches are verified before any destination write or spawn.
+- Backend tokenBudget is the only native inference budget source; absent/changed budgets fail closed without dropping mandatory input.
 - Fresh install on both architectures, notchless/multi-display use, VoiceOver and real Chrome/Brave native messaging require actual device evidence. A mocked adapter does not satisfy these gates.
 
 Root changes, new privileged helpers, cloud task execution or sync, alternative model roles and alternate shells are architecture changes, not implementation conveniences. Record proposals in [DECISIONS](DECISIONS.md) and request review rather than silently modifying the fixed contract.

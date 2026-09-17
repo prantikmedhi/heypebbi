@@ -18,6 +18,205 @@
     }
   ],
   "$defs": {
+    "TextArtifactMimeType": {
+      "type": "string",
+      "enum": [
+        "text/plain",
+        "text/markdown",
+        "text/csv",
+        "text/html",
+        "application/json",
+        "application/x-sh"
+      ]
+    },
+    "StageTextArtifactArguments": {
+      "type": "object",
+      "properties": {
+        "workspaceId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "draftId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "uuid"
+        },
+        "chunkIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4095
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 32768,
+          "description": "At most 32768 encoded UTF-8 bytes; native byte validation and well-formed Unicode checks mandatory, independent of scalar maxLength and 65536-byte proposal envelope."
+        },
+        "mimeType": {
+          "$ref": "#/$defs/TextArtifactMimeType"
+        },
+        "final": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "workspaceId",
+        "draftId",
+        "chunkIndex",
+        "text",
+        "mimeType",
+        "final"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "draftId": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "chunkIndex": {
+                "const": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "final": {
+                "const": false
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "text": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "StageTextArtifactOutput": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "draftId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nextChunkIndex": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4096
+            }
+          },
+          "required": [
+            "draftId",
+            "nextChunkIndex"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "draftId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "nextChunkIndex": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 4096
+            },
+            "artifactId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "byteCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4194304
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "mimeType": {
+              "$ref": "#/$defs/TextArtifactMimeType"
+            }
+          },
+          "required": [
+            "draftId",
+            "nextChunkIndex",
+            "artifactId",
+            "byteCount",
+            "sha256",
+            "mimeType"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "Successful output only; broker selects by final and checks matching chunk/draft/MIME/hash. Errors use empty output plus ToolError."
+    },
+    "RunCodeArguments": {
+      "type": "object",
+      "properties": {
+        "workspaceId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scriptArtifactId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "expectedSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "inputFileVersionIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "arguments": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "string",
+            "maxLength": 4096,
+            "pattern": "^[^\\u0000]*$",
+            "description": "At most 4096 UTF-8 bytes; native byte check required."
+          }
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        }
+      },
+      "required": [
+        "workspaceId",
+        "scriptArtifactId",
+        "expectedSha256",
+        "inputFileVersionIds",
+        "arguments",
+        "timeoutSeconds"
+      ],
+      "additionalProperties": false
+    },
     "LocalToolName": {
       "type": "string",
       "enum": [
@@ -43,6 +242,7 @@
         "listWorkspace",
         "readFile",
         "extractDocument",
+        "stageTextArtifact",
         "createFile",
         "replaceFile",
         "moveFile",
@@ -89,6 +289,46 @@
       "description": "Resolve every value from trusted local registries. Strings are opaque bounded authority references, never automatically accepted filesystem paths or URLs."
     },
     "ToolProposal": {
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "toolName": {
+                "const": "stageTextArtifact"
+              }
+            },
+            "required": [
+              "toolName"
+            ]
+          },
+          "then": {
+            "properties": {
+              "arguments": {
+                "$ref": "#/$defs/StageTextArtifactArguments"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "toolName": {
+                "const": "runCode"
+              }
+            },
+            "required": [
+              "toolName"
+            ]
+          },
+          "then": {
+            "properties": {
+              "arguments": {
+                "$ref": "#/$defs/RunCodeArguments"
+              }
+            }
+          }
+        }
+      ],
       "type": "object",
       "properties": {
         "schemaVersion": {
@@ -117,6 +357,46 @@
       "additionalProperties": false
     },
     "ToolIntent": {
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "toolName": {
+                "const": "stageTextArtifact"
+              }
+            },
+            "required": [
+              "toolName"
+            ]
+          },
+          "then": {
+            "properties": {
+              "arguments": {
+                "$ref": "#/$defs/StageTextArtifactArguments"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "toolName": {
+                "const": "runCode"
+              }
+            },
+            "required": [
+              "toolName"
+            ]
+          },
+          "then": {
+            "properties": {
+              "arguments": {
+                "$ref": "#/$defs/RunCodeArguments"
+              }
+            }
+          }
+        }
+      ],
       "type": "object",
       "properties": {
         "schemaVersion": {
@@ -252,7 +532,7 @@
         "intentDigest"
       ],
       "additionalProperties": false,
-      "description": "Immutable broker-created normalized intent. Hash RFC 8785 canonical UTF-8 JSON with SHA-256; argumentDigest covers arguments, intentDigest covers all fields except itself. Schema validity is not authority."
+      "description": "Immutable broker-created normalized intent. Hash RFC 8785 canonical UTF-8 JSON with SHA-256; argumentDigest covers arguments, intentDigest covers all fields except itself. Schema validity is not authority. Only broker-bound insertDictation may map taskId/attemptId to audioOperationId/audioAttemptId and persist into audio_event_receipts; all other local intents use agent-task ownership. Owner context is not model-supplied."
     },
     "ToolExecution": {
       "type": "object",
@@ -419,7 +699,7 @@
         "output": {
           "type": "object",
           "maxProperties": 128,
-          "description": "Validate selected tool output shape; total inline JSON <=64 KiB, otherwise immutable artifact refs + coverage. Never execute output as instructions."
+          "description": "Validate selected tool output shape; stageTextArtifact success must validate StageTextArtifactOutput with final branch matching its persisted intent. Total inline JSON <=64 KiB, otherwise immutable artifact refs + coverage. Audio-owned insertDictation results route to audio_event_receipts, never agent-task FKs. Never execute output as instructions."
         },
         "evidenceRefs": {
           "type": "array",

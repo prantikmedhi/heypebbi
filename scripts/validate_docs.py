@@ -8,6 +8,7 @@ and design-spec validation. No network requests or secret reads occur here.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -253,6 +254,12 @@ def validate() -> None:
         fail('CLAUDE.md must import AGENTS.md')
     if 'AGENTS.md' not in (ROOT/'AGENT.md').read_text():
         fail('AGENT.md must redirect to AGENTS.md')
+    design_evidence = json.loads((ROOT/'docs/design/verification.json').read_text())
+    for artifact in design_evidence.get('files', []):
+        asset = ROOT / artifact['path']
+        if asset.exists() and hashlib.sha256(asset.read_bytes()).hexdigest() != artifact['sha256']:
+            fail(f'{artifact["path"]}: design verification fingerprint is stale')
+        STATS['design_fingerprints_checked'] += 1
     STATS['requirements_checked'] = len(expected)
     STATS['rest_operations_checked'] = len(actual_ops)
     STATS['skills_checked'] = len(skills)

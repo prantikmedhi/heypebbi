@@ -52,6 +52,7 @@ Editable original assets: [logo](design/assets/logo-mark.svg), [monochrome mark]
 | [CONNECTIONS.md](engineering/CONNECTIONS.md) | Built-in and custom connectors, OAuth, MCP and credential ownership |
 | [BILLING.md](engineering/BILLING.md) | Plans, server-authoritative reservations/ledger and Stripe lifecycle |
 | [DECISIONS.md](engineering/DECISIONS.md) | Accepted architecture decisions and rejected alternatives |
+| [REVIEW-RESOLUTIONS.md](engineering/REVIEW-RESOLUTIONS.md) | Accepted integration clarifications for identity, artifacts, audio ownership and message budgets |
 
 The model provider, local runtime and backend have different responsibilities. Native task execution is not an Azure Responses feature; a model proposes tools, trusted code authorizes and performs them. No raw cloud screenshot/conversation synchronization is part of the chosen architecture.
 
@@ -76,6 +77,7 @@ The model provider, local runtime and backend have different responsibilities. N
 - [Documentation manifest](manifest.json): explicit expected files and shared requirement roster.
 - [Documentation validation record](quality/DOCUMENTATION-VALIDATION.md): checks exercised and limits of documentation-only evidence.
 - [Documentation checker](../scripts/validate_docs.py): structural, link, coverage, schema-reference and hygiene checks. This checker never claims app functionality or live-provider readiness.
+- [Contract regression fixtures](../scripts/validate_contracts.py): synthetic schema checks for device credentials, authored artifacts, role/budget readiness and UTF-8 message bounds; not runtime security evidence.
 
 ## Reading without losing context
 

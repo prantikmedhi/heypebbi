@@ -62,7 +62,7 @@ Rationale: a Boolean “busy” flag or actor callback order loses messages at c
 
 **Status:** specified. **Requirements:** PB-015–PB-018, PB-021, PB-025, PB-034, PB-038.
 
-One attempt occupies each Pebbi's slot, including waiting states. Independent Pebbis can work concurrently under bounded global permits. Exclusive leases cover foreground input, app/tab mutation, workspace mutation and connector resource mutations. All-or-nothing sorted acquisition avoids nested lock deadlocks; approval waits release resource permits.
+One agent task attempt occupies each Pebbi's slot, including waiting states. Separate audio operations do not consume that slot or a reasoning permit; voice can remain available while the same Pebbi runs Astra, and dictation while its task waits. Independent Pebbis can work concurrently under bounded global permits. Exclusive leases cover foreground input, app/tab mutation, workspace mutation and connector resource mutations. All-or-nothing sorted acquisition avoids nested lock deadlocks; approval waits release resource permits.
 
 Rationale: a personal assistant's task order must be predictable while multiple assistants can work independently. Consequence: waiting behind an approval is visible and reorder/cancel is explicit; two Pebbis cannot type into the same field or interleave writes to the same target.
 
@@ -133,6 +133,24 @@ Rationale: predictable resource usage and honest app lifecycle. Consequence: use
 Selected model roles remain realtime `gpt-realtime-2.1`, dictation `gpt-live-transcribe`, reasoning `gpt-6-astra`. Historical access evidence is not current live certification. Missing deployments/identity/billing/signing/permissions are real blockers. Continue all independent implementation and testing under the one-prompt build contract, but never count fixtures as live evidence.
 
 Rationale: the product is complete scope, not a staged MVP or a convincing demo. Consequence: no invented prices, tenant IDs, credentials, passing tests or deployed endpoints. Quality owns release acceptance; source/docs validity does not certify runtime behavior.
+
+## ADR-016 — Explicit authored artifact producer and immutable code binding
+
+**Status:** accepted review repair H-02/M-02. **Requirements:** PB-014, PB-017, PB-021, PB-031.
+
+Exactly one new local tool, stageTextArtifact, accepts closed bounded UTF-8 chunks and returns native-created immutable artifact IDs/hashes. No implicit prose-to-file execution. Contiguous immutable chunks, exact retry receipts, finalization, scoped provenance and cancellation/private cleanup are specified in TOOLS.md and DATA-MODEL.md; private bytes/hashes stay in RAM until native Save. runCode binds scriptArtifactId + expectedSha256 and complete execution inputs; no independent script-version entity. Script staging or Save does not authorize code execution.
+
+## ADR-017 — Audio accounting is independent of queued agent tasks
+
+**Status:** accepted review repair H-03. **Requirements:** PB-007, PB-010, PB-015–PB-017, PB-027, PB-034–PB-035.
+
+Use audio_operations/audio_event_receipts with explicit owner/attempt, cursor, reservation, lifecycle, privacy and cleanup. Only for audio roles do gateway taskId/attemptId carry audioOperationId/audioAttemptId; typed reservation owner/role controls routing. sourceTaskId/sourceAttemptId refer to a real verified result being spoken. Standalone dictation effects use audio-owned approval/effect receipt FKs, not fake queued tasks. One mic owner and one stream per operation remain; serial agent-task execution is unchanged. Stop speech is not Cancel task, crash never auto-replays audio or insertion.
+
+## ADR-018 — Native control-plane authority and backend-delivered limits
+
+**Status:** accepted clarification. **Requirements:** PB-002, PB-004, PB-011, PB-017, PB-025, PB-027–PB-028.
+
+Typed/conversational management drafts feed the same native review/Save/Enable commands; no extra model permission tool. Protected approval, setup and privacy Save remain deliberate native controls, never model/voice assertions. Device credential is the backend-issued deviceToken stored in Keychain, separate from browser MAC/session keys. Native context budgeting consumes authenticated role tokenBudget and its verified estimator, not a guessed capacity; metered usage remains server authoritative. Missing audio deployments/fresh-auth/budget evidence stay honest external gates.
 
 ## Change control and verification
 

@@ -6,6 +6,7 @@
 
 - **Pebbi:** persistent identity, appearance, job, memories, workspace and queue. Editing a job or memory changes future context snapshots; it cannot rewrite a dispatched intent.
 - **Conversation:** ordered user/assistant messages, attachments and pins. It can contain many tasks or no task. Closing/archiving it does not cancel execution.
+- **Audio operation (`audioOperationId`, `audioAttemptId`):** standalone conversation/dictation accounting and lifecycle, persisted in audio_operations/audio_event_receipts, never an agent queue entry. One provider stream per owner; source task references identify a result being spoken, not ownership.
 - **Logical task (`taskId`):** user intent and follow-ups, stable across retries. Journal sequence is monotonic across all its attempts.
 - **Attempt (`attemptId`):** one execution run. Retry creates another attempt with `previousAttemptId`; it never resets an old terminal attempt.
 - **Tool intent (`toolCallId`):** immutable, validated description of one proposed action at an exact attempt/steering generation. A provider tool-call token is a separate opaque `providerCallRef`, not a local UUID.
@@ -44,13 +45,37 @@ Store.commitAttemptMutation(expectedVersion, events, projectionChanges) async ->
 ToolBroker.prepare(proposal, contextVersion) async -> IntentReceipt
 ToolBroker.execute(toolCallId, expectedVersion) async -> ToolResult
 ToolBroker.reconcile(executionId) async -> ToolResult
-VoiceController.stopSpeech(voiceSessionId) async -> PlaybackStopped
+VoiceController.start(pebbiId, conversationId, nativeUserInteraction) async -> AudioOwnerReceipt
+DictationController.start(pebbiId, conversationId, focusSnapshot, nativeUserInteraction) async -> AudioOwnerReceipt
+VoiceController.stopSpeech(audioOperationId, audioAttemptId) async -> PlaybackStopped
+VoiceController.speakResult(audioOwner, sourceTaskID, sourceAttemptID, finalMessageId) async -> ContextReceipt
+Store.acceptManagement(command, ingressId, nativeUserInteraction) async -> ManagementReceipt
 RoutineScheduler.evaluate(now, reason: timer | wake | launch) async -> ScheduleSummary
 ```
 
 `SubmitTask` contains `schemaVersion`, `pebbiId`, `conversationId`, user `messageId`, text/attachment references and origin (`user`, `acceptedSuggestion`, `routineOccurrence`). The trusted caller, not the model, supplies origin. Backend/provider input cannot construct `user` authorization.
 
 `ContextVersion` is `{accountEpoch, attemptId, attemptRevision, steeringRevision, cancelEpoch, memoryRevision}`. An awaited operation returns with the version it started from. Consumers compare only relevant dimensions explicitly: any account/cancel mismatch drops live presentation and prevents further dispatch; steering mismatch discards an obsolete plan; memory revision mismatch invalidates retrieval before the next request. Old tool results remain audit evidence even when they cannot advance the current plan.
+
+### Native management commands from typed or spoken conversation
+
+A concrete typed equivalent is required even when audio is unavailable. Home's composer supports `/pebbi create <JSON>`, `/pebbi update <JSON>`, `/routine create <JSON>`, `/routine update <JSON>` and `/routine state <JSON>`. Parsing is local, deterministic, rejects duplicate/unknown fields and opens an editable **native review**, never commits on Enter alone. Arguments use these closed shapes (all listed fields required):
+
+| Command | Native draft payload |
+|---|---|
+| pebbi create | `{name, job, appearanceKey, workspaceId}` |
+| pebbi update | `{pebbiId, expectedProfileRevision, name, job, appearanceKey}` |
+| routine create | `{pebbiId, name, instruction, schedule}` |
+| routine update | `{routineId, expectedRevision, name, instruction, schedule}` |
+| routine state | `{routineId, expectedRevision, state: active \| paused \| archived}` |
+
+IDs are validated UUIDs; revisions nonnegative safe integers. Name is 1–80 Unicode scalars; job/instruction 1–16,000 scalars; appearanceKey is a ≤80-character catalog key resolving only to installed artwork, not a file/URL; workspaceId must already be native-selected/authorized. Entire command JSON ≤64 KiB UTF-8. `schedule` is a closed union: `{kind:"interval",seconds:integer≥300,timeZone:IANA}`, `{kind:"daily",localTime:"HH:mm",timeZone:IANA}` or `{kind:"weekly",localTime:"HH:mm",weekdays:[1..7],timeZone:IANA}`; interval seconds ≤31,536,000, weekly days nonempty/unique, 1=Monday. Time zone validates against the native time-zone database; no freeform cron or server scheduler.
+
+Conversational natural-language requests such as “Make a Pebbi for research” or “Remind me every weekday at nine” open the same Create/Edit management review through a user-selected composer action. If reasoning is available, request an **untrusted draft** using the existing Responses assistant-text channel, with exact `{schemaVersion:1, command, payload}` JSON matching the table and command enum `pebbi.create|pebbi.update|routine.create|routine.update|routine.state`; tool definitions are empty for this interpretation call. It is a normal read-only reasoning task/attempt with an ordinary reservation and queue position, not an unowned API request or an audio owner; if that Pebbi is busy, the native form/deterministic command path remains immediately usable. Missing/ambiguous fields remain questions in the native form; malformed output is not executed. Never scan arbitrary chat, pages or tool results for management commands. A voice transcript can prefill/open review but is not its Save/Enable click. Without reasoning, users enter the same native form or deterministic typed JSON; no fake interpretation or extra backend route/tool is needed.
+
+Native Save/Enable/Update validates ownership, current accountEpoch/revision and current user interaction, then calls `Store.acceptManagement` with `{schemaVersion:1,command,payload}` + ingressId and an unforgeable process-local native interaction handle (not a model JSON field). In one transaction apply the versioned mutation and immutable ingress receipt; same ingress/digest returns original receipt, changed digest is conflict. `ManagementReceipt` is `{ingressId,entityKind:pebbi|routine,entityId,revision,disposition:created|updated}`; errors `invalidArguments|notFound|conflict|policyDenied` keep the draft open with no mutation. Pebbi creation allocates its identity natively. Routine creation saves **paused**; only a separate explicit native Enable review permits active scheduling. Updating instruction/schedule pauses an active routine and requires a new enable review; current occurrence keeps its immutable snapshot. State active revalidates required scopes, displays app-open-only timing and never grants tools. Pause/archive stop future occurrences, not an already running task; Cancel task is separate.
+
+Management is a typed **native command path**, not additional LocalToolName values and not model authority to manage itself. Connections, pairing, OAuth, executable setup, resource selection, approval decisions, grant creation, Save consent and routine enablement remain deliberate accessible native controls. Model/voice text cannot supply a valid native interaction handle or `allowOnce`/`allowForScope`. Grant-free local profile edits still require the user to save the reviewed draft. No protected-effect authority is added by creating a Pebbi or routine.
 
 ## 3. Durable ingress and race-free follow-ups
 
@@ -94,7 +119,7 @@ Therefore a follow-up racing completion is deterministically either included bef
 
 ## 4. Per-Pebbi queues and shared-resource arbitration
 
-Queue position is a monotonically allocated integer within a Pebbi. Do not use wall-clock timestamps for FIFO. One attempt per Pebbi may occupy the serial execution slot, including waiting states. `queued` tasks behind it do not overtake approval/input blockers. UI may cancel or explicitly move queued work; reordering is a versioned DB transaction and never preempts an already running effect.
+Queue position is a monotonically allocated integer within a Pebbi. Do not use wall-clock timestamps for FIFO. One **agent task** attempt per Pebbi may occupy the serial execution slot, including waiting states. Audio operations never consume this slot or a reasoning permit; the same Pebbi may listen/speak while its independent agent task runs or waits. `queued` tasks behind it do not overtake approval/input blockers. UI may cancel or explicitly move queued work; reordering is a versioned DB transaction and never preempts an already running effect.
 
 One `PebbiExecutor` actor supervises a Pebbi. Store's partial uniqueness constraint independently prevents duplicate claims if two workers start accidentally. Registry operations in `TaskCoordinator` are actor-isolated, but uniqueness in storage is the final safety check.
 
@@ -135,7 +160,7 @@ Idempotency is per operation, not per prompt. `idempotencyKey` is a UUID generat
 |---|---|---|
 | Stop speaking / barge-in | Increment playback generation, flush audio, cancel remote speech response where supported | Does not cancel queued or running tasks |
 | Stop listening | Close microphone capture lease and stream; preserve typed/chat context | Does not undo dictation already inserted or a completed external action |
-| Cancel dictation | Stop that dictation session; discard uninserted draft according to user flow | Does not cancel a task in the conversation |
+| Cancel dictation | Stop that audio owner; before insertion dispatch discard uninserted draft; after admitted dispatch reconcile inserted/unchanged/unknown and retain barrier | Does not cancel a task in the conversation |
 | Cancel task | Commit `cancelling` and cancel epoch; block new dispatch; cancel model/children; settle or record unknown effects; terminal `cancelled` | Does not promise undo or erase evidence |
 | Cancel queued task | Atomically queued→cancelled | Does not affect the Pebbi's current attempt |
 | Quit / sleep / crash | Stop local interactive resources; persist interruption/uncertainty and recover later | Does not make a completed remote operation disappear |
@@ -144,11 +169,24 @@ Task Cancel has a transaction-linearized response: after it commits, no later di
 
 Graceful Cancel waits at most five seconds for cooperative adapters, then terminates owned cancellable processes and records unknown external effects. UI can say “Cancelled; one external action needs verification.” Keep a resource barrier until resolved. Successful cancellation means no further Pebbi dispatch, not proof that the remote system stopped. Approval windows for that attempt close/invalidate immediately.
 
+### Independent audio ownership and task handoff
+
+Starting voice with no task creates audioOperationId/audioAttemptId locally, reserves the conversation role, mints a short-lived stream session and records only audio receipts. `AudioOwnerReceipt` is `{audioOperationId,audioAttemptId,role,pebbiId,conversationId}`; volatile sessionId/token are transport-private, not queue IDs. Backend session/reservation/stream `taskId`/`attemptId` carry those audio UUIDs; reasoning carries actual task/attempt UUIDs. Reservation role/owner identity selects the adapter and receipt table. No ordinary task row is inserted just for listening or metering.
+
+End-to-end required behavior:
+1. Open voice without an agent task; task queue remains empty. Native controller owns one microphone lease and one audio provider stream.
+2. User asks for work; accepted transcript/user action passes through normal TaskCoordinator.submit and creates a separate agent task. Conversation models cannot dispatch native tools or approve anything. The voice operation remains available while that task's Astra stream uses its separate reservation and reasoning permit on the **same Pebbi**.
+3. Commit verified task result/final message, then resolve `sourceTaskID`/`sourceAttemptID` from that actual committed result. When voice is listening with no uncommitted utterance/output, send bounded `conversation.context` containing exact wire `sourceTaskId`/`sourceAttemptId`, increasing session-local revision and `speak:true`. Keep contextSubmitted/contextAccepted audio receipts; acceptance is not proof playback was heard. Context references must match account/Pebbi/conversation and the verified result; audio owner IDs are not substituted. `ContextReceipt` is `{audioOperationId,audioAttemptId,revision,disposition:accepted|deferred|rejected}`; it reflects upstream acceptance or a native readiness check, not tool/task completion.
+4. Stop speaking increments playback generation and sends speech cancellation as supported, leaving task, queue and audio ownership independent. A new task can keep working while the prior result speech is stopped. Task cancellation stops only playback attributable to that task and cannot cancel unrelated audio/dictation work. An already terminal task returns alreadyTerminal.
+5. Dictation may start while this Pebbi's task runs or waits for approval/input/connection. It consumes no queue slot/reasoning permit. If voice owns the microphone, native UI explicitly asks to end that voice input session before dictation claims the lease; no implicit stealing or concurrent competing capture. Resuming voice requires fresh user action/session, never an automatic background recording restart.
+
+Store receipt/FK/cursor/lifecycle details—including standalone insertDictation approval/effect records—are normative in DATA-MODEL.md. Audio owners admit only one active provider stream each; this does not weaken serial agent task execution. Durable audio checkpoints contain no raw audio frames. Per-frame sequence and playback generation stay volatile; accepted checkpoint cursor updates are atomic. Disconnect/crash never triggers inference replay. Recover unknown insertion effects read-only even after the audio stream ends; no task slot is needed to reconcile them.
+
 ## 7. Crash recovery and retries
 
 Startup under an exclusive instance/account store lock:
 
-1. Migrate/validate DB; do not launch tasks if storage is unsafe.
+1. Migrate/validate DB; do not launch tasks if storage is unsafe. Mark old unclosed audio_operations interrupted, invalidate microphone/transport/playback handles, and abandon unfinished artifact drafts. Audio does not resume/replay automatically. Reconcile audio-owned insertion barriers separately from task effects.
 2. Atomically mark old `running`, waiting and `cancelling` attempts `interrupted`, append recovery events and invalidate all process-bound refs, leases, one-shot unconsumed approvals and capture handles. Preserve queued work.
 3. List dispatches without a conclusive effect result. Reconcile in read-only mode by adapter capability. No side-effect replay while reconciliation is pending.
 4. If committed effect found, append confirmed evidence and include it in retry context. If absence is authoritatively proven, permit a new action only under appropriate fresh authorization. If ambiguous, keep a barrier and ask the user; elapsed time is not proof of absence.
@@ -169,7 +207,11 @@ Memory design deliberately starts with local SQLite FTS5, not another vector ser
 3. Scoped FTS5 query over that Pebbi's nondeleted memories and authorized document passages; include at most eight memory items and twelve evidence passages, rank by FTS score then recency and stable ID for ties.
 4. Sibling-Pebbi memories only if the user explicitly shared the item into a shared scope; no automatic cross-Pebbi or cross-account recall.
 
-Budgets derive from the actually available model context limit reported/configured through the backend. Reserve at least 25% for output/tool results and safety overhead; begin compaction when projected input exceeds 70% of the usable input budget. Do not assert a hardcoded model token capacity. If an exact tokenizer is unavailable, use a conservative estimator and a bounded shrink-and-retry on context-length error; never drop new user instructions or pending approvals to fit.
+Use the reasoning role's **`tokenBudget` from authenticated GET /v1/capabilities**, with exact field names/units/nullable readiness rules in API.md/OpenAPI; do not read imaginary backend-only settings or infer context size from a model name. Store tokenBudget.budgetId, verifiedAt/expiresAt and estimator.id/version in the context manifest; send that exact budgetId as ResponseRequest.tokenBudgetId. Verified provider capacity and operator-safe input/output clamps are separate: always apply the most restrictive delivered usable budget, never increase an operator clamp to a public catalog value. A missing/null/unverified budget or unsupported estimator means reasoning is not ready: preserve drafts/task input and show waitingForConnection/capability recovery, not a guessed request.
+
+The delivered estimator accounts for system instructions, tool schemas, accepted pending instructions, history, selected evidence and image/attachment costs before dispatch. Implement the API.md formula exactly: usable input = min(maxInputTokens, providerContextTokens - max(maxOutputTokens, ceil(providerContextTokens / 4))). Count estimator.fixedOverheadTokens inside that budget and each image against estimator.maxImageTokens; null image bound disables screen input. Begin compaction above 70% of usable input, never dispatch above this hard input ceiling, and cap requested output to maxOutputTokens and the service ceiling. This is one shared 25% reserve, not an additional native reserve or guessed tokenizer. Compaction must itself fit that same verified budget. If mandatory instructions/receipts cannot fit, retain them and request an explicit task split or reduced attachment selection instead of silently deleting evidence.
+
+A changed budgetId invalidates prepared estimates. Refresh before a new task, reconnect, expiry and budget error. HTTP 409 tokenBudgetChanged is a pre-dispatch rejection: fetch the new capability and recompute with an undispatched valid reservation or a new one as required. HTTP 400/response.failed contextLimitExceeded invalidates the stale budget; refresh tokenBudget and allow at most one explicit recompact/shrink retry with a new correlated request/reservation once a supported verified replacement budget exists and the earlier request outcome is known. Never replay uncertain billed inference. If still too large or budget absent, show recoverable input/connection state. Preserve pending instructions, approvals and source links on every failure; no silent truncation.
 
 Compaction creates a versioned structured summary containing source message ranges, facts with citations, unresolved questions, user preferences, artifact refs and pending work. It is not a free-text replacement for the task journal. Preserve recent turns, pending follow-ups, approval/dispatch/results and high-priority constraints verbatim outside the summary. Validate every referenced message/file ID and coverage interval; reject hallucinated references. Keep originals searchable locally subject to user retention; no silent deletion during compaction.
 
@@ -223,5 +265,10 @@ These are proposed test cases, not results. Use injected clocks, fake transports
 | RUN-13 | Disk full before dispatch reservation | No side effect; error preserves last durable state |
 | RUN-14 | Model requests unknown tool or says done with unverified artifact | Reject proposal; no false success |
 | RUN-15 | User denies mutation then model proposes it again unchanged | No nag loop or alternate-path bypass; ask for new user intent |
+| RUN-16 | Open voice → request work → same-Pebbi Astra → verified result speech → stop speech | Separate audio/task reservations and receipts, no task slot for voice, sourceTaskId proves result provenance; stop never cancels independent work |
+| RUN-17 | Dictation while current task waits; insertion races Cancel/crash | No extra queue attempt; native focus/approval applies; before dispatch unchanged, after dispatch reconcile inserted/unchanged/unknown |
+| RUN-18 | Missing tokenBudget, unknown estimator, reduced deployment budget, context-limit error | No guessed capacity; preserve mandatory content, refresh/recompact safely, no uncertain inference replay |
+| RUN-19 | Typed/conversational management draft, forged user gesture, stale revision, duplicate Save | No profile/routine writes until native action; one deduped mutation; active routine change pauses and re-enables only by native review |
+| RUN-20 | Stage script → lost final reply → retry → changed hash preview → cancel | One immutable artifact, no ambiguous version entity, stale approval blocks spawn and post-cancel dispatch |
 
 Property tests generate legal transition sequences and assert terminal immutability, monotonic task-local sequence, at most one active attempt per Pebbi and no terminal success with pending inbox. Replay tests rebuild task projections from the journal and compare to live rows. Live OS/provider/device tests remain separate release gates; passing fakes is necessary but never sufficient.

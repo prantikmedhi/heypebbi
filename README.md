@@ -2,6 +2,8 @@
 
 **A little presence. A lot off your plate.**
 
+<img src="docs/design/assets/mascot-ceramic.svg" width="160" alt="Pebbi, the sea-glass ceramic companion">
+
 Pebbi is HeyPebbi's voice-first, native macOS companion: talk through what is on your screen, get clear visual guidance, dictate into your apps, and hand work to persistent Pebbis with their own memory and files.
 
 **Repository status: complete build specification and original brand references only. No app or backend is implemented here yet.** This is a private product repository. The selected domain is `heypebbi.com`; registration, trademark clearance and production services are separate checks.
@@ -39,6 +41,8 @@ In Claude Code, `/build-pebbi` loads the same entry point. Reading the prompt fi
 ```sh
 python3 scripts/validate_docs.py
 npx -y @google/design.md lint DESIGN.md
+# Optional isolated dependency environment for schema regression fixtures:
+uvx --from 'openapi-spec-validator>=0.7,<0.8' python scripts/validate_contracts.py
 ```
 
 The Python checker covers required files, relative links, machine-readable contracts, requirement coverage, original SVG structure, agent/skill frontmatter and obvious secret leakage. Design lint covers token references and component contrast; neither proves a future app works. Future native, integration and release checks are defined in [testing](docs/quality/TESTING.md).

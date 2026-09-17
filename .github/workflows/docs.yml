@@ -24,5 +24,7 @@ jobs:
         run: |
           python -m pip install 'openapi-spec-validator>=0.7,<0.8' 'jsonschema>=4.23,<5'
           python -c 'import json; from openapi_spec_validator import validate; from jsonschema import Draft202012Validator; o=json.load(open("docs/engineering/openapi.json")); t=json.load(open("docs/engineering/schemas/tool-envelope.schema.json")); validate(o); Draft202012Validator.check_schema(t); [Draft202012Validator.check_schema(s) for s in o["components"]["schemas"].values()]; print("OpenAPI and JSON Schema valid")'
+      - name: Check reviewed contract regression fixtures
+        run: python scripts/validate_contracts.py
       - name: Check design tokens and contrast
         run: npx -y @google/design.md lint DESIGN.md

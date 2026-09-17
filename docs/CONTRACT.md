@@ -51,7 +51,7 @@ Approval decisions: `allowOnce`, `allowForScope`, `deny`. Persistent scoped gran
 
 ## Backend route inventory (wire definitions belong in engineering/API.md)
 
-All routes under `/v1` unless stated: `GET /healthz` (public minimal health); `GET /me`; `POST /devices`; `DELETE /devices/{deviceId}`; `GET /capabilities`; `POST /ai/responses` (SSE); `POST /voice/sessions`; WebSocket upgrade `GET /voice/stream` with Authorization session token; `POST /dictation/sessions`; WebSocket upgrade `GET /dictation/stream`; `POST /usage/reservations`; `POST /usage/reservations/{reservationId}/finalize`; `GET /usage`; `GET /billing/plans`; `POST /billing/checkout`; `POST /billing/portal`; `POST /billing/webhook` (Stripe signature instead of app bearer); `POST /account/export`; `DELETE /account`. Voice/dictation session tokens are single-purpose, short-lived and never contain the Azure key. Do not put bearer tokens in URL query strings. Finalization is trusted server-side metering; app-supplied usage counts never authorize or bill work. Backend agent-call clients may call this internal route; end-user finalization payloads are rejected.
+All routes under `/v1` unless stated: `GET /healthz` (public minimal health); `GET /me`; `POST /devices/enrollments`; `POST /devices`; `DELETE /devices/{deviceId}`; `GET /capabilities`; `POST /ai/responses` (SSE); `POST /voice/sessions`; WebSocket upgrade `GET /voice/stream` with Authorization session token; `POST /dictation/sessions`; WebSocket upgrade `GET /dictation/stream`; `POST /usage/reservations`; `POST /usage/reservations/{reservationId}/finalize`; `GET /usage`; `GET /billing/plans`; `POST /billing/checkout`; `POST /billing/portal`; `POST /billing/webhook` (Stripe signature instead of app bearer); `POST /account/export`; `DELETE /account`. Voice/dictation session tokens are single-purpose, short-lived and never contain the Azure key. Do not put bearer tokens in URL query strings. Finalization is trusted server-side metering; app-supplied usage counts never authorize or bill work. Backend agent-call clients may call this internal route; end-user finalization payloads are rejected.
 
 No server route synchronizes conversations, files or raw screenshots in the chosen initial architecture. Cross-device state sync is explicitly outside this product contract. Account export includes server-held account/usage data plus an app-driven local export; distinguish both. Connector OAuth tokens remain local unless a specific authorized server operation requires one.
 
@@ -99,6 +99,14 @@ Every requirement below must have normative behavior in `product/REQUIREMENTS.md
 - PB-038 — Resource budgets, latency and idle efficiency.
 - PB-039 — Support, privacy, account and download web surfaces.
 - PB-040 — Complete end-to-end acceptance and honest release gating.
+
+## Accepted integration clarifications
+
+The refinements in [REVIEW-RESOLUTIONS.md](engineering/REVIEW-RESOLUTIONS.md) are part of this contract. They make the original full scope implementable rather than reducing it: account bearer tokens require a separate registered device credential on device-bound routes, issued through a standard OIDC nonce-challenge enrollment flow; authored text has an explicit `stageTextArtifact` producer; immutable script artifacts are bound by `expectedSha256`; and audio operations own separate native accounting records without occupying an agent-task queue slot.
+
+For audio gateway messages only, the existing wire `taskId`/`attemptId` carry the owning `audioOperationId`/`audioAttemptId`; for reasoning they retain ordinary task/attempt IDs. The typed native adapters and separate audio receipt tables enforce that distinction. Provenance fields `sourceTaskId`/`sourceAttemptId` still identify the actual agent result being spoken.
+
+WebSocket limits distinguish serialized message bytes from Unicode character limits; reasoning capabilities deliver explicit token-budget data. Protected-effect approval originates from a deliberate accessible native control, not a transcript. Cancellation after an insertion was dispatched reconciles its actual outcome rather than promising no change. Release policy does not impose public cohort promotion. Exact schemas and negative tests belong in the owning documents linked by the resolutions.
 
 ## Brand direction
 
