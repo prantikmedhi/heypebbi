@@ -13,6 +13,7 @@
     ".claude/skills/pebbi-services/SKILL.md",
     ".claude/skills/pebbi-verification/SKILL.md",
     ".claude/skills/pebbi-visual/SKILL.md",
+    ".github/assets/readme-cover.svg",
     ".github/workflows/docs.yml",
     ".gitignore",
     "AGENT.md",

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 664" role="img" aria-labelledby="coverTitle coverDesc">
+<title id="coverTitle">HeyPebbi — a little presence. A lot off your plate.</title>
+<desc id="coverDesc">Original Pebbi editorial cover: warm cream paper, plum lettering, sea-glass ceramic mascot, a clay voice capsule and lilac note. Native Mac companion, currently a design and build specification.</desc>
+<defs>
+  <clipPath id="coverClip"><rect width="1200" height="664" rx="30"/></clipPath>
+  <pattern id="deskDots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#176B62" opacity=".14"/></pattern>
+  <filter id="paperShadow" x="-30%" y="-30%" width="170%" height="180%"><feDropShadow dx="0" dy="7" stdDeviation="0" flood-color="#35283E" flood-opacity=".12"/></filter>
+</defs>
+<g clip-path="url(#coverClip)">
+  <rect width="1200" height="664" fill="#FFF8E9"/>
+  <path d="M730 0H1200V609H647C719 552 684 491 654 421C612 327 724 269 700 188C678 108 751 75 730 0Z" fill="#D2EEE5"/>
+  <path d="M730 0H1200V609H647C719 552 684 491 654 421C612 327 724 269 700 188C678 108 751 75 730 0Z" fill="url(#deskDots)"/>
+  <circle cx="978" cy="343" r="205" fill="#F2A18A"/>
+  <circle cx="978" cy="343" r="179" fill="none" stroke="#FFF8E9" stroke-width="2" opacity=".5"/>
+  <svg x="56" y="28" width="218" height="65" viewBox="0 0 872 260"><title id="wordmarkTitle">HeyPebbi wordmark</title><desc id="wordmarkDesc">Original custom lowercase lettering spelling heypebbi. Rounded path lettering, not a font.</desc><g fill="none" stroke="#35283E" stroke-width="19" stroke-linecap="round" stroke-linejoin="round"><path d="M8 43V179M8 126C8 78 80 77 80 124V179" transform="translate(28 0)"/><path d="M8 133H83C83 101 69 82 44 82C-8 82-11 183 44 183C60 183 74 176 82 167" transform="translate(136 0)"/><path d="M4 87L40 171M82 87L39 196C32 213 22 222 7 222" transform="translate(244 0)"/><path d="M8 221V87M8 128C8 71 86 64 86 130C86 196 8 197 8 142" transform="translate(352 0)"/><path d="M8 133H83C83 101 69 82 44 82C-8 82-11 183 44 183C60 183 74 176 82 167" transform="translate(460 0)"/><path d="M8 43V179M8 128C8 71 86 64 86 130C86 196 8 197 8 142" transform="translate(568 0)"/><path d="M8 43V179M8 128C8 71 86 64 86 130C86 196 8 197 8 142" transform="translate(676 0)"/><path d="M17 94V179" transform="translate(784 0)"/><circle cx="801" cy="58" r="2"/></g></svg>
+  <g font-family="ui-rounded, 'Arial Rounded MT Bold', system-ui, sans-serif" fill="#35283E">
+    <text x="64" y="225" font-size="104" font-weight="800" letter-spacing="-5">a little</text>
+    <text x="57" y="335" font-size="104" font-weight="800" letter-spacing="-5">presence.</text>
+    <text x="65" y="407" font-size="33" font-weight="500" letter-spacing="-1">a lot off your plate.</text>
+    <path d="M64 432C205 443 343 428 420 434" stroke="#F2A18A" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <text x="65" y="506" font-size="21">A voice. A point of view.</text>
+    <text x="65" y="538" font-size="21">A small companion for your big ideas.</text>
+    <text x="1137" y="71" text-anchor="end" font-size="15" letter-spacing="2">THE PEBBI PROJECT</text>
+  </g>
+  <g transform="translate(838 121) rotate(-7)" filter="url(#paperShadow)">
+    <rect width="248" height="66" rx="33" fill="#35283E"/>
+    <g stroke="#F2A18A" stroke-width="4" stroke-linecap="round"><path d="M26 29V38M37 21V46M48 26V40M59 30V36"/></g>
+    <text x="80" y="42" fill="#FFF8E9" font-family="ui-rounded, system-ui, sans-serif" font-size="26" font-weight="600">hey, pebbi.</text>
+  </g>
+  <svg x="730" y="202" width="445" height="389.375" viewBox="0 0 320 280"><title id="mascotTitle">Pebbi ceramic mascot</title><desc id="mascotDesc">Original dimensional companion with sea-glass glaze, upper-left highlight and a small clay thumbprint.</desc><defs><radialGradient id="mglaze" cx=".32" cy=".2" r=".92"><stop stop-color="#FFF8E9"/><stop offset=".28" stop-color="#9CDBCB"/><stop offset="1" stop-color="#176B62"/></radialGradient><linearGradient id="mrim" x2="0" y2="1"><stop stop-color="#FFF8E9" stop-opacity=".7"/><stop offset="1" stop-color="#9CDBCB" stop-opacity="0"/></linearGradient></defs><ellipse cx="167" cy="248" rx="111" ry="13" fill="#35283E" opacity=".13"/><path d="M38 177C36 135 55 83 96 58C139 30 203 38 240 72C272 101 291 148 282 189C274 226 226 239 171 238C115 240 58 226 43 201C39 195 38 186 38 177Z" transform="translate(0 7)" fill="#176B62"/><path d="M38 177C36 135 55 83 96 58C139 30 203 38 240 72C272 101 291 148 282 189C274 226 226 239 171 238C115 240 58 226 43 201C39 195 38 186 38 177Z" fill="url(#mglaze)" stroke="#176B62" stroke-width="2"/><path d="M76 102C100 62 162 49 202 70" fill="none" stroke="url(#mrim)" stroke-width="11" stroke-linecap="round"/><ellipse cx="91" cy="176" rx="15" ry="8" fill="#F2A18A" transform="rotate(-15 91 176)"/><g fill="#35283E"><ellipse cx="122" cy="145" rx="8" ry="12"/><ellipse cx="208" cy="140" rx="8" ry="12"/></g><path d="M145 171Q166 192 188 169" fill="none" stroke="#35283E" stroke-width="7" stroke-linecap="round"/></svg>
+  <g transform="translate(760 523) rotate(5)" filter="url(#paperShadow)">
+    <path d="M0 0H324V57H0Z" fill="#D6C8F0"/>
+    <text x="162" y="36" text-anchor="middle" font-family="ui-rounded, system-ui, sans-serif" font-size="19" font-weight="650" fill="#35283E">less dashboard. more personality.</text>
+  </g>
+  <path d="M0 608H1200V664H0Z" fill="#35283E"/>
+  <g font-family="ui-monospace, 'SFMono-Regular', Menlo, monospace" font-size="14" fill="#FFF8E9" letter-spacing="1.2">
+    <text x="64" y="643">NATIVE MAC COMPANION</text>
+    <text x="600" y="643" text-anchor="middle">VOICE / CONTEXT / ACTION</text>
+    <text x="1136" y="643" text-anchor="end">DESIGN &amp; BUILD SPEC</text>
+  </g>
+</g>
+</svg>

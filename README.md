@@ -1,56 +1,130 @@
-# Pebbi
+<p align="center">
+  <img src=".github/assets/readme-cover.svg" width="1200" alt="HeyPebbi — a little presence. A lot off your plate. A sea-glass ceramic companion on a warm, colorful desk.">
+</p>
 
-**A little presence. A lot off your plate.**
+<p align="center">
+  <strong>a softer side of software.</strong><br>
+  A voice-first Mac companion with a little character and a lot to help with.
+</p>
 
-<img src="docs/design/assets/mascot-ceramic.svg" width="160" alt="Pebbi, the sea-glass ceramic companion">
+<p align="center">
+  <a href="docs/design/BRAND.md">the world</a> &nbsp; · &nbsp;
+  <a href="docs/product/APP-FLOWS.md">the experience</a> &nbsp; · &nbsp;
+  <a href="docs/engineering/ARCHITECTURE.md">the blueprint</a> &nbsp; · &nbsp;
+  <a href="docs/agents/BUILD-PROMPT.md">build pebbi ↗</a>
+</p>
 
-Pebbi is HeyPebbi's voice-first, native macOS companion: talk through what is on your screen, get clear visual guidance, dictate into your apps, and hand work to persistent Pebbis with their own memory and files.
+<br>
 
-**Repository status: complete build specification and original brand references only. No app or backend is implemented here yet.** This is a private product repository. The selected domain is `heypebbi.com`; registration, trademark clearance and production services are separate checks.
+## Your ideas don't arrive in neat little boxes.
 
-## Start here
+They arrive mid-tab, mid-thought, halfway through something else.
 
-- [One-prompt full-app build brief](docs/agents/BUILD-PROMPT.md)
-- [Complete documentation map](docs/README.md)
-- [Canonical scope and shared contracts](docs/CONTRACT.md)
-- [Requirements PB-001 through PB-040](docs/product/REQUIREMENTS.md)
-- [Every application flow](docs/product/APP-FLOWS.md)
-- [Brand system](docs/design/BRAND.md) · [visual brand board](docs/design/brand-board.html) · [design tokens](DESIGN.md)
-- [Architecture](docs/engineering/ARCHITECTURE.md) · [API contract](docs/engineering/API.md) · [acceptance criteria](docs/quality/ACCEPTANCE.md)
+**Pebbi is being designed to meet you there.** Talk an idea through. Share a window. Turn a ramble into writing. Hand over a task—and keep your place.
 
-## Design direction
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <h3>01 &nbsp; say it.</h3>
+      Natural conversation.<br>
+      Dictation where you work.<br>
+      Less translating thoughts into clicks.
+    </td>
+    <td width="33%" valign="top">
+      <h3>02 &nbsp; share the view.</h3>
+      Screen context, when you choose.<br>
+      Guidance that points to the thing.<br>
+      A little less “which button?”
+    </td>
+    <td width="33%" valign="top">
+      <h3>03 &nbsp; make room.</h3>
+      Persistent Pebbis, files and memory.<br>
+      Tasks with visible progress.<br>
+      Important actions stay your call.
+    </td>
+  </tr>
+</table>
 
-An expressive pocket world of ceramic pebbles, sea-glass color, warm paper, tactile controls and small characterful motions. **Not minimalism, not a monochrome dashboard, not a reskin of HeyClicky.** Native usability, legibility and accessibility take precedence when decorative treatment competes with an interaction.
+<br>
 
-## Intended product stack
+## Sea-glass. Clay. A bit of mischief.
 
-Swift 6, SwiftUI/AppKit, ScreenCaptureKit, AVAudioEngine, GRDB/SQLite and native macOS tools; a TypeScript/Fastify backend on Azure Container Apps with PostgreSQL, Key Vault, Entra External ID and Stripe; Developer ID/notarized distribution with signed Sparkle updates. [Exact boundaries and rationale](docs/engineering/TECH-STACK.md).
+Warm paper. Rounded type. Glazed ceramic. A companion with an actual silhouette—not another glowing orb.
 
-Locked AI roles: `gpt-realtime-2.1` for conversation, `gpt-live-transcribe` for dictation, `gpt-6-astra` for reasoning and agents. The [dated access audit](docs/engineering/AI-MODELS.md) distinguishes confirmed Astra access from deferred audio-deployment blockers. Do not confuse catalog visibility or successful test fixtures with working live inference.
+Colorful without shouting. Tactile without getting in the way. **Native to the Mac, not a website wearing a window.**
 
-## Give this to a coding agent
+<p align="center">
+  <img src="docs/design/assets/mascot-expression-sheet.svg" width="860" alt="Original Pebbi expression studies for idle, listening, working and failed states.">
+</p>
 
-Start the agent at this repository root, then use this prompt:
+<p align="center">
+  <sub>same little pebble. different things on its mind.</sub><br><br>
+  <a href="docs/design/BRAND.md">Brand story</a> &nbsp; / &nbsp;
+  <a href="DESIGN.md">Colors &amp; type</a> &nbsp; / &nbsp;
+  <a href="docs/design/brand-board.html">Visual studies</a>
+</p>
+
+<br>
+
+## Open the sketchbook.
+
+| Follow your curiosity | Find your way |
+| :--- | :--- |
+| **What is Pebbi?** | [The product](docs/product/PRODUCT.md) · [Every app flow](docs/product/APP-FLOWS.md) |
+| **What does it feel like?** | [The screens](docs/design/SCREENS.md) · [Motion](docs/design/MOTION.md) · [Accessibility](docs/design/ACCESSIBILITY.md) |
+| **What makes it work?** | [Native architecture](docs/engineering/ARCHITECTURE.md) · [Tech stack](docs/engineering/TECH-STACK.md) · [AI roles](docs/engineering/AI-MODELS.md) |
+| **What keeps it trustworthy?** | [Security](docs/engineering/SECURITY.md) · [Privacy](docs/operations/PRIVACY-AND-DATA.md) · [Acceptance](docs/quality/ACCEPTANCE.md) |
+| **Where is everything?** | [Complete documentation map](docs/README.md) · [Canonical contract](docs/CONTRACT.md) |
+
+<br>
+
+> [!NOTE]
+> **Still in the sketchbook.** This private repository holds the complete build specification and original brand references—not a released app. Azure audio setup and other live-service inputs remain [explicitly gated](docs/operations/EXTERNAL-INPUTS.md).
+
+<details>
+<summary><strong>For the builders — one prompt, the whole picture ↗</strong></summary>
+
+### Give this to a coding agent
+
+Start at the repository root:
 
 > Implement the complete Pebbi application described in `docs/agents/BUILD-PROMPT.md`. Follow `AGENTS.md` and all normative documents indexed by `docs/README.md`. Use the repository's specialist skills and agents where supported. Complete every PB requirement with real code, error handling, tests and evidence. Continue all unblocked work without routine clarification; preserve explicit security and external-input gates. Do not stop at scaffolding, substitute mock success, or claim a production release while live gates are blocked.
 
-In Claude Code, `/build-pebbi` loads the same entry point. Reading the prompt file alone does not authorize implementation. There is no claim that an AI can manufacture missing credentials, OS permissions, signing certificates, paid resources, or an unlimited execution context.
+Claude Code: `/build-pebbi`. Reading the prompt alone does not authorize implementation. Credentials, permissions, signing and paid resources remain human-controlled prerequisites.
 
-## Verify this documentation pack
+**Intended stack:** Swift 6 · SwiftUI / AppKit · ScreenCaptureKit · AVAudioEngine · SQLite / GRDB · TypeScript / Fastify · Azure · PostgreSQL.
+
+**Locked AI roles:** `gpt-realtime-2.1` for voice · `gpt-live-transcribe` for dictation · `gpt-6-astra` for reasoning. [Actual access status](docs/engineering/AI-MODELS.md), not catalog assumptions.
+
+### Verify this documentation pack
 
 ```sh
 python3 scripts/validate_docs.py
 npx -y @google/design.md lint DESIGN.md
-# Optional isolated dependency environment for schema regression fixtures:
 uvx --from 'openapi-spec-validator>=0.7,<0.8' python scripts/validate_contracts.py
 ```
 
-The Python checker covers required files, relative links, machine-readable contracts, requirement coverage, original SVG structure, agent/skill frontmatter and obvious secret leakage. Design lint covers token references and component contrast; neither proves a future app works. Future native, integration and release checks are defined in [testing](docs/quality/TESTING.md).
+These validate the specification, not a working application.
 
-## Agent entry points
+### Agent entry points
 
-[AGENTS.md](AGENTS.md) is canonical. [AGENT.md](AGENT.md) is a compatibility redirect. [CLAUDE.md](CLAUDE.md) imports the canonical contract. [`.claude/README.md`](.claude/README.md) explains the portable project skills and specialist agents.
+[AGENTS.md](AGENTS.md) · [AGENT.md](AGENT.md) · [CLAUDE.md](CLAUDE.md) · [Specialist agents & skills](.claude/README.md)
 
-## Sources and rights
+</details>
 
-Public reference behavior is mapped in [HeyClicky coverage](docs/reference/HEYCLICKY-COVERAGE.md); [sources and boundaries](docs/reference/SOURCES.md) distinguish original design, recommendations and tested facts. No proprietary HeyClicky code or branding is included. Future use of its MIT source requires retaining the relevant notices. See [third-party notices](THIRD-PARTY-NOTICES.md) and [license](LICENSE).
+<details>
+<summary><strong>The fine print — sources, rights &amp; reality</strong></summary>
+
+Original Pebbi brand artwork. Public product references are mapped in [HeyClicky coverage](docs/reference/HEYCLICKY-COVERAGE.md), with [sources and boundaries](docs/reference/SOURCES.md). No proprietary HeyClicky code or branding is included. Any future MIT-source reuse must retain its notices.
+
+[Third-party notices](THIRD-PARTY-NOTICES.md) · [License](LICENSE). `heypebbi.com` is the selected domain, not a claim of registration or trademark clearance.
+
+</details>
+
+<br>
+
+<p align="center">
+  <img src="docs/design/assets/logo-mark.svg" width="48" alt="Pebbi"><br>
+  <strong>small presence. big possibility.</strong><br>
+  <sub>the heypebbi project</sub>
+</p>
