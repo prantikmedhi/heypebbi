@@ -1,0 +1,814 @@
+{
+  "schemaVersion": 1,
+  "status": "specified-not-executed",
+  "requirements": [
+    {
+      "id": "PB-001",
+      "title": "Native installation, launch, update and quit.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-001",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-001-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-001-n",
+        "docs/quality/TESTING.md#gj-01",
+        "docs/quality/TESTING.md#gj-09",
+        "docs/quality/TESTING.md#fi-crash"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-002",
+      "title": "Account sign-in, sign-out and device sessions.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-002",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-002-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-002-n",
+        "docs/quality/TESTING.md#gj-01",
+        "docs/quality/TESTING.md#gj-08"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-003",
+      "title": "Permission onboarding and denied/revoked recovery.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-003",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-003-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-003-n",
+        "docs/quality/TESTING.md#gj-01",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-03",
+        "docs/quality/TESTING.md#fi-permissions"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-004",
+      "title": "Personalization interview and first Pebbis.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-004",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-004-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-004-n",
+        "docs/quality/TESTING.md#gj-01"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-005",
+      "title": "Menu bar, top-edge perch and full Home window.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-005",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-005-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-005-n",
+        "docs/quality/TESTING.md#gj-01",
+        "docs/quality/TESTING.md#gj-02"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-006",
+      "title": "Global shortcuts and focus-safe activation.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-006",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-006-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-006-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-03",
+        "docs/quality/TESTING.md#fi-focus"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-007",
+      "title": "Real-time spoken conversation and typed equivalent.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-007",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-007-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-007-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#fi-provider",
+        "docs/quality/TESTING.md#fi-voice"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-008",
+      "title": "Explicit screen capture scope and screen understanding.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-008",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-008-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-008-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#fi-permissions"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-009",
+      "title": "Drawing, pointing and resumable guided walkthroughs.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-009",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-009-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-009-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#fi-display"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-010",
+      "title": "Dictation, review and focus-safe insertion.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-010",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-010-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-010-n",
+        "docs/quality/TESTING.md#gj-03",
+        "docs/quality/TESTING.md#fi-audio",
+        "docs/quality/TESTING.md#fi-duplicate",
+        "docs/quality/TESTING.md#fi-focus"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-011",
+      "title": "Persistent Pebbi creation, editing and appearance.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-011",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-011-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-011-n",
+        "docs/quality/TESTING.md#gj-01",
+        "docs/quality/TESTING.md#gj-04"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual"
+      ]
+    },
+    {
+      "id": "PB-012",
+      "title": "Conversations, search, archive, unread and pinning.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-012",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-012-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-012-n",
+        "docs/quality/TESTING.md#gj-04",
+        "docs/quality/TESTING.md#gj-08"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual"
+      ]
+    },
+    {
+      "id": "PB-013",
+      "title": "Memory inspect, edit, forget and context compaction.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-013",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-013-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-013-n",
+        "docs/quality/TESTING.md#gj-04",
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#fi-memory"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-014",
+      "title": "Attachments, whole-document reading and previews.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-014",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-014-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-014-n",
+        "docs/quality/TESTING.md#gj-04"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-015",
+      "title": "Agent task execution and truthful live progress.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-015",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-015-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-015-n",
+        "docs/quality/TESTING.md#gj-04",
+        "docs/quality/TESTING.md#gj-05",
+        "docs/quality/TESTING.md#fi-crash",
+        "docs/quality/TESTING.md#fi-duplicate",
+        "docs/quality/TESTING.md#fi-network"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-016",
+      "title": "Concurrent Pebbis, queues and race-free follow-ups.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-016",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-016-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-016-n",
+        "docs/quality/TESTING.md#gj-05",
+        "docs/quality/TESTING.md#fi-queue"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-017",
+      "title": "Approval, stop, cancellation and recovery.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-017",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-017-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-017-n",
+        "docs/quality/TESTING.md#gj-05",
+        "docs/quality/TESTING.md#gj-06",
+        "docs/quality/TESTING.md#fi-approval",
+        "docs/quality/TESTING.md#fi-duplicate"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-018",
+      "title": "Native desktop control and takeover boundaries.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-018",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-018-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-018-n",
+        "docs/quality/TESTING.md#gj-06",
+        "docs/quality/TESTING.md#fi-focus",
+        "docs/quality/TESTING.md#fi-permissions"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-019",
+      "title": "Browser DOM tools and user-selected sessions.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-019",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-019-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-019-n",
+        "docs/quality/TESTING.md#gj-06",
+        "docs/quality/TESTING.md#fi-browser"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-020",
+      "title": "Web research with source-grounded results.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-020",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-020-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-020-n",
+        "docs/quality/TESTING.md#gj-04"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-021",
+      "title": "Files, workspace boundaries and code execution.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-021",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-021-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-021-n",
+        "docs/quality/TESTING.md#gj-04",
+        "docs/quality/TESTING.md#gj-06",
+        "docs/quality/TESTING.md#fi-queue",
+        "docs/quality/TESTING.md#fi-workspace"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-022",
+      "title": "Built-in connection catalog and OAuth lifecycle.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-022",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-022-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-022-n",
+        "docs/quality/TESTING.md#gj-06"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-023",
+      "title": "Custom remote/local MCP connections.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-023",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-023-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-023-n",
+        "docs/quality/TESTING.md#gj-06",
+        "docs/quality/TESTING.md#fi-mcp"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-024",
+      "title": "Read-only personalized suggestions and approve-to-run.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-024",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-024-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-024-n",
+        "docs/quality/TESTING.md#gj-07"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-025",
+      "title": "Routines, local scheduling, wake and retry policy.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-025",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-025-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-025-n",
+        "docs/quality/TESTING.md#gj-07",
+        "docs/quality/TESTING.md#fi-sleep"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-026",
+      "title": "Notifications, Focus/call suppression and unread delivery.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-026",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-026-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-026-n",
+        "docs/quality/TESTING.md#gj-05",
+        "docs/quality/TESTING.md#gj-07",
+        "docs/quality/TESTING.md#fi-duplicate"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-027",
+      "title": "Plans, metering, reservations and billing changes.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-027",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-027-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-027-n",
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#fi-duplicate",
+        "docs/quality/TESTING.md#fi-quota"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-028",
+      "title": "Quota limits and graceful provider unavailability.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-028",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-028-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-028-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#fi-provider",
+        "docs/quality/TESTING.md#fi-quota"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-029",
+      "title": "Preferences, voice/device choice and shortcut recording.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-029",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-029-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-029-n",
+        "docs/quality/TESTING.md#gj-03"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-030",
+      "title": "Local export, account export and deletion.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-030",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-030-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-030-n",
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#fi-privacy"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-031",
+      "title": "Privacy controls, retention and sensitive-content boundaries.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-031",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-031-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-031-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#fi-privacy"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-032",
+      "title": "VoiceOver, keyboard, contrast and reduced motion.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-032",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-032-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-032-n",
+        "docs/quality/TESTING.md#gj-01",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-03",
+        "docs/quality/TESTING.md#gj-08"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-033",
+      "title": "Multi-display, notchless, Spaces and scaling behavior.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-033",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-033-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-033-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-09",
+        "docs/quality/TESTING.md#fi-display"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-034",
+      "title": "Audio devices, Bluetooth, interruption and mic recovery.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-034",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-034-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-034-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-03",
+        "docs/quality/TESTING.md#fi-audio",
+        "docs/quality/TESTING.md#fi-voice"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-035",
+      "title": "Offline, sleep/wake and app-crash recovery.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-035",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-035-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-035-n",
+        "docs/quality/TESTING.md#gj-05",
+        "docs/quality/TESTING.md#gj-07",
+        "docs/quality/TESTING.md#fi-crash",
+        "docs/quality/TESTING.md#fi-duplicate",
+        "docs/quality/TESTING.md#fi-network",
+        "docs/quality/TESTING.md#fi-sleep"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-036",
+      "title": "Secure updates, signing and release rollback.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-036",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-036-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-036-n",
+        "docs/quality/TESTING.md#gj-09",
+        "docs/quality/TESTING.md#fi-update"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-037",
+      "title": "Diagnostics, support and redacted telemetry.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-037",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-037-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-037-n",
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#gj-09"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-038",
+      "title": "Resource budgets, latency and idle efficiency.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-038",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-038-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-038-n",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-05",
+        "docs/quality/TESTING.md#fi-memory-pressure",
+        "docs/quality/TESTING.md#fi-queue"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    },
+    {
+      "id": "PB-039",
+      "title": "Support, privacy, account and download web surfaces.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-039",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-039-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-039-n",
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#gj-09"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live"
+      ]
+    },
+    {
+      "id": "PB-040",
+      "title": "Complete end-to-end acceptance and honest release gating.",
+      "requirementDoc": "docs/product/REQUIREMENTS.md",
+      "flowDoc": "docs/product/APP-FLOWS.md",
+      "designDoc": "docs/design/SCREENS.md",
+      "acceptanceDoc": "docs/quality/ACCEPTANCE.md#pb-040",
+      "testCases": [
+        "docs/quality/ACCEPTANCE.md#tc-pb-040-p",
+        "docs/quality/ACCEPTANCE.md#tc-pb-040-n",
+        "docs/quality/TESTING.md#gj-01",
+        "docs/quality/TESTING.md#gj-02",
+        "docs/quality/TESTING.md#gj-03",
+        "docs/quality/TESTING.md#gj-04",
+        "docs/quality/TESTING.md#gj-05",
+        "docs/quality/TESTING.md#gj-06",
+        "docs/quality/TESTING.md#gj-07",
+        "docs/quality/TESTING.md#gj-08",
+        "docs/quality/TESTING.md#gj-09"
+      ],
+      "verificationClass": [
+        "automated",
+        "manual",
+        "live",
+        "hardware"
+      ]
+    }
+  ]
+}

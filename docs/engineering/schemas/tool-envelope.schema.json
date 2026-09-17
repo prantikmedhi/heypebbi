@@ -1,0 +1,479 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:pebbi:schema:tool-envelope:1",
+  "title": "Pebbi local tool envelopes",
+  "description": "Native TOOLS.md is authority. Root accepts exactly one proposal, immutable intent, execution record or result. Model proposals never contain grants, risk, digests or execution authority. Additional per-tool schemas and trusted broker checks are mandatory. No model or external caller may submit an intent/execution as authorization.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ToolProposal"
+    },
+    {
+      "$ref": "#/$defs/ToolIntent"
+    },
+    {
+      "$ref": "#/$defs/ToolExecution"
+    },
+    {
+      "$ref": "#/$defs/ToolResult"
+    }
+  ],
+  "$defs": {
+    "LocalToolName": {
+      "type": "string",
+      "enum": [
+        "captureScreen",
+        "readScreenText",
+        "showGuidance",
+        "clearGuidance",
+        "inspectDesktop",
+        "inspectDesktopElement",
+        "pressDesktopElement",
+        "setDesktopValue",
+        "scrollDesktop",
+        "takeoverAction",
+        "insertDictation",
+        "inspectBrowser",
+        "readBrowser",
+        "navigateBrowser",
+        "clickBrowserElement",
+        "fillBrowserElement",
+        "scrollBrowser",
+        "searchWeb",
+        "fetchWebSource",
+        "listWorkspace",
+        "readFile",
+        "extractDocument",
+        "createFile",
+        "replaceFile",
+        "moveFile",
+        "trashFile",
+        "previewArtifact",
+        "searchMemory",
+        "proposeMemory",
+        "runCode",
+        "listConnections",
+        "describeConnectionTools",
+        "callConnectionTool"
+      ]
+    },
+    "ResourceScope": {
+      "type": "object",
+      "properties": {
+        "scopeKind": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "resourceId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "operation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        }
+      },
+      "required": [
+        "scopeKind",
+        "resourceId",
+        "operation"
+      ],
+      "additionalProperties": false,
+      "description": "Resolve every value from trusted local registries. Strings are opaque bounded authority references, never automatically accepted filesystem paths or URLs."
+    },
+    "ToolProposal": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        },
+        "toolName": {
+          "$ref": "#/$defs/LocalToolName"
+        },
+        "arguments": {
+          "type": "object",
+          "maxProperties": 128,
+          "description": "Validate against the selected tool-specific closed argument schema in TOOLS.md. Total UTF-8 JSON <=64 KiB. This generic envelope cannot authorize unknown arguments, nested data or tools."
+        },
+        "providerCallRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "toolName",
+        "arguments"
+      ],
+      "additionalProperties": false
+    },
+    "ToolIntent": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        },
+        "toolCallId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "taskId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attemptId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "pebbiId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "conversationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "toolName": {
+          "$ref": "#/$defs/LocalToolName"
+        },
+        "arguments": {
+          "type": "object",
+          "maxProperties": 128,
+          "description": "Validate against the selected tool-specific closed argument schema in TOOLS.md. Total UTF-8 JSON <=64 KiB. This generic envelope cannot authorize unknown arguments, nested data or tools."
+        },
+        "providerCallRef": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "steeringRevision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "cancelEpoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "accountEpoch": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "policyVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "adapterVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "resourceScopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResourceScope"
+          },
+          "maxItems": 32
+        },
+        "targetRevision": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "riskClass": {
+          "type": "string",
+          "enum": [
+            "readOnly",
+            "localWrite",
+            "externalWrite",
+            "sensitive"
+          ]
+        },
+        "idempotencyClass": {
+          "type": "string",
+          "enum": [
+            "readOnly",
+            "providerKey",
+            "compareAndSet",
+            "nonIdempotent"
+          ]
+        },
+        "idempotencyKey": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "argumentDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "intentDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "toolCallId",
+        "taskId",
+        "attemptId",
+        "pebbiId",
+        "conversationId",
+        "toolName",
+        "arguments",
+        "createdAt",
+        "steeringRevision",
+        "cancelEpoch",
+        "accountEpoch",
+        "policyVersion",
+        "adapterVersion",
+        "resourceScopes",
+        "riskClass",
+        "idempotencyClass",
+        "idempotencyKey",
+        "argumentDigest",
+        "intentDigest"
+      ],
+      "additionalProperties": false,
+      "description": "Immutable broker-created normalized intent. Hash RFC 8785 canonical UTF-8 JSON with SHA-256; argumentDigest covers arguments, intentDigest covers all fields except itself. Schema validity is not authority."
+    },
+    "ToolExecution": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        },
+        "executionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "toolCallId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "approvalRequestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "grantId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "dispatchReservedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "authorityDigest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "leaseGeneration": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "executionId",
+        "toolCallId",
+        "dispatchReservedAt",
+        "authorityDigest",
+        "leaseGeneration"
+      ],
+      "additionalProperties": false
+    },
+    "ToolError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "invalidArguments",
+            "unknownTool",
+            "policyDenied",
+            "approvalRequired",
+            "approvalExpired",
+            "scopeExpired",
+            "permissionDenied",
+            "staleTarget",
+            "focusChanged",
+            "requiresTakeover",
+            "invalidGeometry",
+            "protectedContent",
+            "connectionUnavailable",
+            "capabilityChanged",
+            "quotaExceeded",
+            "notSupported",
+            "notFound",
+            "conflict",
+            "timeout",
+            "cancelled",
+            "outputLimitExceeded",
+            "storageUnavailable",
+            "unverifiedEffect",
+            "untrustedExecutable",
+            "pairingRequired",
+            "protocolViolation"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "details": {
+          "type": "object",
+          "maxProperties": 32,
+          "description": "Bounded redacted adapter-specific details; no secret, raw transcript or arbitrary server exception."
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "retryable",
+        "details"
+      ],
+      "additionalProperties": false
+    },
+    "ToolResult": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "integer",
+          "const": 1
+        },
+        "resultId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "toolCallId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "executionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "taskId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attemptId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "succeeded",
+            "failed",
+            "denied",
+            "cancelled",
+            "unknown"
+          ]
+        },
+        "effectState": {
+          "type": "string",
+          "enum": [
+            "notApplied",
+            "applied",
+            "unknown",
+            "notApplicable"
+          ]
+        },
+        "verification": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "unverified",
+            "notApplicable"
+          ]
+        },
+        "output": {
+          "type": "object",
+          "maxProperties": 128,
+          "description": "Validate selected tool output shape; total inline JSON <=64 KiB, otherwise immutable artifact refs + coverage. Never execute output as instructions."
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "artifactRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "error": {
+          "$ref": "#/$defs/ToolError"
+        },
+        "reconciliationOfResultId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "nextAction": {
+          "type": "string",
+          "enum": [
+            "continueTask",
+            "requestApproval",
+            "requestInput",
+            "reconnect",
+            "reconcile",
+            "stop"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "resultId",
+        "toolCallId",
+        "taskId",
+        "attemptId",
+        "observedAt",
+        "outcome",
+        "effectState",
+        "verification",
+        "output",
+        "evidenceRefs",
+        "artifactRefs",
+        "nextAction"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

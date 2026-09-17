@@ -1,0 +1,377 @@
+{
+  "schemaVersion": 1,
+  "product": "Pebbi",
+  "repositoryState": "documentationOnly",
+  "releaseReady": false,
+  "environment": {
+    "os": null,
+    "xcodeVersion": null,
+    "swiftVersion": null,
+    "nodeVersion": null
+  },
+  "requirements": [
+    {
+      "id": "PB-001",
+      "title": "Native installation, launch, update and quit",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-002",
+      "title": "Account sign-in, sign-out and device sessions",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-003",
+      "title": "Permission onboarding and denied/revoked recovery",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-004",
+      "title": "Personalization interview and first Pebbis",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-005",
+      "title": "Menu bar, top-edge perch and full Home window",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-006",
+      "title": "Global shortcuts and focus-safe activation",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-007",
+      "title": "Real-time spoken conversation and typed equivalent",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-008",
+      "title": "Explicit screen capture scope and screen understanding",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-009",
+      "title": "Drawing, pointing and resumable guided walkthroughs",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-010",
+      "title": "Dictation, review and focus-safe insertion",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-011",
+      "title": "Persistent Pebbi creation, editing and appearance",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-012",
+      "title": "Conversations, search, archive, unread and pinning",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-013",
+      "title": "Memory inspect, edit, forget and context compaction",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-014",
+      "title": "Attachments, whole-document reading and previews",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-015",
+      "title": "Agent task execution and truthful live progress",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-016",
+      "title": "Concurrent Pebbis, queues and race-free follow-ups",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-017",
+      "title": "Approval, stop, cancellation and recovery",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-018",
+      "title": "Native desktop control and takeover boundaries",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-019",
+      "title": "Browser DOM tools and user-selected sessions",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-020",
+      "title": "Web research with source-grounded results",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-021",
+      "title": "Files, workspace boundaries and code execution",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-022",
+      "title": "Built-in connection catalog and OAuth lifecycle",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-023",
+      "title": "Custom remote/local MCP connections",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-024",
+      "title": "Read-only personalized suggestions and approve-to-run",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-025",
+      "title": "Routines, local scheduling, wake and retry policy",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-026",
+      "title": "Notifications, Focus/call suppression and unread delivery",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-027",
+      "title": "Plans, metering, reservations and billing changes",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-028",
+      "title": "Quota limits and graceful provider unavailability",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-029",
+      "title": "Preferences, voice/device choice and shortcut recording",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-030",
+      "title": "Local export, account export and deletion",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-031",
+      "title": "Privacy controls, retention and sensitive-content boundaries",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-032",
+      "title": "VoiceOver, keyboard, contrast and reduced motion",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-033",
+      "title": "Multi-display, notchless, Spaces and scaling behavior",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-034",
+      "title": "Audio devices, Bluetooth, interruption and mic recovery",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-035",
+      "title": "Offline, sleep/wake and app-crash recovery",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-036",
+      "title": "Secure updates, signing and release rollback",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-037",
+      "title": "Diagnostics, support and redacted telemetry",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-038",
+      "title": "Resource budgets, latency and idle efficiency",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-039",
+      "title": "Support, privacy, account and download web surfaces",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    },
+    {
+      "id": "PB-040",
+      "title": "Complete end-to-end acceptance and honest release gating",
+      "status": "notStarted",
+      "implementationPaths": [],
+      "tests": [],
+      "evidence": [],
+      "blockers": []
+    }
+  ],
+  "externalInputs": [],
+  "nextActions": [],
+  "lastUpdatedAt": null
+}

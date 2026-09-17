@@ -1,0 +1,87 @@
+# Privacy, data handling and deletion
+
+Status: **implementation/privacy requirements, not a published legal policy or compliance certification**. Actual operators, processor terms, regions, retention configuration and contact details require approval and verification before launch. No real app data is collected by these documents. [CONTRACT](../CONTRACT.md), [API](../engineering/API.md) and [DATA-MODEL](../engineering/DATA-MODEL.md) control system boundaries and records; this document controls operational disclosure, testing and lifecycle obligations. [EXTERNAL-INPUTS](EXTERNAL-INPUTS.md) keeps unverified policy/deployment inputs BLOCKED.
+
+## Plain-language product promises to implement
+
+- Pebbi is explicitly AI. It does not silently watch the desktop, continuously record the microphone, monitor global typing or synchronize local content across devices.
+- Selected task content can leave the Mac for authenticated backend/provider processing. Do not claim “nothing leaves your Mac,” local model inference, end-to-end encryption of cloud inference, zero provider retention or no-training use unless the actual architecture/agreements prove the exact claim.
+- Local conversations, memory, routine definitions, workspaces and task journals reside in native GRDB SQLite/managed files under Application Support/HeyPebbi. Secrets belong in Keychain, not the database. The backend has no conversation/file/screenshot synchronization route.
+- A capture scope, a connector OAuth grant, a model-processing disclosure, a saved memory and a protected-effect approval are distinct permissions. Granting one does not imply the others.
+- A private session minimizes durable content; it does not eliminate necessary usage/security accounting or erase content already sent to a provider. Explicitly saved outputs and minimal safety/effect-reconciliation records are disclosed exceptions.
+
+## Data inventory and lifecycle
+
+“Default” below is intended product behavior, not evidence of deployment. Retention policy version and effective settings must be inspectable. Exact production server/security/backup retention configuration must match [SECURITY.md](../engineering/SECURITY.md#data-location-and-retention), [BILLING.md](../engineering/BILLING.md) and the published notice and be tested before LG-PRIVACY passes; unset/invalid policy cannot silently mean forever. SECURITY.md owns the fixed implementation ceilings: temporary local cache 24 hours, local diagnostics 7 days, server logs 30 days, detailed operational usage/dedupe 90 days, completed reservation/cursor metadata 30 days, idempotency metadata 24 hours, server export artifact 24 hours with a 15-minute object URL, and encrypted database backups 35 days. These are testable ceilings, not operator permission to enlarge them; jurisdiction-specific minimal financial retention still needs approval.
+
+| Data class | Location / purpose | Retention and user control | Transfer / exclusions |
+| --- | --- | --- | --- |
+| Account, device session and entitlement metadata | Entra identity authority; server PostgreSQL for app accounts/devices/entitlements. | Retain while needed for account/security; revoke admission immediately on sign-out/device revoke/account deletion. Apply approved deletion/legal rules below. | No hardware serial fingerprint; app installation/device IDs are scoped metadata. No identity-provider passwords stored by Pebbi. |
+| Native access/refresh/session material and connector credentials | Keychain; server-owned provider/webhook secrets in Key Vault through managed identity. | Delete/revoke on corresponding disconnect/sign-out/deletion where applicable; expired session material cannot authorize new work. | Never enter prompts, plain preferences, logs, exports, URL queries or support tickets. Connector secrets stay local unless a specific authorized server operation requires transfer. |
+| Pebbi profile, approved memory and conversation text/transcripts | Local GRDB with account/Pebbi scope, provenance and revisions. | Persist until user deletes or selects supported shorter retention. Memory proposals need approval. Forget invalidates retrieval/summaries; editing/forgetting memory does not falsely erase unrelated original chats. | Only selected relevant context is sent for an authorized task. No default cross-Pebbi/private-account sharing. |
+| Raw screen frames, microphone input and generated playback buffers | Bounded volatile buffers for active selected capture/audio session. | Ephemeral by default; clear/drop on stop, scope/account change, completion, sleep/lock or invalidation. No durable recording merely for diagnostics/history. | Selected frames/audio may be sent for the approved role; excluded windows/secure content cannot be captured by broadening scope. Explicit Save/Attach screenshot creates a separate disclosed durable artifact. |
+| Dictation recovery text and personal dictionary | Local recoverable draft/explicit preference only. | Partial/final text retained according to chosen history/private-session controls; cancelled unsaved content not turned into memory. | No global typing surveillance. Never send or insert into secure fields; terminal/shell destinations need safe preview. |
+| Managed attachments and generated files | Selected Pebbi workspace, provenance and versioned manifest. | Retain until deleted/selected policy; user exports outside managed scope remain user-controlled. Derived extraction/search cache removed with source deletion. | Explicit file-processing scope before contents are sent; macros/scripts/embedded instructions do not authorize tools. Preview is not consent to upload or execute. |
+| Task journal, intent/approval/effect receipts and routine occurrence history | Local durable records needed for truthful progress and reconciliation. | Minimize content in receipts; protect active/unknown-effect safety records until resolved under published policy. Deletion stops/reconciles work and removes eligible content; minimal tombstones prevent resurrection/replay. | No raw secrets or blanket full payload logging. Necessary verification references stay access controlled and sanitized. |
+| Usage reservations/ledger and billing references | Server PostgreSQL and Stripe for payment processing. | Necessary metering/account/legal retention only; distinguish held, consumed and settled usage. Legal billing exceptions need purpose and approved duration. | Server trusts provider/accounting, not user-provided counts. Pebbi does not store card credentials; hosted Checkout/Portal handles payment UI. |
+| Optional product analytics | Approved redacted backend telemetry only after opt-in. | Off by default; revocation stops new optional transmission. Bounded approved retention and deletion handling; no bundled consent with core use. | No prompts, transcript/file bodies, screenshots/audio, full URLs, usernames/home paths, credentials or tool payloads. |
+| Necessary security/service logs | Redacted Azure Monitor/service metadata with least-privilege access. | Approved bounded retention, purpose and access audit; cannot secretly become product analytics. | Safe error codes, durations, release/config version and restricted correlation IDs only; content logging disabled. |
+| Support diagnostics | User-generated local preview/export; authorized support storage only after explicit send. | Bounded requested interval; user selects notes and can cancel. Retention/disposal follows approved support policy; no indefinite ticket attachments. | Redaction fails closed before export/send. Raw screen/audio/history or secret-bearing paths are not bundled. A separate user attachment needs explicit preview/consent. |
+| Local and account export artifacts | User-chosen local destination; scoped expiring server Blob object for account export. | Local copies remain user-controlled; server object/link expires under published configuration and is deleted by lifecycle. | Server artifact contains account/device/entitlement/usage data, not local conversations/files/screens; secrets/other accounts excluded. |
+| Backups/deletion tombstones | User-authorized local checkpoints; approved server backup systems. | Bound expiry and reapply tombstones after restore before serving data. See deadlines below; backups are not a hidden archive. | Encrypted/protected according to actual configured platform policy, not an assumed feature. Access and restore are audited. |
+
+## Consent, scope and sensitive content
+
+Request macOS Microphone, Screen Recording, Accessibility and Notifications only at point of need with a clear reason and recovery path. The OS/user grants permission; Pebbi cannot automate consent or modify TCC records. Denial leaves independent local/typed features usable. Revocation immediately halts the affected collection/action path and invalidates stale targets and queued context.
+
+Show which window/display/region, file, app/tab or connector source is selected before disclosure. Model/tool text and retrieved pages cannot widen that scope. A sensitive-content classifier is a defense in depth, not a guarantee: known secure/password/payment/permission fields are excluded by rule; uncertain sensitive capture pauses for user redaction/reselection rather than optimistic upload. Excluded-window canaries must not appear in provider payloads, persistent storage or telemetry.
+
+Memory proposals and Suggestions source opt-in are separate controls. Suggestions use read-only granted context; approval creates work but never bypasses fresh protected-effect approval. A scoped persistent grant is revocable, expiry-bound and resource-specific and cannot include payments, credentials, destructive bulk, publishing or outbound messages. One-prompt build autonomy is not a consent waiver.
+
+## Private sessions, memory forgetting and compaction
+
+Private-session UI states exactly what will persist: no durable conversation/memory/unsaved artifact content, except explicitly saved outputs; minimal usage/security accounting and unresolved-effect safety metadata may remain. Do not claim private mode erases an already sent email, provider input, external recipient copy or a user's separately exported file. Crash/diagnostics must not accidentally persist private text.
+
+On Forget: increment memory revision; remove eligible item/FTS entries and cached snippets; invalidate summaries or prompt snapshots that carry the fact; reassemble before the next provider request; discard obsolete in-flight planning as appropriate. Preserve the distinction between forgetting a memory and deleting its original conversation/document. Do not re-extract the forgotten canary automatically from surviving source text into a new memory. Do not promise a provider can unsee already-sent content.
+
+Compaction is a versioned derived summary, not new authorization or an invisible replacement for the journal. Keep source/provenance and active instructions/receipts; reject hallucinated references. Source deletion/retention expiry invalidates dependent summaries/extractions/search indexes. A failure to remove a derived copy is a failed deletion test.
+
+## Export procedure and oracle
+
+1. Let the user choose local scope/destination and whether to request a separate account export. Show content categories and exclusions before generating anything. Exports are consequential disclosures; support cannot initiate them silently.
+2. Local export contains chosen Pebbi profiles, conversations, approved memory, routine definitions, task/artifact manifest and selected files plus schema/version metadata. Exclude credentials, unselected/private content, ephemeral raw capture, other accounts and internal signing/configuration secrets.
+3. Account export via `POST /v1/account/export` contains only server-held account/devices/entitlements/usage. `includesLocalData` stays false for that artifact. The app may combine it with a separately consented local export, but must not imply server sync exists.
+4. Use atomic completed-artifact presentation, integrity manifest and safe filenames/path handling. Disk full, cancelled picker, timeout or partial archive stays failed/incomplete with recovery, never “exported.” No export job grants write access beyond the selected destination.
+5. Server export download is read-only/object-scoped/short-lived, excluded from logs and protected against cross-account access. Handle expired links with authenticated renewal rather than permanent public links.
+6. Verify archive parse, counts, hashes, all selected categories and absence of synthetic secret/other-account canaries. Use actual readback; an export API's accepted response is not a ready artifact.
+
+## Deletion, retention and restoration
+
+Deletion UI distinguishes local selected data, whole local account store, server account, billing obligations and external/user-created copies. Offer export first, disclose irreversible and retained categories and require explicit confirmation/reauthentication as applicable. Do not conflate sign-out with content deletion.
+
+- **Local deletion:** stop/reconcile active relevant tasks, remove eligible GRDB rows/files/FTS/snippets/summaries/caches and handle owned processes. Preserve only disclosed minimal safety/tombstone obligations. Offline local deletion can complete independently while server deletion remains pending. Other retained accounts stay isolated.
+- **Server account deletion:** `DELETE /v1/account` immediately marks deletion pending, revokes device/session admission and blocks new billing/model work; durable cancellation/deletion jobs follow. The API contract requires eligible active data deletion within **30 days**, with backup expiry no later than **35 days after active deletion**. These are proposed service obligations requiring verified operational/legal approval before launch, not evidence they are currently delivered. Do not imply the two clocks have the same start.
+- **Legal records:** required billing/security retention is narrowly purpose-bound, access restricted and disclosed with approved duration/basis. No blanket “all data instantly erased” claim. Production policy values must be supplied/approved; absence blocks launch rather than inventing legal rules.
+- **Restore:** restore only in an isolated authorized environment first. Reapply deletion tombstones before any restored account/content becomes usable. Preserve task/external-effect high-water marks; an old backup must not resurrect deleted memory or resend a previously executed action. Verify all indexes/artifacts as well as primary rows.
+- **External limits:** account deletion cannot remotely erase an offline Mac's local store, user-created exports, recipient messages or third-party provider records beyond actual agreements. Show exact scope and unresolved status.
+
+Retention changes run against explicit data classes with progress/error handling and retry-safe checkpoints. Shortening retention removes eligible derived data too; extending it cannot resurrect deleted data. Never keep raw audio/screenshots “temporarily” without an explicit bounded lifetime and user-visible purpose.
+
+## Storage and transmission security
+
+TLS protects client/backend/provider links; validate certificates and authorized destinations. Native secrets use Keychain, server secrets Key Vault/managed identity. Do not put bearer/session tokens in URLs or log export URLs. Signed, one-purpose voice/dictation session authorization never includes an Azure key. Limit SSRF/redirects and untrusted input sizes at backend/MCP/browser boundaries.
+
+GRDB/SQLite is native persistence, **not proof of database encryption**. Apply least-privilege local file permissions and appropriate macOS protection; explain that local-user compromise/unencrypted disks are not solved by an app tool allowlist. Do not claim SQLCipher or hardware-backed protection not selected/implemented. Actual Azure encryption/backup policies must be verified, not inferred from a service name. No broad content sync or additional vector/cloud memory store is introduced for convenience.
+
+## Required privacy verification and publication gate
+
+LG-PRIVACY requires:
+
+- Real payload inspection with synthetic canaries for selected/excluded windows, private sessions, documents, forgotten memory, secrets, account boundaries and browser tabs.
+- Revocation during capture/dispatch; no unauthorized follow-up request or resumed microphone after sleep/Quit.
+- Redaction tests before persistence/export/upload, optional telemetry-off verification and necessary-log purpose separation.
+- Local/account export parse/integrity/isolation and independent local/server deletion failures, approved retention sweeps and backup-restore tombstones.
+- Documented actual processors, regions, purposes, retention, data subject request procedure and verified operator contact. Public pages must match actual behavior and contract deadlines.
+- Security/privacy reviewer approval tied to the release/configuration version, not generic vendor marketing claims.
+
+No deployment input, published privacy page or compliance status is assumed verified here. Unresolved policy or data-path evidence keeps LG-PRIVACY and public release **BLOCKED**.

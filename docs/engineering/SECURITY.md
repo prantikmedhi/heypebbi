@@ -1,0 +1,120 @@
+# Security, privacy and fail-closed boundaries
+
+Status: required implementation controls, not a security certification or existing production deployment. [CONTRACT](../CONTRACT.md) is authoritative. [API](API.md) owns wire authentication and [TOOLS](TOOLS.md) owns local tool execution. The native Mac, model, content source, connector, backend and billing provider are separate trust boundaries.
+
+## Trust and least privilege
+
+| Principal / surface | Allowed authority | Explicitly forbidden |
+| --- | --- | --- |
+| Human in native UI | Choose context, approve a bounded action, revoke permissions, authorize a purchase in hosted Stripe UI | A blanket instruction to be autonomous cannot bypass OS, security, payment or provisioning gates. |
+| Model / transcript / memory | Produce untrusted proposals and explanations | Grant permissions, approve its own proposal, mint tokens, select another account, read secrets or rewrite policy. |
+| Native ToolBroker | Validate registry, scope, fresh target, approval, resource lease and cancellation before one dispatch | Treat allowlisting as an OS sandbox; blindly retry an unknown side effect. |
+| Browser extension / native host | Authenticated, selected-tab DOM read/action | Read all tabs/profile data, expose an ordinary signed-in browser debugging port, act in a new origin without revalidation. |
+| Local connector / MCP process | Only explicit connector scopes and approved tool classes | Inherit the full agent environment, retrieve Keychain inventory, authorize other connectors, survive Quit. |
+| Backend API identity | Own account/device, configured model role and allowed entitlement | Access another user's resources, use an app token to finalize usage, execute desktop tools on the server. |
+| Metering workload identity | Finalize only verified server operation evidence for assigned service | Accept app-authored usage, arbitrary balance adjustment or billing-provider secrets. |
+| Migration / release identities | Narrow migration or release-artifact operation | Share the runtime DB role or blanket owner permissions with ordinary requests. |
+| Azure / Stripe | Receive only data needed for selected inference or hosted billing | Receive connector refresh tokens, local private file inventories, native account refresh tokens or unrestricted tool authority. |
+
+Use separate managed identities and least-privilege Azure roles for gateway, metering worker, database migrations, export worker and release upload. Runtime SQL role cannot create extensions or change schema; migration role is not a request credential. Use non-superuser pooled database access and enforce account ownership in every query. If RLS is used, transaction-local account context and non-bypass roles are mandatory; RLS is defense-in-depth, not a reason to omit application checks. Blob readers cannot list/write release containers; export URLs are single-object read-only grants. Keys/connection strings stay in Key Vault, not client bundles, build logs or committed configuration.
+
+## Native identity and session controls
+
+Entra External ID authorization-code + PKCE `S256` runs in the system browser. Validate callback state, redirect and nonce; validate issuer, audience, signature, lifetime and tenant/policy against configured trust, not user input. API access tokens and native ID tokens are different artifacts. Unknown JWKS keys cause a bounded refresh from the pinned issuer, never dynamic token-specified discovery. Unknown issuer/audience/algorithm/scope fails closed. Use standard libraries, no custom JWT cryptography.
+
+Refresh/session material, OAuth refresh tokens and IPC pairing secrets belong in Keychain, scoped to this app/account and device with the least sharing required. Do not place them in SQLite, UserDefaults, command lines, logs, crash attachments, browser localStorage or screenshots. Sign-out stops work, clears sessions, revokes current device online and locks the account's local partition; offline revocation is disclosed, not invented. The API rejects revoked devices immediately on admission and within 5 seconds on active streams. Account deletion requires independently verified recent authentication and typed confirmation; see [API](API.md).
+
+Unconfigured tenant, audience, redirect allowlist, signing authority, role deployment, price mapping or permission gate is an unavailable feature, not a placeholder success. Do not ship demo tenant IDs or a shared development credential. A selected domain does not prove registration, trademark clearance, TLS ownership or authorized redirects.
+
+## Capability and approval enforcement
+
+All side effects go through a single trusted local broker. Validate in this order, then revalidate after any suspension and immediately before dispatch:
+
+1. Active account/device epoch, logical task and attempt, cancel epoch, deadline and current connection state.
+2. Registered tool identity/version and closed tool-specific input schema. Model argument fields cannot replace trusted envelope fields.
+3. Current capabilities from the actual connector/app and OS permission state. A prior approval cannot create a missing AX, microphone, screen-capture, file or OAuth permission.
+4. Resource scope: resolved file root + real target, specific app/bundle, selected browser tab/session/origin, connector account/resource and requested operation. IDs/names are not authorization.
+5. Required approval bound to the immutable normalized intent and preview hash, user, connector/app, tool class, bounded resource and expiry. `allowOnce` applies to one dispatch; `allowForScope` is an explicitly recorded, revocable, bounded grant; `deny` terminates the request. No decision can be inferred from silence, old chat text, a webpage or a model output.
+6. Acquire the relevant resource lease; validate target generation, scope and cancellation again; durably record intended dispatch before sending it; verify exact target after mutation.
+
+Persistent grants **never** cover payments, credentials, destructive bulk operations, publishing or outbound messages. These require a fresh human-readable preview and approval every time. Changing amount, recipient, destination, content, resource, tool version, account, target generation or meaningful arguments invalidates approval. A cached approval for one connector cannot authorize another. `allowOnce` has no automatic retry privilege after uncertain dispatch. Routines and accepted suggestions follow the same checks; a routine cannot turn a high-risk one-time approval into a standing permission.
+
+Approvals must show what will leave the machine and to whom, and distinguish a semantic background action from foreground takeover. AX actions can fail or trigger visible effects; CGEvent fallback requires explicit takeover consent and uses the real foreground session. Never bypass a password, permission or payment UI; let the user complete it. OS TCC prompts and provider OAuth consent cannot be approved by an LLM. Screen visibility is not consent to capture all windows.
+
+The [tool envelope schema](schemas/tool-envelope.schema.json) validates shape, not authority. Approval/grant/capability records must be checked against trusted local records or authenticated broker IPC. A valid JSON object signed by nobody is not permission. Do not expose the tool broker as an unauthenticated loopback HTTP service.
+
+## Prompt injection and untrusted content
+
+Treat pages, DOM text/attributes, PDFs, filenames, OCR, repository files, transcripts of third-party speech, connector tool descriptions/results and recalled memory as untrusted data. Delimit their provenance and scope separately from system instructions. They cannot request secret exfiltration, new permissions, task redirection, hidden clicks, purchases, log uploads or policy changes. Retrieved instructions addressed to an AI are still content.
+
+- Never evaluate HTML, shell, JavaScript, templates, JSON Schema extensions or MCP tool output as native code because a model suggested it.
+- MCP `tools/list` and descriptions may contain injected instructions. Pin a reviewed tool manifest snapshot; a change to schemas, identity or capabilities invalidates standing grants and requires fresh review before invocation.
+- Do not forward arbitrary connector headers, environment variables, OAuth tokens, page cookies or auth challenges to the model. Provider context includes sanitized tool outputs only.
+- Schema and output size limits are enforced before model ingestion. Remove active HTML/script, terminal escape sequences and dangerous link schemes from previews; preserve source text in inert form when necessary for analysis.
+- A model may propose a tool that sends content elsewhere; destination and data class are checked independently against the original user request and approval. Summaries/memory cannot launder source instructions into trusted policy.
+- Research citations must correspond to read sources. A provider/tool success message alone is not read-back verification of external state.
+
+## SSRF, redirect and network controls
+
+Backend never accepts a freeform Azure endpoint, image URL, webhook destination, Checkout return URL or arbitrary network tool request. Azure hosts/operations, Stripe hosts and Entra metadata are operator-configured, authenticated and allowlisted. Never forward credentials across redirects. Production external HTTP uses verified TLS with hostname checking; no `verify=false` escape hatch.
+
+For native remote MCP and research fetches, validate every URL before DNS resolution and connection:
+
+1. Permit only approved schemes (`https` remote by default); reject userinfo, fragments used as credentials, unexpected ports, invalid hostname forms, control characters, ambiguous escapes and mixed parser interpretations.
+2. Resolve all IPv4/IPv6 answers; reject loopback, private, link-local, multicast, unspecified, reserved and cloud metadata addresses. Detect IPv4-in-IPv6 and alternative numeric representations. A public hostname resolving to a private address is not public access.
+3. Pin the validated resolved destination for that connection while still checking TLS for the original hostname; revalidate on reconnect and every redirect. Bound redirects (maximum 3), response size and time. Never carry Authorization/Cookie to a new origin.
+4. Disable proxy/environment behavior that bypasses destination policy. No arbitrary CONNECT tunneling. Apply egress controls as defense-in-depth; URL validation alone does not stop DNS rebinding.
+5. Localhost/LAN MCP is a separate user-enabled connection type with an exact host/port/process identity and explicit disclosure. It never becomes a general exception to blocklists; still block cloud metadata and credential forwarding. Local stdio MCP is preferred when appropriate. Remote web content cannot nominate a localhost service.
+
+Treat server redirects and MCP OAuth discovery metadata as untrusted until origin/issuer/resource validation succeeds. Do not auto-open `file:`, `javascript:`, arbitrary custom URL schemes or a browser's internal privileged pages. Signed export/download links are produced by the service for a fixed object, not accepted as arbitrary fetch destinations.
+
+## Files, execution and desktop containment
+
+Resolve real paths and symlinks against the authorized root before access and revalidate at open/rename to prevent TOCTOU escapes. Reject traversal, NULs, unauthorized symlinks, special-device paths and ambiguous canonicalization. Use scoped bookmarks where appropriate and invalidate stale file grants. Preview before overwrite/delete; destructive bulk needs a fresh bounded list/hash and approval. Archives require decompression limits, path validation and zip-slip protection. Parse untrusted documents in bounded workers and fail honestly on partial extraction.
+
+Local code execution is explicit, user-authorized work in a selected workspace, with output/time/process limits, sanitized environment and no inherited provider/connector secrets. It runs with ordinary user authority and is **not** advertised as a hardened arbitrary-code sandbox. No privileged helper, sudo, unrestricted shell invoked by the model, package install or remote script fetch without the relevant approval. The signed execution supervisor terminates/reaps its owned process group after cancel/Quit and reconciles uncertain effects. As TOOLS.md specifies, a hostile process can detach and escape process-group controls; never promise containment of adversarial code. Disable execution requiring guaranteed confinement until a reviewed OS-enforced isolation design exists. Hardened runtime and notarization do not make generated code safe.
+
+Browser controls require authenticated native messaging and selected-session generations, not a public debugging port. Navigation/tab replacement invalidates refs; stale refs do not trigger coordinate guessing. File uploads, messages, publishing and purchases remain fresh-approval operations even when the browser can click them.
+
+## Data location and retention
+
+These are implementation retention limits. They are not a claim that Azure/Stripe store nothing or that an SSD deletion is forensic erasure. Publish the actual provider retention terms and region policy before production use; do not claim zero retention without a verified contractual setting.
+
+| Data | Location and permitted persistence | Deletion / retention requirement |
+| --- | --- | --- |
+| Pebbis, chats, memories, task journal, routine definitions, file metadata | Local `Application Support/HeyPebbi/Accounts/<accountId>/`, GRDB SQLite and owned workspace files | Until user deletes/exports them. No server synchronization. Per-account isolation; clear UI for remember/forget. |
+| User source files outside app storage | Original user-chosen location | Never deleted by account deletion unless separately selected and approved; deleting an attachment reference does not delete its source. |
+| Live microphone/screen frames | Native bounded RAM buffers; gateway/provider only when explicitly used | Discard promptly after consumption/cancel, never disk-spool by default. No continuous background capture; no raw audio/screenshot server logging. |
+| Saved conversation text or selected screenshot attachment | Local only, if that feature/user action explicitly retains it | User-visible delete/export controls; not silently added to diagnostic bundles. |
+| Temporary rendered/extracted local files | Account-local protected cache, no secrets | Purge at session cleanup, on sign-out when safe, and no later than 24 hours; live preview leases are bounded. |
+| Entra / connector refresh tokens and pairing secrets | Keychain locally; necessary server secrets only in Key Vault | Revoke/delete on disconnect/sign-out/deletion as applicable; references only in DB. |
+| Server request context, prompts, outputs, raw PCM/images | Memory-only streaming buffers | Drop immediately after bounded request/session ends; no server history store, body logs or replay cache. Provider-side retention separately disclosed. |
+| Server accounts/devices/entitlements | PostgreSQL, TLS and at-rest encrypted backups | Active account lifetime; eligible active data removed within 30 days of deletion request. Revoked device/security metadata ≤30 days. |
+| Reservations, dispatch hashes, transport cursors | Server metadata, no content | Unused reservation expires in 60 seconds; active bounded by operation/session; completed reservation/cursor metadata ≤30 days. Idempotency response metadata 24 hours. |
+| Detailed usage and webhook/metering dedupe IDs | Server ledger/inbox, metadata only | Detailed operational usage ≤90 days; on account deletion remove task/device linkage within 30 days. Minimal lawful invoice/accounting records follow approved jurisdiction-specific policy, not indefinite raw payload retention. |
+| Local diagnostic logs | Redacted metadata only | 7-day rolling limit; user previews support export before sharing. |
+| Server operational/security logs | Azure Monitor, allowlisted metadata only | 30-day limit; no model content or bearer/signed-URL fields. A scoped incident hold requires documented access, purpose and expiry. |
+| Server account export | Private Blob object | Artifact expires within 24 hours; read-only object URL expires after 15 minutes. Delete on account deletion; disclose downloaded copies cannot be recalled. |
+| Encrypted database backups | Restricted Azure backup storage | Maximum 35-day retention; deletion deadline no later than 35 days after active deletion. Restore procedure reapplies deletion tombstones before service admission. |
+
+Do not claim SQLite encryption: GRDB SQLite here is ordinary local SQLite protected by user filesystem permissions and the user's device security/FileVault settings. App directories/files are user-only where supported; secret backups retain equivalent protection. The product must explain this distinction.
+
+User data deletion takes precedence over ordinary operational retention unless a specific lawful hold applies. Keep minimal deletion-suppression metadata only through the backup horizon, with no content; purge it afterward. Account exports distinguish server and local data and do not bundle secrets. Deletion stops access/work first, cancels subscriptions through a verified Stripe operation, purges eligible server data, then confirms local deletion separately. Other offline Macs cannot be wiped by a server route in this architecture. User-created exports, external provider records and original files are outside automatic recall.
+
+Financial retention jurisdiction, legal basis, fields and duration are operator inputs required before paid billing. Missing policy keeps paid billing disabled; do not invent a universal seven-year rule. Invoice records legally retained must be minimized, access-restricted and disclosed before deletion confirmation. Detailed task/voice content is never necessary accounting evidence.
+
+## Fail-closed operation and abuse protection
+
+- No valid token/scope/device → no request admission. No validated recent-auth assertion → no account deletion. No current role/entitlement/reservation → no chargeable provider dispatch.
+- No trusted usage evidence → reservation enters reconciliation; do not let a client finalize zero, do not fabricate usage. Reconciliation may block new chargeable work within bounded exposure.
+- No durable local intent journal / server accounting transaction → do not start a side effect. Disk full, DB outage, permission revocation, stale target and cancel epoch changes are hard stops.
+- No model deployment → connection `disconnected`/`failed`/`degraded`, voice `unavailable` or dictation `failed`; preserve typed/local work and explain the blocker. No alternative model without explicit decision.
+- Bound requests, accounts/devices, sessions, per-IP and per-account rates, model output, concurrent work, MCP messages and subprocess output. Reject decompression bombs and unbounded schema recursion. Concurrency admission and budget reservation are atomic.
+- Continue harmless local reading/editing while paid/provider features are unavailable; fail-closed does not mean erase local data or trap the user behind a billing screen.
+- Quit ends capture, tools, connectors and child processes; no background daemon or local routine continues after Quit. Sleep/restart closes volatile grants and requires fresh target validation.
+
+## Verification and release evidence
+
+Required tests cover forged/expired/wrong-audience tokens, key rotation, callback replay, cross-account resource IDs, missing recent auth, device revocation during streams, one-use token races, wrong-role websocket upgrades, SSRF address/redirect/DNS rebinding cases, malicious MCP descriptions, tool schema changes, approval scope/hash changes, cancellation during awaiting approval/dispatch, stale browser refs, symlink races, disk full, logging redaction and deletion/restore drills. Payment/webhook/metering tests are specified in [BILLING](BILLING.md).
+
+Penetration/security review, real OS permissions, live deployment configuration, verified provider privacy settings, signing/notarization and production Stripe checks remain real release gates. A valid schema, mock server or fixture demo does not certify these controls. Report unresolved vulnerabilities/blockers instead of disabling checks to complete a build.

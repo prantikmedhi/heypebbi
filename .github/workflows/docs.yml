@@ -1,0 +1,28 @@
+name: Documentation checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check documentation structure and traceability
+        run: |
+          python scripts/validate_docs.py --self-test
+          python scripts/validate_docs.py
+      - name: Check OpenAPI and JSON Schema
+        run: |
+          python -m pip install 'openapi-spec-validator>=0.7,<0.8' 'jsonschema>=4.23,<5'
+          python -c 'import json; from openapi_spec_validator import validate; from jsonschema import Draft202012Validator; o=json.load(open("docs/engineering/openapi.json")); t=json.load(open("docs/engineering/schemas/tool-envelope.schema.json")); validate(o); Draft202012Validator.check_schema(t); [Draft202012Validator.check_schema(s) for s in o["components"]["schemas"].values()]; print("OpenAPI and JSON Schema valid")'
+      - name: Check design tokens and contrast
+        run: npx -y @google/design.md lint DESIGN.md

@@ -1,0 +1,580 @@
+{
+  "schemaVersion": 1,
+  "scope": "Documentation and original static visual references only; not application acceptance.",
+  "parentReview": {
+    "renderer": "Headless installed Chrome via Playwright",
+    "viewportWidths": [390, 1024, 1440],
+    "horizontalOverflow": false,
+    "pageErrors": [],
+    "visualReview": "Wordmark reads heypebbi; no clipping; reference labels enlarged; failure expression softened and re-inspected as concerned rather than angry.",
+    "scope": "Static HTML/SVG design references only; no native app implemented or tested."
+  },
+  "verifiedAt": "2026-09-17T14:57:24.294946+00:00",
+  "designLint": {
+    "command": "npx -y @google/design.md lint DESIGN.md",
+    "exitCode": 0,
+    "findings": [
+      {
+        "severity": "info",
+        "message": "Design system defines 19 colors, 9 typography scales, 5 rounding levels, 7 spacing tokens, 35 components.",
+        "rule": "token-summary"
+      }
+    ],
+    "summary": {
+      "errors": 0,
+      "warnings": 0,
+      "infos": 1
+    }
+  },
+  "coverage": {
+    "requirements": [
+      "PB-001",
+      "PB-002",
+      "PB-003",
+      "PB-004",
+      "PB-005",
+      "PB-006",
+      "PB-007",
+      "PB-008",
+      "PB-009",
+      "PB-010",
+      "PB-011",
+      "PB-012",
+      "PB-013",
+      "PB-014",
+      "PB-015",
+      "PB-016",
+      "PB-017",
+      "PB-018",
+      "PB-019",
+      "PB-020",
+      "PB-021",
+      "PB-022",
+      "PB-023",
+      "PB-024",
+      "PB-025",
+      "PB-026",
+      "PB-027",
+      "PB-028",
+      "PB-029",
+      "PB-030",
+      "PB-031",
+      "PB-032",
+      "PB-033",
+      "PB-034",
+      "PB-035",
+      "PB-036",
+      "PB-037",
+      "PB-038",
+      "PB-039",
+      "PB-040"
+    ],
+    "requirementCount": 40,
+    "matchesContract": true,
+    "statesByAxis": {
+      "task": [
+        "queued",
+        "running",
+        "waitingForApproval",
+        "waitingForInput",
+        "waitingForConnection",
+        "cancelling",
+        "cancelled",
+        "succeeded",
+        "failed",
+        "interrupted"
+      ],
+      "voice": [
+        "idle",
+        "connecting",
+        "listening",
+        "thinking",
+        "speaking",
+        "interrupted",
+        "unavailable",
+        "failed"
+      ],
+      "dictation": [
+        "idle",
+        "capturing",
+        "transcribing",
+        "reviewing",
+        "inserting",
+        "completed",
+        "cancelled",
+        "failed"
+      ],
+      "connection": [
+        "disconnected",
+        "connecting",
+        "ready",
+        "expired",
+        "degraded",
+        "failed"
+      ],
+      "routine": [
+        "active",
+        "paused",
+        "blocked",
+        "archived"
+      ]
+    },
+    "stateOccurrences": 36
+  },
+  "contrast": {
+    "method": "WCAG sRGB relative luminance; declared opaque pairs only",
+    "textMinimum": 4.5,
+    "geometryMinimum": 3,
+    "componentPairs": [
+      {
+        "component": "home-light",
+        "foreground": "ink",
+        "background": "cream",
+        "ratio": 13.0247,
+        "passes45": true
+      },
+      {
+        "component": "home-dark",
+        "foreground": "night-ink",
+        "background": "night",
+        "ratio": 14.8937,
+        "passes45": true
+      },
+      {
+        "component": "tray-light",
+        "foreground": "ink",
+        "background": "surface",
+        "ratio": 13.452,
+        "passes45": true
+      },
+      {
+        "component": "tray-dark",
+        "foreground": "night-ink",
+        "background": "night-surface",
+        "ratio": 12.9806,
+        "passes45": true
+      },
+      {
+        "component": "inspector-dark",
+        "foreground": "night-ink",
+        "background": "night-raised",
+        "ratio": 11.0781,
+        "passes45": true
+      },
+      {
+        "component": "button-primary",
+        "foreground": "cream",
+        "background": "primary",
+        "ratio": 5.988,
+        "passes45": true
+      },
+      {
+        "component": "button-primary-hover",
+        "foreground": "cream",
+        "background": "primary-hover",
+        "ratio": 8.3839,
+        "passes45": true
+      },
+      {
+        "component": "button-primary-pressed",
+        "foreground": "cream",
+        "background": "ink",
+        "ratio": 13.0247,
+        "passes45": true
+      },
+      {
+        "component": "button-primary-dark",
+        "foreground": "ink",
+        "background": "sea-glass",
+        "ratio": 8.7956,
+        "passes45": true
+      },
+      {
+        "component": "button-secondary",
+        "foreground": "primary",
+        "background": "surface",
+        "ratio": 6.1845,
+        "passes45": true
+      },
+      {
+        "component": "button-secondary-dark",
+        "foreground": "sea-glass",
+        "background": "night-raised",
+        "ratio": 7.779,
+        "passes45": true
+      },
+      {
+        "component": "button-disabled",
+        "foreground": "muted",
+        "background": "surface",
+        "ratio": 6.1113,
+        "passes45": true
+      },
+      {
+        "component": "button-disabled-dark",
+        "foreground": "night-muted",
+        "background": "night-raised",
+        "ratio": 6.8769,
+        "passes45": true
+      },
+      {
+        "component": "destructive",
+        "foreground": "cream",
+        "background": "danger",
+        "ratio": 6.2145,
+        "passes45": true
+      },
+      {
+        "component": "destructive-dark",
+        "foreground": "ink",
+        "background": "danger-soft",
+        "ratio": 9.0954,
+        "passes45": true
+      },
+      {
+        "component": "input-light",
+        "foreground": "ink",
+        "background": "surface",
+        "ratio": 13.452,
+        "passes45": true
+      },
+      {
+        "component": "input-dark",
+        "foreground": "night-ink",
+        "background": "night-raised",
+        "ratio": 11.0781,
+        "passes45": true
+      },
+      {
+        "component": "selection-light",
+        "foreground": "ink",
+        "background": "sea-glass",
+        "ratio": 8.7956,
+        "passes45": true
+      },
+      {
+        "component": "approval-chip",
+        "foreground": "ink",
+        "background": "butter",
+        "ratio": 9.8004,
+        "passes45": true
+      },
+      {
+        "component": "speech-chip",
+        "foreground": "ink",
+        "background": "clay",
+        "ratio": 6.7174,
+        "passes45": true
+      },
+      {
+        "component": "memory-chip",
+        "foreground": "ink",
+        "background": "lilac",
+        "ratio": 7.9018,
+        "passes45": true
+      },
+      {
+        "component": "task-chip",
+        "foreground": "ink",
+        "background": "sea-glass",
+        "ratio": 8.7956,
+        "passes45": true
+      },
+      {
+        "component": "caption-light",
+        "foreground": "muted",
+        "background": "cream",
+        "ratio": 5.9172,
+        "passes45": true
+      },
+      {
+        "component": "caption-dark",
+        "foreground": "night-muted",
+        "background": "night",
+        "ratio": 9.2455,
+        "passes45": true
+      },
+      {
+        "component": "perch-light",
+        "foreground": "ink",
+        "background": "cream",
+        "ratio": 13.0247,
+        "passes45": true
+      },
+      {
+        "component": "perch-dark",
+        "foreground": "night-ink",
+        "background": "night-surface",
+        "ratio": 12.9806,
+        "passes45": true
+      },
+      {
+        "component": "identity-display",
+        "foreground": "ink",
+        "background": "cream",
+        "ratio": 13.0247,
+        "passes45": true
+      },
+      {
+        "component": "window-title",
+        "foreground": "ink",
+        "background": "cream",
+        "ratio": 13.0247,
+        "passes45": true
+      },
+      {
+        "component": "section-title",
+        "foreground": "ink",
+        "background": "surface",
+        "ratio": 13.452,
+        "passes45": true
+      },
+      {
+        "component": "reading-body",
+        "foreground": "ink",
+        "background": "surface",
+        "ratio": 13.452,
+        "passes45": true
+      },
+      {
+        "component": "code-block",
+        "foreground": "night-ink",
+        "background": "night",
+        "ratio": 14.8937,
+        "passes45": true
+      }
+    ],
+    "geometryPairs": [
+      {
+        "foreground": "edge",
+        "background": "cream",
+        "ratio": 3.9484,
+        "passes3": true
+      },
+      {
+        "foreground": "edge",
+        "background": "surface",
+        "ratio": 4.0779,
+        "passes3": true
+      },
+      {
+        "foreground": "primary",
+        "background": "cream",
+        "ratio": 5.988,
+        "passes3": true
+      },
+      {
+        "foreground": "primary",
+        "background": "surface",
+        "ratio": 6.1845,
+        "passes3": true
+      },
+      {
+        "foreground": "night-edge",
+        "background": "night",
+        "ratio": 6.1653,
+        "passes3": true
+      },
+      {
+        "foreground": "night-edge",
+        "background": "night-surface",
+        "ratio": 5.3734,
+        "passes3": true
+      },
+      {
+        "foreground": "night-edge",
+        "background": "night-raised",
+        "ratio": 4.5858,
+        "passes3": true
+      },
+      {
+        "foreground": "butter",
+        "background": "night",
+        "ratio": 11.6529,
+        "passes3": true
+      },
+      {
+        "foreground": "butter",
+        "background": "night-surface",
+        "ratio": 10.1561,
+        "passes3": true
+      },
+      {
+        "foreground": "butter",
+        "background": "night-raised",
+        "ratio": 8.6676,
+        "passes3": true
+      }
+    ]
+  },
+  "assets": {
+    "svgCount": 7,
+    "xmlValid": true,
+    "titleDescriptionViewBoxPresent": true,
+    "externalResources": 0,
+    "originalSources": "Author-generated vector geometry; no third-party art, paid assets, image-generation call or font downloads."
+  },
+  "html": {
+    "scriptCount": 0,
+    "appControlCount": 0,
+    "externalResources": 0,
+    "duplicateIds": 0,
+    "missingAriaLabelTargets": 0,
+    "referenceOnlyLabels": true
+  },
+  "browser": {
+    "engine": "Local Playwright Chromium Headless Shell",
+    "version": "153.0.8010.12",
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 1000,
+        "documentWidth": 1440,
+        "horizontalOverflow": false,
+        "axeViolations": [],
+        "axeIncomplete": [],
+        "axePassCount": 24
+      },
+      {
+        "width": 900,
+        "height": 1000,
+        "documentWidth": 900,
+        "horizontalOverflow": false,
+        "axeViolations": [],
+        "axeIncomplete": [],
+        "axePassCount": 24
+      },
+      {
+        "width": 640,
+        "height": 1000,
+        "documentWidth": 640,
+        "horizontalOverflow": false,
+        "axeViolations": [],
+        "axeIncomplete": [],
+        "axePassCount": 24
+      },
+      {
+        "width": 390,
+        "height": 1000,
+        "documentWidth": 390,
+        "horizontalOverflow": false,
+        "axeViolations": [],
+        "axeIncomplete": [],
+        "axePassCount": 24
+      },
+      {
+        "width": 320,
+        "height": 1000,
+        "documentWidth": 320,
+        "horizontalOverflow": false,
+        "axeViolations": [],
+        "axeIncomplete": [],
+        "axePassCount": 24
+      }
+    ],
+    "consoleErrors": [],
+    "pageErrors": [],
+    "externalRequests": [],
+    "keyboard": {
+      "firstTabLabel": "Skip to the design reference",
+      "firstTabHref": "#main",
+      "focusOutline": "solid",
+      "focusOutlineWidth": "3px",
+      "skipDestination": "#main"
+    },
+    "accessibilityMedia": {
+      "reducedMotion": true,
+      "increasedContrast": true,
+      "runningAnimations": 0,
+      "sampleBorder": "2px"
+    }
+  },
+  "visualReview": {
+    "inspected": [
+      "Cover composition",
+      "Light and dark product compositions",
+      "Original wordmark spelling and letterforms",
+      "App icon material and silhouette"
+    ],
+    "outcome": "No clipping or malformed artwork found in reviewed images. Mockup label/affordance issues and narrow-layout SVG overhang were corrected and browser QA rerun.",
+    "slopSelfAudit": {
+      "scoreOutOf10": 0,
+      "basis": "No generic tech gradient, indigo default, three-feature grid, accent rail, unearned blur, fake stat, icon topper, centered-everything layout, accidental type choice or wrong surface. Native system typography is deliberate; object-local glaze is material illustration."
+    },
+    "rasterEvidence": "Inspected locally outside repository; not delivered as duplicate source assets."
+  },
+  "limitations": [
+    "Browser-harness daemon did not start; verification used isolated local Playwright instead.",
+    "Native app does not exist here. No SwiftUI/AppKit interaction, VoiceOver session, real device, multi-display hardware, live model, billing, signing or release acceptance was run.",
+    "Chromium checks do not prove Safari rendering or native accessibility compliance.",
+    "Automated axe results and token ratios are limited to these reference documents, not all future UI combinations.",
+    "The original vector source is provided without third-party asset dependencies; trademark clearance is not established."
+  ],
+  "files": [
+    {
+      "path": "DESIGN.md",
+      "sha256": "59f3c6563a22c556c029528ba925e05dcc9013182e5da63d0902797f45977ea8"
+    },
+    {
+      "path": "docs/design/ACCESSIBILITY.md",
+      "sha256": "4aaba154d9503c57b22ef995524560f834a85e1247605b4072ea7f36a4bc2c5c"
+    },
+    {
+      "path": "docs/design/ASSETS.md",
+      "sha256": "c7f63ef7614c50bf1401664ae32d82f9b6ec5696ee79ff91c4663c8afc742f05"
+    },
+    {
+      "path": "docs/design/BRAND.md",
+      "sha256": "eb832e2d2c052be562f2f2e3be6de470a9bb9ab4e29e9d251fbd41c0d0a97b66"
+    },
+    {
+      "path": "docs/design/COMPONENTS.md",
+      "sha256": "d54a44c6e7de4c60acf92d5c2d855824466dbd33abc3c635b76c5c3c018ecb6a"
+    },
+    {
+      "path": "docs/design/MOTION.md",
+      "sha256": "946ccdf3f76ccb856d4101f4e9a756c0691b222f1d2663d6ac653678eaa535e9"
+    },
+    {
+      "path": "docs/design/SCREENS.md",
+      "sha256": "9eb7278ca5278389a13f7bbd25447f64bee22d5cb54acf0134dff5a024057ff6"
+    },
+    {
+      "path": "docs/design/brand-board.html",
+      "sha256": "f6085d72383734b3f74b821f2831acb5c84c5941d494e4c40e2aa30de1139579"
+    },
+    {
+      "path": "docs/design/assets/app-icon-reference.svg",
+      "sha256": "752073d662cbd8329a83e3c01311813ecf391300c8d60429c56d5987b5607a05"
+    },
+    {
+      "path": "docs/design/assets/logo-mark-mono.svg",
+      "sha256": "4b2a2f4d59266acdf043fab8a6313e629b8c07b4291943dc0e489d57185923c4"
+    },
+    {
+      "path": "docs/design/assets/logo-mark.svg",
+      "sha256": "945a562140df82796d7dc72dfb0016855a1689743b418b900d4e8d5e11f9662f"
+    },
+    {
+      "path": "docs/design/assets/mascot-ceramic.svg",
+      "sha256": "19af14736558abf259b1d66ac5d00e44dfcb0944aa9fa0a30a0625eeff5614d2"
+    },
+    {
+      "path": "docs/design/assets/mascot-expression-sheet.svg",
+      "sha256": "03cf52c341b98a2345d65ec2c825d5c75490133d901c36d8ee88b40eff3769d1"
+    },
+    {
+      "path": "docs/design/assets/pocket-world.svg",
+      "sha256": "59f3fd05f8a69be22701f45979792ae4e6f4a910ca28cc78851ec17220c1f226"
+    },
+    {
+      "path": "docs/design/assets/wordmark.svg",
+      "sha256": "ff6bd936772e406d20f3891b8b639178d2d0035434c84e534cff8019baa1870f"
+    }
+  ],
+  "links": {
+    "markdownLocalLinks": 49,
+    "htmlLinks": 13,
+    "allResolve": true
+  }
+}

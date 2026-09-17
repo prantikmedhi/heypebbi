@@ -1,0 +1,5900 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "Pebbi Service API",
+    "version": "1.0.0",
+    "description": "Documentation-only target contract. CONTRACT.md controls scope. Authentication tenant/hosts are operator inputs; no production availability is asserted."
+  },
+  "security": [
+    {
+      "appBearer": []
+    }
+  ],
+  "paths": {
+    "/healthz": {
+      "get": {
+        "operationId": "getHealth",
+        "summary": "Minimal process liveness only; does not assert Azure, billing or database readiness",
+        "description": "Minimal process liveness only; does not assert Azure, billing or database readiness.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/me": {
+      "get": {
+        "operationId": "getMe",
+        "summary": "Return account, owned device sessions and entitlement summary",
+        "description": "Return account, owned device sessions and entitlement summary.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        }
+      }
+    },
+    "/v1/devices": {
+      "post": {
+        "operationId": "registerDevice",
+        "summary": "Register or return the same account installation; cannot resurrect a revoked session without recent sign-in",
+        "description": "Register or return the same account installation; cannot resurrect a revoked session without recent sign-in.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisterDeviceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDeviceRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/devices/{deviceId}": {
+      "delete": {
+        "operationId": "revokeDevice",
+        "summary": "Revoke an owned device immediately and close its streams; already-revoked device returns 204",
+        "description": "Revoke an owned device immediately and close its streams; already-revoked device returns 204.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        }
+      }
+    },
+    "/v1/capabilities": {
+      "get": {
+        "operationId": "getCapabilities",
+        "summary": "Return exactly one capability for each locked role and current operator limits",
+        "description": "Return exactly one capability for each locked role and current operator limits.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Capabilities"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        }
+      }
+    },
+    "/v1/ai/responses": {
+      "post": {
+        "operationId": "createResponse",
+        "summary": "One reasoning inference call using gpt-6-astra, not an autonomous server task",
+        "description": "One reasoning inference call using gpt-6-astra, not an autonomous server task. Closing the transport cancels provider work best-effort; see API.md. No SSE replay or implicit resubmission.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE frames: event type and eventId plus one ResponseEvent JSON in each data field. Keepalives are comment frames. JSON schema applies to decoded data, not raw SSE bytes.",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              },
+              "Content-Type": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "text/event-stream; charset=utf-8"
+                  ]
+                }
+              },
+              "X-Accel-Buffering": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                },
+                "x-event-schema": {
+                  "$ref": "#/components/schemas/ResponseEvent"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResponseRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/voice/sessions": {
+      "post": {
+        "operationId": "createVoiceSession",
+        "summary": "Mint a one-use conversation token only after a ready capability, entitlement and reservation check",
+        "description": "Mint a one-use conversation token only after a ready capability, entitlement and reservation check. Never return an Azure key.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoiceSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoiceSessionRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dictation/sessions": {
+      "post": {
+        "operationId": "createDictationSession",
+        "summary": "Mint a one-use dictation token only after a ready capability, entitlement and reservation check",
+        "description": "Mint a one-use dictation token only after a ready capability, entitlement and reservation check. Configuration acceptance alone is not feature readiness.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DictationSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DictationSessionRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/usage/reservations": {
+      "post": {
+        "operationId": "reserveUsage",
+        "summary": "Atomically reserve an operator-bounded ceiling; client quantities are hints, not usage or entitlement",
+        "description": "Atomically reserve an operator-bounded ceiling; client quantities are hints, not usage or entitlement.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reservation"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReservationRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/usage/reservations/{reservationId}/finalize": {
+      "post": {
+        "operationId": "finalizeUsage",
+        "summary": "INTERNAL ONLY",
+        "description": "INTERNAL ONLY. Require approved metering workload identity and server operation evidence. Public ingress and all app tokens are denied.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "name": "reservationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Finalization"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "security": [
+          {
+            "meteringBearer": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinalizeRequest"
+              }
+            }
+          }
+        },
+        "x-internal": true
+      }
+    },
+    "/v1/usage": {
+      "get": {
+        "operationId": "getUsage",
+        "summary": "Read server-derived current billing-period quantities; no floating currency or client-authored totals",
+        "description": "Read server-derived current billing-period quantities; no floating currency or client-authored totals.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 512
+            },
+            "description": "Opaque account/filter-bound cursor from nextCursor. Never an access token."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usage"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        }
+      }
+    },
+    "/v1/billing/plans": {
+      "get": {
+        "operationId": "getBillingPlans",
+        "summary": "Return Nest, Studio and Constellation exactly once",
+        "description": "Return Nest, Studio and Constellation exactly once. Unconfigured prices and allowances are null and checkout is disabled.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plans"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        }
+      }
+    },
+    "/v1/billing/checkout": {
+      "post": {
+        "operationId": "createCheckout",
+        "summary": "Create Stripe hosted Checkout for an operator-configured plan/interval after a fresh user preview and allowOnce decision",
+        "description": "Create Stripe hosted Checkout for an operator-configured plan/interval after a fresh user preview and allowOnce decision. Reject client price IDs, amounts and return URLs.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostedBillingSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/billing/portal": {
+      "post": {
+        "operationId": "createPortal",
+        "summary": "Create a hosted Customer Portal for the caller's existing Stripe customer; server fixes the return destination",
+        "description": "Create a hosted Customer Portal for the caller's existing Stripe customer; server fixes the return destination.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostedBillingSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PortalRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/billing/webhook": {
+      "post": {
+        "operationId": "receiveStripeWebhook",
+        "summary": "Verify raw Stripe signature, timestamp, mode and webhook event; durably dedupe before acknowledging",
+        "description": "Verify raw Stripe signature, timestamp, mode and webhook event; durably dedupe before acknowledging. Never trust redirect success as payment.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookAck"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "security": [
+          {
+            "stripeSignature": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeEvent"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/account/export": {
+      "post": {
+        "operationId": "requestAccountExport",
+        "summary": "Create or observe one export using the same idempotency key; response may advance pending to ready without rebuilding",
+        "description": "Create or observe one export using the same idempotency key; response may advance pending to ready without rebuilding. Server-held account and usage only; app separately exports local content.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportRequest"
+              }
+            }
+          }
+        },
+        "x-idempotency-observation": true
+      }
+    },
+    "/v1/account": {
+      "delete": {
+        "operationId": "deleteAccount",
+        "summary": "Recent authentication and exact confirmation required",
+        "description": "Recent authentication and exact confirmation required. Revoke access, stop work and asynchronously erase server data; billing retention and local deletion limits are disclosed.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/RequestId"
+          },
+          {
+            "$ref": "#/components/parameters/DeviceId"
+          },
+          {
+            "$ref": "#/components/parameters/IdempotencyKey"
+          },
+          {
+            "$ref": "#/components/parameters/RecentAuth"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful response",
+            "headers": {
+              "X-Request-Id": {
+                "schema": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "no-store"
+                  ]
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Deletion"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "415": {
+            "$ref": "#/components/responses/Error415"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Error500"
+          },
+          "502": {
+            "$ref": "#/components/responses/Error502"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          },
+          "504": {
+            "$ref": "#/components/responses/Error504"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAccountRequest"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "appBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Entra External ID access token",
+        "description": "Validate configured issuer, audience, delegated scope, signature, time, account and device status. ID tokens are not API credentials."
+      },
+      "meteringBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Entra workload access token",
+        "description": "Separate workload audience and application role; explicit service allowlist. End-user delegated tokens are rejected even if valid for the app API."
+      },
+      "stripeSignature": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Stripe-Signature",
+        "description": "Verify signature against raw body and configured webhook secret with timestamp tolerance; not a static API key."
+      }
+    },
+    "schemas": {
+      "ErrorCode": {
+        "type": "string",
+        "enum": [
+          "invalidRequest",
+          "unauthenticated",
+          "forbidden",
+          "notFound",
+          "conflict",
+          "idempotencyConflict",
+          "capabilityUnavailable",
+          "approvalRequired",
+          "quotaExceeded",
+          "rateLimited",
+          "providerUnavailable",
+          "providerTimeout",
+          "streamInterrupted",
+          "reservationExpired",
+          "untrustedMetering",
+          "billingNotConfigured",
+          "accountDeleting",
+          "exportNotReady",
+          "payloadTooLarge",
+          "unsupportedMediaType",
+          "internalError"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "$ref": "#/components/schemas/ErrorCode"
+              },
+              "message": {
+                "type": "string",
+                "maxLength": 512
+              },
+              "requestId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "retryable": {
+                "type": "boolean"
+              },
+              "retryAfterSeconds": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 3600
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "code",
+              "message",
+              "requestId",
+              "retryable",
+              "retryAfterSeconds"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "error"
+        ],
+        "additionalProperties": false
+      },
+      "TaskState": {
+        "type": "string",
+        "enum": [
+          "queued",
+          "running",
+          "waitingForApproval",
+          "waitingForInput",
+          "waitingForConnection",
+          "cancelling",
+          "cancelled",
+          "succeeded",
+          "failed",
+          "interrupted"
+        ]
+      },
+      "VoiceState": {
+        "type": "string",
+        "enum": [
+          "idle",
+          "connecting",
+          "listening",
+          "thinking",
+          "speaking",
+          "interrupted",
+          "unavailable",
+          "failed"
+        ]
+      },
+      "DictationState": {
+        "type": "string",
+        "enum": [
+          "idle",
+          "capturing",
+          "transcribing",
+          "reviewing",
+          "inserting",
+          "completed",
+          "cancelled",
+          "failed"
+        ]
+      },
+      "ConnectionState": {
+        "type": "string",
+        "enum": [
+          "disconnected",
+          "connecting",
+          "ready",
+          "expired",
+          "degraded",
+          "failed"
+        ]
+      },
+      "Role": {
+        "type": "string",
+        "enum": [
+          "conversation",
+          "dictation",
+          "reasoning"
+        ]
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok"
+            ]
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "Device": {
+        "type": "object",
+        "properties": {
+          "deviceId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "installationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "macOS"
+            ]
+          },
+          "appVersion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "revokedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "deviceId",
+          "installationId",
+          "name",
+          "platform",
+          "appVersion",
+          "createdAt",
+          "lastSeenAt",
+          "revokedAt"
+        ],
+        "additionalProperties": false
+      },
+      "RegisterDeviceRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "installationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "macOS"
+            ]
+          },
+          "appVersion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "installationId",
+          "name",
+          "platform",
+          "appVersion"
+        ],
+        "additionalProperties": false
+      },
+      "RegisterDeviceResponse": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "device": {
+            "$ref": "#/components/schemas/Device"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "device"
+        ],
+        "additionalProperties": false
+      },
+      "PlanCode": {
+        "type": "string",
+        "enum": [
+          "Nest",
+          "Studio",
+          "Constellation"
+        ]
+      },
+      "Subscription": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlanCode"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "entitlementState": {
+            "type": "string",
+            "enum": [
+              "unconfigured",
+              "enabled",
+              "restricted"
+            ]
+          },
+          "periodStart": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "periodEnd": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cancelAtPeriodEnd": {
+            "type": "boolean"
+          },
+          "entitlementVersion": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "plan",
+          "entitlementState",
+          "periodStart",
+          "periodEnd",
+          "cancelAtPeriodEnd",
+          "entitlementVersion"
+        ],
+        "additionalProperties": false
+      },
+      "Me": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "account": {
+            "type": "object",
+            "properties": {
+              "accountId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "displayName": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 160
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "email": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 320
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "accountState": {
+                "type": "string",
+                "enum": [
+                  "active",
+                  "deletionPending"
+                ]
+              }
+            },
+            "required": [
+              "accountId",
+              "displayName",
+              "email",
+              "createdAt",
+              "accountState"
+            ],
+            "additionalProperties": false
+          },
+          "devices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            },
+            "maxItems": 50
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/Subscription"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "account",
+          "devices",
+          "subscription"
+        ],
+        "additionalProperties": false
+      },
+      "AudioFormat": {
+        "type": "object",
+        "properties": {
+          "encoding": {
+            "type": "string",
+            "enum": [
+              "pcm16"
+            ]
+          },
+          "sampleRateHz": {
+            "type": "integer",
+            "enum": [
+              16000,
+              24000,
+              48000
+            ]
+          },
+          "channels": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "encoding",
+          "sampleRateHz",
+          "channels"
+        ],
+        "additionalProperties": false
+      },
+      "RoleCapability": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "model": {
+            "type": "string",
+            "enum": [
+              "gpt-realtime-2.1",
+              "gpt-live-transcribe",
+              "gpt-6-astra"
+            ]
+          },
+          "state": {
+            "$ref": "#/components/schemas/ConnectionState"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 256
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "supportsScreenInput": {
+            "type": "boolean"
+          },
+          "supportsTools": {
+            "type": "boolean"
+          },
+          "audioFormats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AudioFormat"
+            },
+            "maxItems": 3
+          },
+          "voices": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            "maxItems": 100
+          },
+          "verifiedAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "supportsContextInput": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "role",
+          "model",
+          "state",
+          "reason",
+          "supportsScreenInput",
+          "supportsTools",
+          "audioFormats",
+          "voices",
+          "verifiedAt",
+          "supportsContextInput"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "conversation"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "model": {
+                  "const": "gpt-realtime-2.1"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "dictation"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "model": {
+                  "const": "gpt-live-transcribe"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "reasoning"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "model": {
+                  "const": "gpt-6-astra"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Capabilities": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleCapability"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "allOf": [
+              {
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "const": "conversation"
+                    }
+                  },
+                  "required": [
+                    "role"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "const": "dictation"
+                    }
+                  },
+                  "required": [
+                    "role"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "const": "reasoning"
+                    }
+                  },
+                  "required": [
+                    "role"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            ]
+          },
+          "billingConfigured": {
+            "type": "boolean"
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "maxRequestBytes": {
+                "type": "integer",
+                "const": 12582912
+              },
+              "maxSseSeconds": {
+                "type": "integer",
+                "const": 300
+              },
+              "maxAudioSessionSeconds": {
+                "type": "integer",
+                "const": 600
+              },
+              "sessionTokenLifetimeSeconds": {
+                "type": "integer",
+                "const": 60
+              },
+              "maxFrameBytes": {
+                "type": "integer",
+                "const": 32768
+              },
+              "maxConcurrentReasoning": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 16
+              },
+              "maxConcurrentAudio": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 4
+              }
+            },
+            "required": [
+              "maxRequestBytes",
+              "maxSseSeconds",
+              "maxAudioSessionSeconds",
+              "sessionTokenLifetimeSeconds",
+              "maxFrameBytes",
+              "maxConcurrentReasoning",
+              "maxConcurrentAudio"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "roles",
+          "billingConfigured",
+          "limits"
+        ],
+        "additionalProperties": false
+      },
+      "UsageQuantity": {
+        "type": "object",
+        "properties": {
+          "inputTokens": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "outputTokens": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "audioInputMilliseconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "audioOutputMilliseconds": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "inputTokens",
+          "outputTokens",
+          "audioInputMilliseconds",
+          "audioOutputMilliseconds"
+        ],
+        "additionalProperties": false
+      },
+      "ReservationRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "requestedCeiling": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "taskId",
+          "attemptId",
+          "role",
+          "requestedCeiling"
+        ],
+        "additionalProperties": false
+      },
+      "Reservation": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "reservationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "reservationState": {
+            "type": "string",
+            "enum": [
+              "reserved",
+              "active",
+              "reconciling",
+              "finalized",
+              "released",
+              "expired"
+            ]
+          },
+          "ceiling": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "entitlementVersion": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "reservationId",
+          "taskId",
+          "attemptId",
+          "role",
+          "reservationState",
+          "ceiling",
+          "expiresAt",
+          "entitlementVersion"
+        ],
+        "additionalProperties": false
+      },
+      "FinalizeRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "meteringEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerOperationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "observedUsage": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          },
+          "measurementSource": {
+            "type": "string",
+            "enum": [
+              "providerReceipt",
+              "gatewayObservation",
+              "reconciliation"
+            ]
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "cancelled",
+              "failed"
+            ]
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "meteringEventId",
+          "providerOperationId",
+          "observedUsage",
+          "measurementSource",
+          "outcome",
+          "completedAt"
+        ],
+        "additionalProperties": false
+      },
+      "Finalization": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "reservationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ledgerEntryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reservationState": {
+            "type": "string",
+            "enum": [
+              "finalized"
+            ]
+          },
+          "chargedUsage": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          },
+          "releasedUsage": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "reservationId",
+          "ledgerEntryId",
+          "reservationState",
+          "chargedUsage",
+          "releasedUsage"
+        ],
+        "additionalProperties": false
+      },
+      "UsageEntry": {
+        "type": "object",
+        "properties": {
+          "ledgerEntryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reservationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "quantity": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "entryKind": {
+            "type": "string",
+            "enum": [
+              "debit",
+              "credit"
+            ]
+          },
+          "adjustsLedgerEntryId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "ledgerEntryId",
+          "reservationId",
+          "taskId",
+          "attemptId",
+          "role",
+          "quantity",
+          "occurredAt",
+          "entryKind",
+          "adjustsLedgerEntryId"
+        ],
+        "additionalProperties": false
+      },
+      "Usage": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "periodStart": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "periodEnd": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "allowance": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          },
+          "consumed": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          },
+          "held": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          },
+          "remaining": {
+            "$ref": "#/components/schemas/UsageQuantity"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UsageEntry"
+            },
+            "maxItems": 100
+          },
+          "nextCursor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "periodStart",
+          "periodEnd",
+          "allowance",
+          "consumed",
+          "held",
+          "remaining",
+          "entries",
+          "nextCursor"
+        ],
+        "additionalProperties": false
+      },
+      "Plan": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/PlanCode"
+          },
+          "configured": {
+            "type": "boolean"
+          },
+          "checkoutEnabled": {
+            "type": "boolean"
+          },
+          "price": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "amountMinor": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "currency": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{3}$"
+                  },
+                  "interval": {
+                    "type": "string",
+                    "enum": [
+                      "month",
+                      "year"
+                    ]
+                  }
+                },
+                "required": [
+                  "amountMinor",
+                  "currency",
+                  "interval"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "allowance": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UsageQuantity"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 120
+            },
+            "maxItems": 30
+          }
+        },
+        "required": [
+          "plan",
+          "configured",
+          "checkoutEnabled",
+          "price",
+          "allowance",
+          "features"
+        ],
+        "additionalProperties": false
+      },
+      "Plans": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "billingConfigured": {
+            "type": "boolean"
+          },
+          "plans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Plan"
+            },
+            "minItems": 3,
+            "maxItems": 3,
+            "allOf": [
+              {
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "plan": {
+                      "const": "Nest"
+                    }
+                  },
+                  "required": [
+                    "plan"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "plan": {
+                      "const": "Studio"
+                    }
+                  },
+                  "required": [
+                    "plan"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              },
+              {
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "plan": {
+                      "const": "Constellation"
+                    }
+                  },
+                  "required": [
+                    "plan"
+                  ]
+                },
+                "minContains": 1,
+                "maxContains": 1
+              }
+            ]
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "billingConfigured",
+          "plans"
+        ],
+        "additionalProperties": false
+      },
+      "CheckoutRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "plan": {
+            "$ref": "#/components/schemas/PlanCode"
+          },
+          "interval": {
+            "type": "string",
+            "enum": [
+              "month",
+              "year"
+            ]
+          },
+          "consent": {
+            "type": "object",
+            "properties": {
+              "previewId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "approvedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              "decision": {
+                "type": "string",
+                "enum": [
+                  "allowOnce"
+                ]
+              }
+            },
+            "required": [
+              "previewId",
+              "approvedAt",
+              "decision"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "plan",
+          "interval",
+          "consent"
+        ],
+        "additionalProperties": false
+      },
+      "HostedBillingSession": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          },
+          "expiresAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Use verified provider expiration; null if the provider does not return one. Never invent a Stripe Portal expiration."
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "url",
+          "expiresAt"
+        ],
+        "additionalProperties": false
+      },
+      "PortalRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          }
+        },
+        "required": [
+          "schemaVersion"
+        ],
+        "additionalProperties": false
+      },
+      "StripeEvent": {
+        "type": "object",
+        "required": [
+          "id",
+          "object",
+          "api_version",
+          "created",
+          "type",
+          "livemode",
+          "data"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "object": {
+            "const": "event"
+          },
+          "api_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "livemode": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "required": [
+              "object"
+            ],
+            "properties": {
+              "object": {
+                "type": "object"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true,
+        "description": "Vendor-defined Stripe event. Preserve raw request bytes for signature validation before parsing; additional Stripe fields are permitted."
+      },
+      "WebhookAck": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "received": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "received"
+        ],
+        "additionalProperties": false
+      },
+      "ExportRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "json"
+            ]
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "format"
+        ],
+        "additionalProperties": false
+      },
+      "ExportResult": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "exportId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "exportState": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "ready",
+              "failed"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "downloadUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "expiresAt": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "Z$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "includesLocalData": {
+            "type": "boolean",
+            "const": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "exportId",
+          "exportState",
+          "createdAt",
+          "downloadUrl",
+          "expiresAt",
+          "includesLocalData"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "exportState": {
+                  "const": "ready"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "downloadUrl": {
+                  "type": "string",
+                  "format": "uri",
+                  "pattern": "^https://"
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "Z$"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "downloadUrl": {
+                  "type": "null"
+                },
+                "expiresAt": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "DeleteAccountRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "confirmation": {
+            "type": "string",
+            "const": "DELETE MY ACCOUNT"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "confirmation"
+        ],
+        "additionalProperties": false
+      },
+      "Deletion": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "deletionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "accountState": {
+            "type": "string",
+            "enum": [
+              "deletionPending"
+            ]
+          },
+          "acceptedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "activeDataDeletionDeadline": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "backupExpiryDeadline": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "deletionId",
+          "accountState",
+          "acceptedAt",
+          "activeDataDeletionDeadline",
+          "backupExpiryDeadline"
+        ],
+        "additionalProperties": false
+      },
+      "ContextText": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "text"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200000
+          }
+        },
+        "required": [
+          "kind",
+          "text"
+        ],
+        "additionalProperties": false
+      },
+      "ContextImage": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "image"
+            ]
+          },
+          "mimeType": {
+            "type": "string",
+            "enum": [
+              "image/png",
+              "image/jpeg"
+            ]
+          },
+          "dataBase64": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 11184812,
+            "contentEncoding": "base64",
+            "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "selectedScreen",
+              "selectedWindow",
+              "selectedRegion",
+              "attachment"
+            ]
+          },
+          "capturedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          }
+        },
+        "required": [
+          "kind",
+          "mimeType",
+          "dataBase64",
+          "source",
+          "capturedAt"
+        ],
+        "additionalProperties": false
+      },
+      "ContextToolResult": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "toolResult"
+            ]
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "result": {
+            "type": "string",
+            "maxLength": 200000
+          },
+          "isError": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "kind",
+          "callId",
+          "result",
+          "isError"
+        ],
+        "additionalProperties": false
+      },
+      "ModelMessage": {
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "assistant",
+              "tool"
+            ]
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/ContextText"
+                },
+                {
+                  "$ref": "#/components/schemas/ContextImage"
+                },
+                {
+                  "$ref": "#/components/schemas/ContextToolResult"
+                },
+                {
+                  "$ref": "#/components/schemas/ContextToolProposal"
+                }
+              ]
+            },
+            "minItems": 1,
+            "maxItems": 32
+          }
+        },
+        "required": [
+          "role",
+          "content"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "user"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "content": {
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ContextText"
+                      },
+                      {
+                        "$ref": "#/components/schemas/ContextImage"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "assistant"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "content": {
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ContextText"
+                      },
+                      {
+                        "$ref": "#/components/schemas/ContextToolProposal"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "role": {
+                  "const": "tool"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "content": {
+                  "items": {
+                    "oneOf": [
+                      {
+                        "$ref": "#/components/schemas/ContextToolResult"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ToolDefinition": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/LocalToolName"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "inputSchema": {
+            "type": "object",
+            "description": "A bounded JSON Schema 2020-12 object validated and authorized against the local tool registry. No remote refs; no authority is implied by this definition."
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "inputSchema"
+        ],
+        "additionalProperties": false
+      },
+      "ResponseRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pebbiId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reservationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "afterSequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "input": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelMessage"
+            },
+            "minItems": 1,
+            "maxItems": 128
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolDefinition"
+            },
+            "maxItems": 64
+          },
+          "maxOutputTokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32768
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "requestId",
+          "taskId",
+          "attemptId",
+          "pebbiId",
+          "reservationId",
+          "afterSequence",
+          "input",
+          "tools",
+          "maxOutputTokens"
+        ],
+        "additionalProperties": false
+      },
+      "EventResponseStarted": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.started"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "responseId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "model": {
+                "type": "string",
+                "enum": [
+                  "gpt-6-astra"
+                ]
+              }
+            },
+            "required": [
+              "responseId",
+              "model"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "EventResponseTextDelta": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.text.delta"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "responseId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 16384
+              }
+            },
+            "required": [
+              "responseId",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "EventResponseToolProposed": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.tool.proposed"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "responseId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "callId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "tool": {
+                "$ref": "#/components/schemas/LocalToolName"
+              },
+              "arguments": {
+                "type": "object",
+                "description": "Untrusted JSON proposal, max serialized 64 KiB; validate against registered tool schema before creating an authorized tool envelope."
+              }
+            },
+            "required": [
+              "responseId",
+              "callId",
+              "tool",
+              "arguments"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "EventResponseCompleted": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.completed"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "responseId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "finishReason": {
+                "type": "string",
+                "enum": [
+                  "stop",
+                  "toolProposals",
+                  "length"
+                ]
+              },
+              "usage": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/UsageQuantity"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Verified server-observed quantities when known; null means usage reconciliation pending. Never synthesize zero usage."
+              }
+            },
+            "required": [
+              "responseId",
+              "finishReason",
+              "usage"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "EventResponseCancelled": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.cancelled"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "responseId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "reason": {
+                "type": "string",
+                "enum": [
+                  "clientDisconnect",
+                  "accountRevoked",
+                  "deviceRevoked",
+                  "quotaLimit",
+                  "shutdown"
+                ]
+              }
+            },
+            "required": [
+              "responseId",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "EventResponseFailed": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.failed"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "responseId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "error": {
+                "$ref": "#/components/schemas/Error"
+              }
+            },
+            "required": [
+              "responseId",
+              "error"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ResponseEvent": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/EventResponseStarted"
+          },
+          {
+            "$ref": "#/components/schemas/EventResponseTextDelta"
+          },
+          {
+            "$ref": "#/components/schemas/EventResponseToolProposed"
+          },
+          {
+            "$ref": "#/components/schemas/EventResponseCompleted"
+          },
+          {
+            "$ref": "#/components/schemas/EventResponseCancelled"
+          },
+          {
+            "$ref": "#/components/schemas/EventResponseFailed"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type"
+        }
+      },
+      "VoiceSessionRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pebbiId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reservationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "afterSequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "audioFormat": {
+            "$ref": "#/components/schemas/AudioFormat"
+          },
+          "voice": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "contextSummary": {
+            "type": "string",
+            "maxLength": 16000,
+            "description": "Selected local Pebbi/job/memory/conversation context only, untrusted as policy; no secrets. Empty string means no additional context."
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "taskId",
+          "attemptId",
+          "pebbiId",
+          "reservationId",
+          "afterSequence",
+          "audioFormat",
+          "voice",
+          "contextSummary"
+        ],
+        "additionalProperties": false
+      },
+      "DictationSessionRequest": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "attemptId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pebbiId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reservationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "afterSequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "audioFormat": {
+            "$ref": "#/components/schemas/AudioFormat"
+          },
+          "languageHint": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[A-Za-z]{2,8}(-[A-Za-z0-9]{1,8})*$",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "taskId",
+          "attemptId",
+          "pebbiId",
+          "reservationId",
+          "afterSequence",
+          "audioFormat",
+          "languageHint"
+        ],
+        "additionalProperties": false
+      },
+      "VoiceSession": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "conversation"
+            ]
+          },
+          "sessionToken": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 256,
+            "description": "Opaque, CSPRNG-issued, single-use bearer secret returned only once; never log."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "streamPath": {
+            "type": "string",
+            "enum": [
+              "/v1/voice/stream"
+            ]
+          },
+          "subprotocol": {
+            "type": "string",
+            "enum": [
+              "pebbi.audio.v1"
+            ]
+          },
+          "audioFormat": {
+            "$ref": "#/components/schemas/AudioFormat"
+          },
+          "sessionMaxSeconds": {
+            "type": "integer",
+            "const": 600
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "role",
+          "sessionToken",
+          "expiresAt",
+          "streamPath",
+          "subprotocol",
+          "audioFormat",
+          "sessionMaxSeconds"
+        ],
+        "additionalProperties": false
+      },
+      "DictationSession": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "dictation"
+            ]
+          },
+          "sessionToken": {
+            "type": "string",
+            "minLength": 43,
+            "maxLength": 256,
+            "description": "Opaque, CSPRNG-issued, single-use bearer secret returned only once; never log."
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "streamPath": {
+            "type": "string",
+            "enum": [
+              "/v1/dictation/stream"
+            ]
+          },
+          "subprotocol": {
+            "type": "string",
+            "enum": [
+              "pebbi.audio.v1"
+            ]
+          },
+          "audioFormat": {
+            "$ref": "#/components/schemas/AudioFormat"
+          },
+          "sessionMaxSeconds": {
+            "type": "integer",
+            "const": 600
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "role",
+          "sessionToken",
+          "expiresAt",
+          "streamPath",
+          "subprotocol",
+          "audioFormat",
+          "sessionMaxSeconds"
+        ],
+        "additionalProperties": false
+      },
+      "ClientSessionStart": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientSequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "session.start"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "clientEventId",
+          "clientSequence",
+          "type",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ClientAudioAppend": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientSequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "audio.append"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "chunkIndex": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "audioBase64": {
+                "type": "string",
+                "minLength": 4,
+                "maxLength": 21848,
+                "contentEncoding": "base64",
+                "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+              },
+              "utteranceId": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "chunkIndex",
+              "audioBase64",
+              "utteranceId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "clientEventId",
+          "clientSequence",
+          "type",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ClientAudioCommit": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientSequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "audio.commit"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "utteranceId": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "utteranceId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "clientEventId",
+          "clientSequence",
+          "type",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ClientResponseInterrupt": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientSequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "response.interrupt"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "outputId": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "required": [
+              "outputId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "clientEventId",
+          "clientSequence",
+          "type",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ClientSessionStop": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientSequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "session.stop"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "reason": {
+                "type": "string",
+                "enum": [
+                  "userStop",
+                  "sleep",
+                  "deviceChanged",
+                  "quit"
+                ]
+              }
+            },
+            "required": [
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "clientEventId",
+          "clientSequence",
+          "type",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ClientSessionCancel": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientSequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "session.cancel"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "reason": {
+                "type": "string",
+                "enum": [
+                  "userCancel",
+                  "taskCancelled"
+                ]
+              }
+            },
+            "required": [
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "clientEventId",
+          "clientSequence",
+          "type",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "AudioClientMessage": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ClientSessionStart"
+          },
+          {
+            "$ref": "#/components/schemas/ClientAudioAppend"
+          },
+          {
+            "$ref": "#/components/schemas/ClientAudioCommit"
+          },
+          {
+            "$ref": "#/components/schemas/ClientResponseInterrupt"
+          },
+          {
+            "$ref": "#/components/schemas/ClientSessionStop"
+          },
+          {
+            "$ref": "#/components/schemas/ClientSessionCancel"
+          },
+          {
+            "$ref": "#/components/schemas/ClientConversationContext"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type"
+        }
+      },
+      "ServerSessionReady": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "session.ready"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "conversation",
+                  "dictation"
+                ]
+              },
+              "audioFormat": {
+                "$ref": "#/components/schemas/AudioFormat"
+              }
+            },
+            "required": [
+              "sessionId",
+              "role",
+              "audioFormat"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerAudioAccepted": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "audio.accepted"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "clientSequence": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "sessionId",
+              "clientSequence"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerVoiceState": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "voice.state"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "state": {
+                "$ref": "#/components/schemas/VoiceState"
+              }
+            },
+            "required": [
+              "sessionId",
+              "state"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerVoiceInputTranscript": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "voice.input.transcript"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "utteranceId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 32000
+              },
+              "isFinal": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "sessionId",
+              "utteranceId",
+              "text",
+              "isFinal"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerVoiceOutputAudio": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "voice.output.audio"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "outputId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "chunkIndex": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "audioBase64": {
+                "type": "string",
+                "minLength": 4,
+                "maxLength": 21848,
+                "contentEncoding": "base64",
+                "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
+              }
+            },
+            "required": [
+              "sessionId",
+              "outputId",
+              "chunkIndex",
+              "audioBase64"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerVoiceOutputText": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "voice.output.text"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "outputId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 16000
+              },
+              "isFinal": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "sessionId",
+              "outputId",
+              "text",
+              "isFinal"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerVoiceOutputDone": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "voice.output.done"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "outputId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "interrupted": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "sessionId",
+              "outputId",
+              "interrupted"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerDictationState": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "dictation.state"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "transcribing",
+                  "failed"
+                ]
+              }
+            },
+            "required": [
+              "sessionId",
+              "state"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerDictationTranscriptPartial": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "dictation.transcript.partial"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "utteranceId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 32000
+              }
+            },
+            "required": [
+              "sessionId",
+              "utteranceId",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerDictationTranscriptFinal": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "dictation.transcript.final"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "utteranceId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "text": {
+                "type": "string",
+                "maxLength": 32000
+              }
+            },
+            "required": [
+              "sessionId",
+              "utteranceId",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerSessionError": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "session.error"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "error": {
+                "$ref": "#/components/schemas/Error"
+              }
+            },
+            "required": [
+              "sessionId",
+              "error"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerSessionClosed": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "session.closed"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "reason": {
+                "type": "string",
+                "enum": [
+                  "completed",
+                  "cancelled",
+                  "expired",
+                  "failed",
+                  "quotaLimit",
+                  "shutdown"
+                ]
+              }
+            },
+            "required": [
+              "sessionId",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "AudioServerMessage": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ServerSessionReady"
+          },
+          {
+            "$ref": "#/components/schemas/ServerAudioAccepted"
+          },
+          {
+            "$ref": "#/components/schemas/ServerVoiceState"
+          },
+          {
+            "$ref": "#/components/schemas/ServerVoiceInputTranscript"
+          },
+          {
+            "$ref": "#/components/schemas/ServerVoiceOutputAudio"
+          },
+          {
+            "$ref": "#/components/schemas/ServerVoiceOutputText"
+          },
+          {
+            "$ref": "#/components/schemas/ServerVoiceOutputDone"
+          },
+          {
+            "$ref": "#/components/schemas/ServerDictationState"
+          },
+          {
+            "$ref": "#/components/schemas/ServerDictationTranscriptPartial"
+          },
+          {
+            "$ref": "#/components/schemas/ServerDictationTranscriptFinal"
+          },
+          {
+            "$ref": "#/components/schemas/ServerSessionError"
+          },
+          {
+            "$ref": "#/components/schemas/ServerSessionClosed"
+          },
+          {
+            "$ref": "#/components/schemas/ServerConversationContextAccepted"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type"
+        }
+      },
+      "LocalToolName": {
+        "type": "string",
+        "enum": [
+          "captureScreen",
+          "readScreenText",
+          "showGuidance",
+          "clearGuidance",
+          "inspectDesktop",
+          "inspectDesktopElement",
+          "pressDesktopElement",
+          "setDesktopValue",
+          "scrollDesktop",
+          "takeoverAction",
+          "insertDictation",
+          "inspectBrowser",
+          "readBrowser",
+          "navigateBrowser",
+          "clickBrowserElement",
+          "fillBrowserElement",
+          "scrollBrowser",
+          "searchWeb",
+          "fetchWebSource",
+          "listWorkspace",
+          "readFile",
+          "extractDocument",
+          "createFile",
+          "replaceFile",
+          "moveFile",
+          "trashFile",
+          "previewArtifact",
+          "searchMemory",
+          "proposeMemory",
+          "runCode",
+          "listConnections",
+          "describeConnectionTools",
+          "callConnectionTool"
+        ]
+      },
+      "ContextToolProposal": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "toolProposal"
+            ]
+          },
+          "callId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tool": {
+            "$ref": "#/components/schemas/LocalToolName"
+          },
+          "arguments": {
+            "type": "object",
+            "description": "Earlier untrusted gateway tool proposal, replayed as context only. Max bounded request/event limits apply."
+          }
+        },
+        "required": [
+          "kind",
+          "callId",
+          "tool",
+          "arguments"
+        ],
+        "additionalProperties": false
+      },
+      "ClientConversationContext": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientEventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clientSequence": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "conversation.context"
+            ]
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16000
+              },
+              "sourceTaskId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "sourceAttemptId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "speak": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "revision",
+              "text",
+              "sourceTaskId",
+              "sourceAttemptId",
+              "speak"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "speak": {
+                      "const": true
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "sourceTaskId": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "sourceAttemptId": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "sessionId",
+          "clientEventId",
+          "clientSequence",
+          "type",
+          "payload"
+        ],
+        "additionalProperties": false
+      },
+      "ServerConversationContextAccepted": {
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "integer",
+            "const": 1
+          },
+          "eventId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "taskId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "conversation.context.accepted"
+            ]
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "Z$"
+          },
+          "payload": {
+            "type": "object",
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "sessionId",
+              "revision"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "eventId",
+          "taskId",
+          "sequence",
+          "type",
+          "occurredAt",
+          "payload"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "parameters": {
+      "RequestId": {
+        "name": "X-Request-Id",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "Optional correlation UUID; invalid values rejected. Server generates one if absent and echoes it. Never authorization."
+      },
+      "DeviceId": {
+        "name": "X-Pebbi-Device-Id",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "Registered, nonrevoked device bound to bearer account. Not an independent credential."
+      },
+      "IdempotencyKey": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": "UUID scoped to authenticated principal + method + path; canonical request hash must match on replay. See API.md for streaming and one-time token exclusions."
+      },
+      "RecentAuth": {
+        "name": "X-Pebbi-Reauth",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "required"
+          ]
+        },
+        "description": "Signals recent-auth action; server must independently require verified authentication age <= 5 minutes, never trust this header as proof."
+      }
+    },
+    "responses": {
+      "Error400": {
+        "description": "Invalid request",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error401": {
+        "description": "Authentication required or expired",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          },
+          "WWW-Authenticate": {
+            "schema": {
+              "type": "string"
+            },
+            "description": "Bearer challenge; do not include token internals."
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error403": {
+        "description": "Scope, device, recent authentication or policy denied",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error404": {
+        "description": "Not found or not owned",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error409": {
+        "description": "Conflict or idempotency/reservation conflict",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error413": {
+        "description": "Payload too large",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error415": {
+        "description": "Unsupported media type",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error429": {
+        "description": "Rate or quota limit",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          },
+          "Retry-After": {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error500": {
+        "description": "Internal error",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error502": {
+        "description": "Invalid upstream response",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error503": {
+        "description": "Feature/provider not configured or unavailable",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          },
+          "Retry-After": {
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Error504": {
+        "description": "Upstream timeout",
+        "headers": {
+          "X-Request-Id": {
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "Cache-Control": {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "no-store"
+              ]
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-websocket": {
+    "/v1/voice/stream": {
+      "method": "GET",
+      "upgrade": "websocket",
+      "subprotocol": "pebbi.audio.v1",
+      "authorization": "Bearer <single-use conversation session token>",
+      "tokenEndpoint": "/v1/voice/sessions",
+      "protocol": "API.md#websocket-protocol",
+      "clientMessageSchema": {
+        "$ref": "#/components/schemas/AudioClientMessage"
+      },
+      "serverMessageSchema": {
+        "$ref": "#/components/schemas/AudioServerMessage"
+      }
+    },
+    "/v1/dictation/stream": {
+      "method": "GET",
+      "upgrade": "websocket",
+      "subprotocol": "pebbi.audio.v1",
+      "authorization": "Bearer <single-use dictation session token>",
+      "tokenEndpoint": "/v1/dictation/sessions",
+      "protocol": "API.md#websocket-protocol",
+      "clientMessageSchema": {
+        "$ref": "#/components/schemas/AudioClientMessage"
+      },
+      "serverMessageSchema": {
+        "$ref": "#/components/schemas/AudioServerMessage"
+      }
+    }
+  }
+}
